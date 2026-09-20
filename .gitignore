@@ -21,3 +21,5 @@ uploads/
 public/uploads/
 scratch/chrome-*/
 scratch/*-profile*/
+
+*.sql
