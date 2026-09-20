@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assignments - Student Information Portal</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/student-dashboard.css">
+  <link rel="stylesheet" href="/css/student-assignments.css">
+</head>
+<body class="student-portal-body">
+
+  <div id="sidebarBackdrop" class="sidebar-backdrop hidden"></div>
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- FIXED LEFT SIDEBAR -->
+  <aside id="studentSidebar" class="student-sidebar" aria-label="Student Navigation">
+    <div class="sidebar-header">
+      <a href="/pages/student/dashboard.html" class="sidebar-brand">
+        <div class="sidebar-logo" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/>
+          </svg>
+        </div>
+        <div class="sidebar-title">
+          <span class="brand-main">Student Portal</span>
+          <span class="brand-sub">STUDENT</span>
+        </div>
+      </a>
+      <button type="button" id="closeSidebarBtn" class="sidebar-close-btn" aria-label="Close menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-group-title">ACADEMIC MODULES</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/student/dashboard.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/profile.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <span>My Profile</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/courses.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            <span>My Courses / Enrollment</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/attendance.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+            <span>My Attendance</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/grades.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+            <span>My Results / Grades</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/timetable.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            <span>Timetable</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/assignments.html" class="nav-link active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+            <span>Assignments</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/study-material.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+            <span>Study Material</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="nav-group-title">CAMPUS & SERVICES</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/student/notices.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+            <span>Notices</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/notifications.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+            <span>Notifications</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/queries.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            <span>Queries</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/reports.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            <span>Reports</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sidebarAvatar">S</div>
+        <div class="sidebar-user-info">
+          <span class="sidebar-user-name" id="sidebarUserName">Student</span>
+          <span class="sidebar-user-role">STUDENT</span>
+        </div>
+      </div>
+      <button type="button" id="sidebarLogoutBtn" class="btn-sidebar-logout" title="Sign Out" aria-label="Sign Out">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN WRAPPER -->
+  <div class="student-main-wrapper">
+    <header class="student-header" id="studentHeader">
+      <div class="header-left">
+        <button type="button" id="toggleSidebarBtn" class="sidebar-toggle-btn" aria-label="Open menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <div class="header-heading-group">
+          <h1 class="header-title">Assignments</h1>
+          <p class="header-subtitle">Continuous internal assessments, submission portals, and marks</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <button type="button" id="headerNotificationBtn" class="header-notify-btn" title="View notifications" aria-label="Notifications">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+          <span id="headerNotificationDot" class="header-notify-badge"></span>
+        </button>
+        <div class="profile-dropdown-wrapper" id="profileDropdownWrapper">
+          <button type="button" id="profileDropdownBtn" class="header-profile-btn" aria-haspopup="true" aria-expanded="false">
+            <div class="header-avatar" id="headerUserAvatar">S</div>
+            <div class="header-profile-meta">
+              <span class="header-profile-name" id="navUserName">Student</span>
+              <span class="header-profile-badge" id="userRoleBadge">STUDENT</span>
+            </div>
+            <svg class="dropdown-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="dashboard-main">
+
+      <!-- KPI Summary -->
+      <section class="stats-grid mb-4">
+        <div class="stat-card card-border-orange">
+          <div class="stat-icon-wrap stat-icon-amber">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+          </div>
+          <div class="stat-meta">
+            <span class="stat-label">Pending Submissions</span>
+            <div class="stat-value card-val-orange" id="kpiPendingSubmissions">0 Due</div>
+            <span class="stat-trend neutral" id="kpiPendingTrend">Deliverables awaiting solution</span>
+          </div>
+        </div>
+
+        <div class="stat-card card-border-green">
+          <div class="stat-icon-wrap stat-icon-emerald">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+          </div>
+          <div class="stat-meta">
+            <span class="stat-label">Completed Deliverables</span>
+            <div class="stat-value card-val-green" id="kpiCompletedDeliverables">0 Submitted</div>
+            <span class="stat-trend neutral" id="kpiCompletedTrend">Turned in assignments</span>
+          </div>
+        </div>
+
+        <div class="stat-card card-border-blue">
+          <div class="stat-icon-wrap stat-icon-blue">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+          </div>
+          <div class="stat-meta">
+            <span class="stat-label">Graded &amp; Evaluated</span>
+            <div class="stat-value card-val-blue" id="kpiGradedTasks">0 Tasks</div>
+            <span class="stat-trend neutral" id="kpiGradedTrend">Evaluated by faculty</span>
+          </div>
+        </div>
+
+        <div class="stat-card card-border-indigo">
+          <div class="stat-icon-wrap stat-icon-purple">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+          </div>
+          <div class="stat-meta">
+            <span class="stat-label">Internal Weightage</span>
+            <div class="stat-value card-val-indigo" id="kpiInternalWeightage">0 Marks</div>
+            <span class="stat-trend neutral" id="kpiWeightageTrend">Total Available Points</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Assignments List -->
+      <section class="assignment-schedule-card mb-4" id="assignmentScheduleSection">
+        <div class="assignment-card-header">
+          <div class="assignment-header-title-group">
+            <h3 class="assignment-card-title">Enrolled Courses Assignment Schedule</h3>
+            <p class="assignment-card-subtitle">Continuous internal assessments, submission portals, and marks</p>
+          </div>
+          <div class="assignment-tabs-container" role="tablist" aria-label="Assignment status filters">
+            <button type="button" class="asg-tab-btn active" id="btnFilterAll" data-filter="all" role="tab" aria-selected="true">
+              All <span class="asg-tab-count" id="countAll">0</span>
+            </button>
+            <button type="button" class="asg-tab-btn" id="btnFilterPending" data-filter="pending" role="tab" aria-selected="false">
+              Pending <span class="asg-tab-count" id="countPending">0</span>
+            </button>
+            <button type="button" class="asg-tab-btn" id="btnFilterSubmitted" data-filter="submitted" role="tab" aria-selected="false">
+              Submitted <span class="asg-tab-count" id="countSubmitted">0</span>
+            </button>
+            <button type="button" class="asg-tab-btn" id="btnFilterEvaluated" data-filter="evaluated" role="tab" aria-selected="false">
+              Evaluated <span class="asg-tab-count" id="countEvaluated">0</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Desktop Table Wrapper -->
+        <div class="assignment-table-wrapper" id="assignmentTableWrapper">
+          <table class="assignment-table" id="assignmentTable">
+            <thead>
+              <tr>
+                <th class="col-asg-title">Assignment Title</th>
+                <th class="col-asg-course">Course</th>
+                <th class="col-asg-deadline">Deadline</th>
+                <th class="col-asg-marks">Max Marks</th>
+                <th class="col-asg-status">Submission Status</th>
+                <th class="col-asg-eval">Evaluation &amp; Marks</th>
+                <th class="col-asg-action">Action</th>
+              </tr>
+            </thead>
+            <tbody id="assignmentsTbody">
+              <tr>
+                <td colspan="7" style="text-align: center; padding: 48px 16px; color: var(--stu-text-muted);">
+                  Loading assignments...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Mobile Cards Container (<= 768px) -->
+        <div class="assignment-mobile-cards-container" id="assignmentMobileCardsContainer"></div>
+
+        <!-- Clean Full-Width Empty State -->
+        <div class="assignment-empty-state hidden" id="assignmentEmptyState">
+          <div class="asg-empty-icon-wrap">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+              <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+            </svg>
+          </div>
+          <h4 class="asg-empty-title" id="emptyStateTitle">No assignments available</h4>
+          <p class="asg-empty-desc" id="emptyStateDesc">You currently have no course assignments scheduled.</p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Submit Assignment Modal -->
+  <div id="submitModal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal-card" style="max-width: 540px; width: 95%;">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title" id="asgModalTitle">Submit Assignment Solution</h3>
+          <p id="asgModalMeta" style="margin: 4px 0 0 0; font-size: 12.5px; color: #64748b;">Course: - | Deadline: -</p>
+        </div>
+        <button type="button" class="modal-close-btn" data-close-modal="submitModal">&times;</button>
+      </div>
+      <form id="asgUploadForm" style="padding: 20px;">
+        <input type="hidden" id="asgSubmitId">
+
+        <!-- Evaluation Details Card if evaluated -->
+        <div id="evalDetailsContainer" style="display: none; margin-bottom: 16px;">
+          <div style="background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 8px; padding: 14px 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px; margin-bottom: 8px;">
+              <div>
+                <span style="font-size: 11px; font-weight: 700; color: #047857; text-transform: uppercase; letter-spacing: 0.5px;">Evaluation Result</span>
+                <div style="font-size: 20px; font-weight: 800; color: #065f46; margin-top: 2px;">
+                  <span id="evalCardMarks">0</span> <span style="font-size: 13px; font-weight: 500; color: #047857;">/ <span id="evalCardMaxMarks">100</span></span>
+                  <span id="evalCardPercentage" style="font-size: 13px; font-weight: 600; color: #047857; margin-left: 6px;">(0%)</span>
+                </div>
+              </div>
+              <span class="badge-asg badge-sub-ok" style="font-size: 11.5px;">Evaluated</span>
+            </div>
+            <div id="evalCardFeedbackRow" style="background: #ffffff; border: 1px solid #d1fae5; border-radius: 6px; padding: 10px 12px; margin-top: 8px;">
+              <div style="font-size: 11.5px; font-weight: 600; color: #065f46; margin-bottom: 3px;">Faculty Feedback:</div>
+              <div id="evalCardFeedbackText" style="font-size: 13px; color: #334155; font-style: italic; white-space: pre-wrap;">-</div>
+            </div>
+            <div id="evalCardDate" style="font-size: 11px; color: #047857; margin-top: 8px;">Evaluated on: -</div>
+          </div>
+        </div>
+
+        <!-- Evaluation Pending Box if submitted but not evaluated yet -->
+        <div id="evalPendingContainer" style="display: none; margin-bottom: 16px;">
+          <div style="background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 10px 14px; display: flex; align-items: center; gap: 8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b45309" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            <span style="font-size: 12.5px; color: #92400e; font-weight: 500;">Evaluation Pending — Faculty has not graded this submission yet.</span>
+          </div>
+        </div>
+
+        <!-- Submission History & Attempt Timeline -->
+        <div id="submissionHistoryContainer" style="display: none; margin-bottom: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span style="font-size: 12.5px; font-weight: 700; color: #1e293b;">Submission History &amp; Attempts</span>
+            <span id="historyAttemptBadge" class="badge" style="background: #e2e8f0; color: #334155; font-size: 11px;">0 Attempts</span>
+          </div>
+          <div id="submissionHistoryList" style="display: flex; flex-direction: column; gap: 8px; max-height: 220px; overflow-y: auto; padding-right: 4px;"></div>
+        </div>
+
+        <div class="modal-body" style="padding: 0;">
+          <div class="modal-form-group" style="margin-bottom: 14px;">
+            <label for="asgFile" style="display: block; font-size: 12.5px; font-weight: 600; color: #475569; margin-bottom: 4px;">
+              Select Solution File (PDF, DOC/DOCX, PPT, XLS, ZIP - Max 10MB) *
+            </label>
+            <input type="file" id="asgFile" required class="form-control" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt,.zip" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
+          </div>
+          <div class="modal-form-group" style="margin-bottom: 20px;">
+            <label for="asgNotes" style="display: block; font-size: 12.5px; font-weight: 600; color: #475569; margin-bottom: 4px;">
+              Submission Remarks / Notes (Optional)
+            </label>
+            <textarea id="asgNotes" rows="3" class="form-control" placeholder="Add any notes or repository links for your faculty..." style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-family: inherit; resize: vertical;"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer" style="padding: 0; display: flex; justify-content: flex-end; gap: 10px;">
+          <button type="button" class="btn btn-secondary" data-close-modal="submitModal">Cancel</button>
+          <button type="submit" id="btnSubmitAsgSolution" class="btn btn-primary">Upload &amp; Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/student-shell.js"></script>
+  <script src="/js/user-menu.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const user = await requireAuth('STUDENT');
+      if (!user) return;
+
+      let allAssignments = [];
+      let currentFilter = 'all';
+
+      function escapeHtml(str) {
+        if (str === null || str === undefined) return '';
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      }
+
+      function formatRemainingTime(dueDateStr) {
+        if (!dueDateStr) {
+          return { text: 'No Deadline', badgeClass: 'badge-deadline-normal', isOverdue: false };
+        }
+        const now = new Date();
+        const due = new Date(dueDateStr);
+        const diffMs = due.getTime() - now.getTime();
+
+        if (diffMs < 0) {
+          const pastMs = Math.abs(diffMs);
+          const pastDays = Math.floor(pastMs / (1000 * 60 * 60 * 24));
+          const pastHours = Math.floor(pastMs / (1000 * 60 * 60));
+          let t = '';
+          if (pastDays >= 1) {
+            t = `Overdue by ${pastDays} day${pastDays > 1 ? 's' : ''}`;
+          } else {
+            t = `Overdue by ${Math.max(1, pastHours)} hour${pastHours > 1 ? 's' : ''}`;
+          }
+          return { text: t, badgeClass: 'badge-asg-overdue', isOverdue: true };
+        }
+
+        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+        if (diffDays === 0) {
+          if (diffHours < 1) {
+            const diffMins = Math.max(1, Math.floor(diffMs / (1000 * 60)));
+            return { text: `Due today (${diffMins}m left)`, badgeClass: 'badge-deadline-soon', isOverdue: false };
+          }
+          return { text: `Due today (${diffHours}h left)`, badgeClass: 'badge-deadline-soon', isOverdue: false };
+        } else if (diffDays === 1) {
+          return { text: '1 day remaining', badgeClass: 'badge-deadline-soon', isOverdue: false };
+        } else {
+          return { text: `${diffDays} days remaining`, badgeClass: 'badge-deadline-normal', isOverdue: false };
+        }
+      }
+
+      function renderAssignments() {
+        const tbody = document.getElementById('assignmentsTbody');
+        const tableWrapper = document.getElementById('assignmentTableWrapper');
+        const mobileContainer = document.getElementById('assignmentMobileCardsContainer');
+        const emptyState = document.getElementById('assignmentEmptyState');
+        const emptyTitle = document.getElementById('emptyStateTitle');
+        const emptyDesc = document.getElementById('emptyStateDesc');
+
+        if (!tbody || !tableWrapper || !mobileContainer) return;
+
+        let filtered = allAssignments;
+        if (currentFilter === 'pending') {
+          filtered = allAssignments.filter(a => a.status !== 'Submitted' && a.status !== 'Late Submission');
+        } else if (currentFilter === 'submitted') {
+          filtered = allAssignments.filter(a => a.status === 'Submitted' || a.status === 'Late Submission');
+        } else if (currentFilter === 'evaluated') {
+          filtered = allAssignments.filter(a => a.submission && a.submission.is_evaluated);
+        }
+
+        if (filtered.length === 0) {
+          tableWrapper.style.display = 'none';
+          mobileContainer.style.display = 'none';
+          tbody.innerHTML = '';
+          mobileContainer.innerHTML = '';
+
+          if (emptyState) {
+            emptyState.classList.remove('hidden');
+            if (currentFilter === 'pending') {
+              if (emptyTitle) emptyTitle.textContent = 'No pending assignments';
+              if (emptyDesc) emptyDesc.textContent = 'You have submitted all active deliverables for your enrolled courses.';
+            } else if (currentFilter === 'submitted') {
+              if (emptyTitle) emptyTitle.textContent = 'No submitted assignments';
+              if (emptyDesc) emptyDesc.textContent = 'You haven\'t submitted any assignment solutions yet.';
+            } else if (currentFilter === 'evaluated') {
+              if (emptyTitle) emptyTitle.textContent = 'No evaluated assignments';
+              if (emptyDesc) emptyDesc.textContent = 'None of your submitted assignments have been evaluated yet.';
+            } else {
+              if (emptyTitle) emptyTitle.textContent = 'No assignments available';
+              if (emptyDesc) emptyDesc.textContent = 'You currently have no course assignments scheduled.';
+            }
+          }
+          return;
+        }
+
+        if (emptyState) emptyState.classList.add('hidden');
+        tableWrapper.style.display = '';
+        mobileContainer.style.display = '';
+
+        // Render Desktop Table Rows
+        tbody.innerHTML = filtered.map(a => {
+          const dueDateObj = a.due_date ? new Date(a.due_date) : null;
+          const dueDateFormatted = dueDateObj
+            ? dueDateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+            : 'No Date';
+          const dueTimeFormatted = dueDateObj
+            ? dueDateObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
+            : '';
+          const remainingInfo = formatRemainingTime(a.due_date);
+          
+          let badgeClass = 'badge-asg-pending';
+          let statusText = a.status || 'Pending';
+
+          if (a.status === 'Submitted') {
+            badgeClass = 'badge-sub-ok';
+            statusText = 'Submitted';
+          } else if (a.status === 'Late Submission') {
+            badgeClass = 'badge-sub-late';
+            statusText = 'Late Submission';
+          } else if (a.status === 'Overdue' || a.is_overdue) {
+            badgeClass = 'badge-asg-overdue';
+            statusText = 'Overdue';
+          } else {
+            badgeClass = 'badge-asg-pending';
+            statusText = 'Pending';
+          }
+
+          const hasSubmitted = a.status === 'Submitted' || a.status === 'Late Submission';
+          const isEvaluated = Boolean(a.submission && a.submission.is_evaluated);
+
+          let evalColumnHtml = '<span style="color: #94a3b8; font-size: 13px;">-</span>';
+          let actionBtnHtml = '';
+
+          if (isEvaluated) {
+            const marks = a.submission.marks_obtained;
+            const maxM = a.max_marks || 100;
+            evalColumnHtml = `
+              <div>
+                <span class="badge-asg badge-eval-ok" style="font-size: 11.5px; padding: 2px 8px;">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 3px;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  ${marks} / ${maxM}
+                </span>
+                ${a.submission.feedback ? `<div style="font-size: 11px; color: #64748b; margin-top: 3px; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${escapeHtml(a.submission.feedback)}">Feedback: ${escapeHtml(a.submission.feedback)}</div>` : ''}
+              </div>`;
+            actionBtnHtml = `<button type="button" class="btn-asg-action btn-asg-evaluated btn-open-submit" data-id="${a.assignment_id}">View Evaluation / Resubmit</button>`;
+          } else if (hasSubmitted) {
+            evalColumnHtml = `<span class="badge-asg badge-eval-pending">Pending Evaluation</span>`;
+            actionBtnHtml = `<button type="button" class="btn-asg-action btn-asg-secondary btn-open-submit" data-id="${a.assignment_id}">Resubmit</button>`;
+          } else {
+            evalColumnHtml = `<span style="color: #94a3b8; font-size: 13px;">-</span>`;
+            actionBtnHtml = `<button type="button" class="btn-asg-action btn-asg-primary btn-open-submit" data-id="${a.assignment_id}">Upload Solution</button>`;
+          }
+
+          return `
+            <tr class="asg-row">
+              <td class="col-asg-title">
+                <div class="asg-cell-title" title="${escapeHtml(a.title)}">${escapeHtml(a.title)}</div>
+                ${a.description ? `<div class="asg-cell-desc" title="${escapeHtml(a.description)}">${escapeHtml(a.description)}</div>` : ''}
+              </td>
+              <td class="col-asg-course">
+                <span class="asg-course-pill">${escapeHtml(a.course_code || 'COURSE')}</span>
+                <span class="asg-course-name">${escapeHtml(a.course_name || '')}</span>
+              </td>
+              <td class="col-asg-deadline">
+                <div class="asg-deadline-date">${dueDateFormatted}</div>
+                ${dueTimeFormatted ? `<div class="asg-deadline-time">${dueTimeFormatted}</div>` : ''}
+                <div style="margin-top: 4px;">
+                  <span class="badge-asg ${remainingInfo.badgeClass}">
+                    ${remainingInfo.text}
+                  </span>
+                </div>
+              </td>
+              <td class="col-asg-marks">
+                <span class="asg-marks-badge">${a.max_marks || 0} pts</span>
+              </td>
+              <td class="col-asg-status">
+                <div><span class="badge-asg ${badgeClass}">${statusText}</span></div>
+                ${a.submission ? `
+                  <div class="asg-submission-meta">
+                    <span style="white-space: nowrap; font-weight: 500;">Attempt ${a.submission.attempt_number || 1}:</span>
+                    <span class="asg-filename-truncate" title="${escapeHtml(a.submission.original_filename || 'Solution')}">
+                      ${escapeHtml(a.submission.original_filename || 'Solution')}
+                    </span>
+                  </div>` : ''}
+              </td>
+              <td class="col-asg-eval">
+                ${evalColumnHtml}
+              </td>
+              <td class="col-asg-action">
+                ${actionBtnHtml}
+              </td>
+            </tr>
+          `;
+        }).join('');
+
+        // Render Mobile Cards
+        mobileContainer.innerHTML = filtered.map(a => {
+          const dueDateObj = a.due_date ? new Date(a.due_date) : null;
+          const dueDateFormatted = dueDateObj
+            ? dueDateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+            : 'No Date';
+          const dueTimeFormatted = dueDateObj
+            ? dueDateObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
+            : '';
+          const remainingInfo = formatRemainingTime(a.due_date);
+
+          let badgeClass = 'badge-asg-pending';
+          let statusText = a.status || 'Pending';
+
+          if (a.status === 'Submitted') {
+            badgeClass = 'badge-sub-ok';
+            statusText = 'Submitted';
+          } else if (a.status === 'Late Submission') {
+            badgeClass = 'badge-sub-late';
+            statusText = 'Late Submission';
+          } else if (a.status === 'Overdue' || a.is_overdue) {
+            badgeClass = 'badge-asg-overdue';
+            statusText = 'Overdue';
+          } else {
+            badgeClass = 'badge-asg-pending';
+            statusText = 'Pending';
+          }
+
+          const hasSubmitted = a.status === 'Submitted' || a.status === 'Late Submission';
+          const isEvaluated = Boolean(a.submission && a.submission.is_evaluated);
+
+          let evalMobileHtml = '<span style="color: #94a3b8; font-size: 12.5px;">Not evaluated</span>';
+          let actionBtnMobileHtml = '';
+
+          if (isEvaluated) {
+            const marks = a.submission.marks_obtained;
+            const maxM = a.max_marks || 100;
+            evalMobileHtml = `
+              <div>
+                <span class="badge-asg badge-eval-ok" style="font-size: 11.5px; padding: 2px 8px;">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 3px;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  ${marks} / ${maxM} pts
+                </span>
+                ${a.submission.feedback ? `<div style="font-size: 11px; color: #64748b; margin-top: 3px; font-style: italic;">"${escapeHtml(a.submission.feedback)}"</div>` : ''}
+              </div>`;
+            actionBtnMobileHtml = `<button type="button" class="btn-asg-action btn-asg-evaluated btn-open-submit" data-id="${a.assignment_id}">View Evaluation / Resubmit</button>`;
+          } else if (hasSubmitted) {
+            evalMobileHtml = `<span class="badge-asg badge-eval-pending">Pending Evaluation</span>`;
+            actionBtnMobileHtml = `<button type="button" class="btn-asg-action btn-asg-secondary btn-open-submit" data-id="${a.assignment_id}">Resubmit</button>`;
+          } else {
+            evalMobileHtml = `<span style="color: #94a3b8; font-size: 12px;">Not Submitted</span>`;
+            actionBtnMobileHtml = `<button type="button" class="btn-asg-action btn-asg-primary btn-open-submit" data-id="${a.assignment_id}">Upload Solution</button>`;
+          }
+
+          return `
+            <div class="assignment-mobile-card">
+              <div class="asg-mobile-header">
+                <div class="asg-mobile-course-tag">
+                  <span class="asg-course-pill">${escapeHtml(a.course_code || 'COURSE')}</span>
+                  <span style="font-size: 12.5px; color: #475569; font-weight: 500;">${escapeHtml(a.course_name || '')}</span>
+                </div>
+                <h4 class="asg-mobile-title" title="${escapeHtml(a.title)}">${escapeHtml(a.title)}</h4>
+                ${a.description ? `<p class="asg-mobile-desc">${escapeHtml(a.description)}</p>` : ''}
+              </div>
+
+              <hr class="asg-mobile-divider">
+
+              <div class="asg-mobile-section">
+                <span class="asg-mobile-label">Deadline</span>
+                <div class="asg-mobile-deadline-box">
+                  <span class="asg-mobile-deadline-text">${dueDateFormatted}${dueTimeFormatted ? ` &bull; ${dueTimeFormatted}` : ''}</span>
+                  <span class="badge-asg ${remainingInfo.badgeClass}">
+                    ${remainingInfo.text}
+                  </span>
+                </div>
+              </div>
+
+              <div class="asg-mobile-grid">
+                <div class="asg-mobile-grid-cell">
+                  <span class="asg-mobile-label">Max Marks</span>
+                  <span class="asg-mobile-grid-val">${a.max_marks || 0} pts</span>
+                </div>
+                <div class="asg-mobile-grid-cell">
+                  <span class="asg-mobile-label">Submission</span>
+                  <div><span class="badge-asg ${badgeClass}">${statusText}</span></div>
+                </div>
+                <div class="asg-mobile-grid-cell" style="grid-column: span 2;">
+                  <span class="asg-mobile-label">Evaluation</span>
+                  <div style="margin-top: 2px;">${evalMobileHtml}</div>
+                </div>
+              </div>
+
+              ${hasSubmitted && a.submission ? `
+                <div class="asg-mobile-attempt-box">
+                  <span class="asg-mobile-label">Attempt ${a.submission.attempt_number || 1}</span>
+                  <span class="asg-mobile-attempt-file" title="${escapeHtml(a.submission.original_filename || 'Solution')}">
+                    ${escapeHtml(a.submission.original_filename || 'Solution')}
+                  </span>
+                </div>
+              ` : ''}
+
+              <div class="asg-mobile-action-wrap">
+                ${actionBtnMobileHtml}
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        // Wire submit buttons
+        document.querySelectorAll('.btn-open-submit').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const id = parseInt(btn.getAttribute('data-id'), 10);
+            const asg = allAssignments.find(x => x.assignment_id === id);
+            if (!asg) return;
+
+            document.getElementById('asgSubmitId').value = asg.assignment_id;
+
+            const dueDateObj = asg.due_date ? new Date(asg.due_date) : null;
+            const dueDateFormatted = dueDateObj ? dueDateObj.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'No Deadline';
+            document.getElementById('asgModalMeta').textContent = `Course: ${asg.course_code} | Deadline: ${dueDateFormatted} | Max Marks: ${asg.max_marks || 100} pts`;
+
+            const token = localStorage.getItem('token');
+            const evalContainer = document.getElementById('evalDetailsContainer');
+            const pendingContainer = document.getElementById('evalPendingContainer');
+            const historyContainer = document.getElementById('submissionHistoryContainer');
+            const historyList = document.getElementById('submissionHistoryList');
+            const historyBadge = document.getElementById('historyAttemptBadge');
+            const submitBtn = document.getElementById('btnSubmitAsgSolution');
+
+            // Evaluation display in modal
+            if (asg.submission && asg.submission.is_evaluated) {
+              if (evalContainer) {
+                evalContainer.style.display = 'block';
+                const marksObtained = asg.submission.marks_obtained ?? 0;
+                const maxMarks = asg.max_marks || 100;
+                const pct = maxMarks > 0 ? ((marksObtained / maxMarks) * 100).toFixed(1) : '0';
+
+                document.getElementById('evalCardMarks').textContent = marksObtained;
+                document.getElementById('evalCardMaxMarks').textContent = maxMarks;
+                document.getElementById('evalCardPercentage').textContent = `(${pct}%)`;
+
+                const feedbackText = asg.submission.feedback ? asg.submission.feedback : 'No written comments provided by faculty.';
+                document.getElementById('evalCardFeedbackText').textContent = feedbackText;
+
+                const evalDateStr = asg.submission.evaluated_at
+                  ? new Date(asg.submission.evaluated_at).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+                  : '-';
+                document.getElementById('evalCardDate').textContent = `Evaluated on: ${evalDateStr}`;
+              }
+              if (pendingContainer) pendingContainer.style.display = 'none';
+            } else if (asg.submission) {
+              if (evalContainer) evalContainer.style.display = 'none';
+              if (pendingContainer) pendingContainer.style.display = 'block';
+            } else {
+              if (evalContainer) evalContainer.style.display = 'none';
+              if (pendingContainer) pendingContainer.style.display = 'none';
+            }
+
+            // Fetch and render submission history & attempts
+            try {
+              const historyRes = await apiRequest(`/assignments/${asg.assignment_id}/my-history`);
+              const history = (historyRes && historyRes.ok && historyRes.data && Array.isArray(historyRes.data.history))
+                ? historyRes.data.history
+                : (asg.submission ? [asg.submission] : []);
+
+              if (history.length > 0) {
+                historyContainer.style.display = 'block';
+                historyBadge.textContent = `${history.length} Attempt${history.length > 1 ? 's' : ''}`;
+                historyList.innerHTML = history.map(att => {
+                  const isCurrent = Boolean(att.is_current);
+                  const attNum = att.attempt_number || 1;
+                  const dUrl = isCurrent
+                    ? `/api/assignments/${asg.assignment_id}/submissions/${att.submission_id}/download?token=${encodeURIComponent(token)}`
+                    : `/api/assignments/${asg.assignment_id}/submissions/${att.submission_id}/history/${att.history_id}/download?token=${encodeURIComponent(token)}`;
+                  const vUrl = isCurrent
+                    ? `/api/assignments/${asg.assignment_id}/submissions/${att.submission_id}/view?token=${encodeURIComponent(token)}`
+                    : `/api/assignments/${asg.assignment_id}/submissions/${att.submission_id}/history/${att.history_id}/view?token=${encodeURIComponent(token)}`;
+                  const dateStr = att.submitted_at
+                    ? new Date(att.submitted_at).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+                    : '-';
+                  const statusBadge = att.status === 'Late Submission'
+                    ? '<span class="badge-asg badge-sub-late" style="font-size: 10.5px; padding: 1px 6px;">Late</span>'
+                    : '<span class="badge-asg badge-sub-ok" style="font-size: 10.5px; padding: 1px 6px;">Submitted</span>';
+
+                  let evalText = '';
+                  if (att.is_evaluated && att.marks_obtained !== null && att.marks_obtained !== undefined) {
+                    evalText = `<span style="color: #047857; font-weight: 700; font-size: 11.5px;">Marks: ${att.marks_obtained}/${asg.max_marks || 100}</span>`;
+                    if (att.feedback) {
+                      evalText += `<span style="font-size: 11px; color: #475569; margin-left: 6px; font-style: italic;">"${escapeHtml(att.feedback)}"</span>`;
+                    }
+                  } else {
+                    evalText = `<span style="color: #b45309; font-size: 11px; font-weight: 500;">Pending Evaluation</span>`;
+                  }
+
+                  return `
+                    <div style="background: ${isCurrent ? '#f0fdf4' : '#f8fafc'}; border: 1px solid ${isCurrent ? '#86efac' : '#e2e8f0'}; border-radius: 6px; padding: 8px 12px; font-size: 12px;">
+                      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                          <strong style="color: #0f172a;">Attempt #${attNum}</strong>
+                          ${isCurrent ? '<span class="badge" style="background: #dcfce7; color: #15803d; font-size: 9.5px; font-weight: 700; padding: 1px 6px;">CURRENT</span>' : ''}
+                          ${statusBadge}
+                        </div>
+                        <span style="color: #64748b; font-size: 11px;">${dateStr}</span>
+                      </div>
+                      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px;">
+                        <div style="color: #334155;">
+                          <span style="font-weight: 600;">File:</span> ${escapeHtml(att.original_filename || 'Solution')} &bull; ${evalText}
+                        </div>
+                        <div style="display: flex; gap: 6px;">
+                          <a href="${vUrl}" target="_blank" rel="noopener" class="btn btn-secondary btn-sm" style="padding: 2px 7px; font-size: 11px; text-decoration: none;">View</a>
+                          <a href="${dUrl}" class="btn btn-secondary btn-sm" style="padding: 2px 7px; font-size: 11px; text-decoration: none;" download>Download</a>
+                        </div>
+                      </div>
+                    </div>`;
+                }).join('');
+              } else {
+                historyContainer.style.display = 'none';
+              }
+            } catch (histErr) {
+              console.warn('Could not fetch submission history:', histErr);
+              historyContainer.style.display = 'none';
+            }
+
+            // Modal title & submit button text
+            if (asg.submission) {
+              const curAttempt = asg.submission.attempt_number || 1;
+              const nextAttempt = curAttempt + 1;
+              document.getElementById('asgModalTitle').textContent = `Resubmit Solution (Attempt ${nextAttempt}): ${asg.title}`;
+              submitBtn.textContent = `Upload & Resubmit (Attempt ${nextAttempt})`;
+            } else {
+              document.getElementById('asgModalTitle').textContent = `Submit Solution: ${asg.title}`;
+              submitBtn.textContent = 'Upload & Submit';
+            }
+
+            document.getElementById('asgFile').value = '';
+            document.getElementById('asgNotes').value = asg.submission?.remarks || '';
+            document.getElementById('submitModal').classList.remove('hidden');
+          });
+        });
+      }
+
+      async function loadAssignments() {
+        try {
+          const res = await apiRequest('/assignments');
+          if (res.ok && res.data) {
+            allAssignments = res.data.assignments || [];
+
+            const pending = allAssignments.filter(a => a.status !== 'Submitted' && a.status !== 'Late Submission');
+            const submitted = allAssignments.filter(a => a.status === 'Submitted' || a.status === 'Late Submission');
+            const evaluated = allAssignments.filter(a => a.submission && a.submission.is_evaluated);
+
+            let totalMarks = 0;
+            allAssignments.forEach(a => totalMarks += (a.max_marks || 0));
+
+            // KPIs
+            const kpiPending = document.getElementById('kpiPendingSubmissions');
+            if (kpiPending) kpiPending.textContent = `${pending.length} Due`;
+            const kpiPendingTrend = document.getElementById('kpiPendingTrend');
+            if (kpiPendingTrend) kpiPendingTrend.textContent = pending.length > 0 ? 'Action required' : 'All caught up';
+
+            const kpiCompleted = document.getElementById('kpiCompletedDeliverables');
+            if (kpiCompleted) kpiCompleted.textContent = `${submitted.length} Submitted`;
+
+            const kpiGraded = document.getElementById('kpiGradedTasks');
+            if (kpiGraded) kpiGraded.textContent = `${evaluated.length} Evaluated`;
+            const kpiGradedTrend = document.getElementById('kpiGradedTrend');
+            if (kpiGradedTrend) kpiGradedTrend.textContent = evaluated.length > 0 ? `${evaluated.length} with marks & feedback` : 'Awaiting faculty review';
+
+            const kpiWeightage = document.getElementById('kpiInternalWeightage');
+            if (kpiWeightage) kpiWeightage.textContent = `${totalMarks} Marks`;
+
+            // Filter button count pills
+            const cAll = document.getElementById('countAll');
+            if (cAll) cAll.textContent = allAssignments.length;
+            const cPen = document.getElementById('countPending');
+            if (cPen) cPen.textContent = pending.length;
+            const cSub = document.getElementById('countSubmitted');
+            if (cSub) cSub.textContent = submitted.length;
+            const cEval = document.getElementById('countEvaluated');
+            if (cEval) cEval.textContent = evaluated.length;
+
+            renderAssignments();
+          } else {
+            showErrorState();
+          }
+        } catch (err) {
+          console.error('Failed to load assignments:', err);
+          showErrorState();
+        }
+      }
+
+      function showErrorState() {
+        const tbody = document.getElementById('assignmentsTbody');
+        if (tbody) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="7" style="text-align: center; padding: 48px 16px;">
+                <div style="color: #b91c1c; font-weight: 700; margin-bottom: 8px;">Unable to load assignments</div>
+                <p style="color: #64748b; font-size: 13px; margin: 0 0 14px 0;">Please check your connection and try again.</p>
+                <button type="button" class="btn btn-primary btn-sm" id="btnRetryAssignments">Retry</button>
+              </td>
+            </tr>
+          `;
+          document.getElementById('btnRetryAssignments')?.addEventListener('click', loadAssignments);
+        }
+      }
+
+      // Filter tabs
+      document.querySelectorAll('.asg-tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.asg-tab-btn').forEach(b => {
+            b.classList.remove('active');
+            b.setAttribute('aria-selected', 'false');
+          });
+          btn.classList.add('active');
+          btn.setAttribute('aria-selected', 'true');
+
+          currentFilter = btn.getAttribute('data-filter');
+          renderAssignments();
+        });
+      });
+
+      // Close modal
+      document.querySelectorAll('[data-close-modal]').forEach(b => {
+        b.addEventListener('click', () => {
+          document.getElementById(b.getAttribute('data-close-modal'))?.classList.add('hidden');
+        });
+      });
+
+      // Real File Upload Submission form handler
+      document.getElementById('asgUploadForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const asgId = document.getElementById('asgSubmitId').value;
+        const fileInput = document.getElementById('asgFile');
+        const notesInput = document.getElementById('asgNotes');
+        const submitBtn = document.getElementById('btnSubmitAsgSolution');
+
+        const file = fileInput?.files?.[0];
+        if (!file) {
+          showToast('Please select a file to upload.', 'error');
+          return;
+        }
+
+        if (file.size > 10 * 1024 * 1024) {
+          showToast('File size exceeds the 10MB maximum allowed limit.', 'error');
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append('file', file);
+        if (notesInput?.value?.trim()) {
+          formData.append('remarks', notesInput.value.trim());
+        }
+
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Uploading...';
+        }
+
+        try {
+          const token = localStorage.getItem('token');
+          const response = await fetch(`/api/assignments/${asgId}/submit`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${token}`
+            },
+            body: formData
+          });
+
+          const res = await response.json();
+
+          if (response.ok && res.success) {
+            document.getElementById('submitModal').classList.add('hidden');
+            showToast(res.message || 'Assignment solution submitted successfully.', 'success');
+            await loadAssignments();
+          } else {
+            showToast(res.message || 'Failed to submit assignment solution.', 'error');
+          }
+        } catch (err) {
+          console.error('Error uploading assignment submission:', err);
+          showToast('Failed to upload assignment solution.', 'error');
+        } finally {
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Upload & Submit';
+          }
+        }
+      });
+
+      loadAssignments();
+    });
+  </script>
+</body>
+</html>

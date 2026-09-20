@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In - Student Information Portal</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/auth.css">
+</head>
+<body class="auth-page">
+  <main class="auth-container">
+    <div class="auth-card">
+      <div class="auth-brand">
+        <div class="auth-logo" aria-hidden="true">
+          <!-- Graduation Cap SVG Icon -->
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/>
+          </svg>
+        </div>
+        <h1>Student Information Portal</h1>
+        <p>Sign in to access your portal dashboard</p>
+      </div>
+
+      <!-- Live Error Alert Box -->
+      <div id="errorAlert" class="alert alert-error hidden" role="alert" aria-live="assertive">
+        <svg aria-hidden="true" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+        </svg>
+        <span id="errorMessage"></span>
+      </div>
+
+      <form id="loginForm" novalidate autocomplete="on">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input 
+            type="text" 
+            id="username" 
+            name="username" 
+            placeholder="e.g. admin, teacher, or student" 
+            required 
+            autofocus
+            autocomplete="username"
+            spellcheck="false"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="password-input-wrapper">
+            <input 
+              type="password" 
+              id="password" 
+              name="password" 
+              placeholder="Enter your account password" 
+              required
+              autocomplete="current-password"
+            >
+            <button 
+              type="button" 
+              id="togglePassword" 
+              class="btn-toggle-password" 
+              aria-label="Show password" 
+              aria-pressed="false"
+              aria-controls="password"
+              title="Show/hide password"
+            >
+              <!-- Eye open icon (shown when password is hidden) -->
+              <svg id="eyeOpenIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+              <!-- Eye off icon (shown when password is shown) -->
+              <svg id="eyeOffIcon" class="hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                <line x1="1" y1="1" x2="23" y2="23"></line>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" id="submitBtn" class="btn-submit">
+          <span id="submitBtnText">Sign In</span>
+          <span id="submitBtnSpinner" class="spinner hidden" aria-hidden="true"></span>
+        </button>
+      </form>
+
+      <!-- Alternative Face Biometric Login -->
+      <div class="auth-divider">
+        <span>OR</span>
+      </div>
+
+      <button type="button" id="btnFaceLogin" class="btn-face-login">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+          <circle cx="12" cy="13" r="4"></circle>
+        </svg>
+        <span>Use Face to Login</span>
+      </button>
+
+      <footer class="auth-footer">
+        <p>Available Portal Access</p>
+        <div class="roles-hint">
+          <span class="role-pill">Admin</span>
+          <span class="role-pill">Teacher</span>
+          <span class="role-pill">Student</span>
+        </div>
+      </footer>
+    </div>
+  </main>
+
+  <script src="/vendor/face-api/face-api.min.js"></script>
+  <script src="/js/face-auth-modal.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/auth.js"></script>
+</body>
+</html>

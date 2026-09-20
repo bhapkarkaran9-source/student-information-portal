@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Faculty Feedback Management - Faculty Portal</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/teacher-dashboard.css">
+  <link rel="stylesheet" href="/css/teacher-feedback.css">
+</head>
+<body class="teacher-layout">
+
+  <!-- Mobile Sidebar Backdrop -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop hidden"></div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- FIXED LEFT SIDEBAR (Standardized by teacher-shell.js) -->
+  <aside id="teacherSidebar" class="teacher-sidebar" aria-label="Faculty Navigation"></aside>
+
+  <!-- MAIN VIEWPORT WRAPPER -->
+  <div class="teacher-main-wrapper" style="margin-left: 260px; min-height: 100vh; display: flex; flex-direction: column;">
+    
+    <!-- STICKY TOP HEADER -->
+    <header class="teacher-header" id="teacherHeader">
+      <div class="header-left">
+        <button type="button" id="toggleSidebarBtn" class="sidebar-toggle-btn" aria-label="Open menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <div class="header-heading-group">
+          <h1 class="header-title">Feedback Management</h1>
+          <div class="header-breadcrumb">
+            <a href="/pages/teacher/dashboard.html">Home</a>
+            <span>/</span>
+            <span>Feedback</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <!-- Exactly ONE Notification Bell -->
+        <button type="button" id="headerNotificationBtn" class="header-notify-btn" title="View notifications" aria-label="Notifications" onclick="window.location.href='/pages/teacher/notifications.html'">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          <span id="headerNotificationDot" class="header-notify-badge hidden">0</span>
+        </button>
+
+        <!-- Right-side User Profile Menu Trigger -->
+        <div class="profile-dropdown-wrapper" id="profileDropdownWrapper">
+          <button type="button" id="profileDropdownBtn" class="header-profile-btn" aria-haspopup="true" aria-expanded="false" aria-label="User profile menu">
+            <div class="header-avatar" id="headerUserAvatar" style="background: linear-gradient(135deg, #0d9488, #059669);">T</div>
+            <div class="header-profile-meta">
+              <span class="header-profile-name" id="navUserName">Faculty Member</span>
+              <span class="header-profile-badge" id="userRoleBadge" style="background: #ccfbf1; color: #0f766e;">TEACHER</span>
+            </div>
+            <svg class="dropdown-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="profile-dropdown-menu" id="profileDropdownMenu" role="menu">
+            <div class="dropdown-user-header">
+              <div class="dropdown-user-name" id="dropdownUserName">Faculty Member</div>
+              <div class="dropdown-user-email" id="dropdownUserEmail">teacher@studentportal.local</div>
+            </div>
+            <button type="button" class="dropdown-item" id="btnMyProfile" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              <span>My Profile</span>
+            </button>
+            <button type="button" class="dropdown-item" id="btnEditProfile" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+              <span>Edit Profile</span>
+            </button>
+            <button type="button" class="dropdown-item" id="btnChangePassword" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+              <span>Change Password</span>
+            </button>
+            <button type="button" class="dropdown-item" id="btnAccountSettings" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+              <span>Account Settings</span>
+            </button>
+            <div class="dropdown-divider"></div>
+            <button type="button" class="dropdown-item dropdown-item-danger" id="logoutBtn" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+              <span>Sign Out</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN PAGE CONTENT -->
+    <main class="teacher-dashboard-content">
+      <div class="teacher-feedback-page">
+
+        <!-- Top Header & Action -->
+        <div class="tf-page-header">
+          <div class="tf-page-title-group">
+            <h2>Faculty Feedback Management</h2>
+            <p>Administer academic feedback surveys, monitor student submission rosters in real-time, and analyze aggregated rating distributions and anonymous feedback.</p>
+          </div>
+          <button type="button" id="btnOpenCreateFormModal" class="btn-tf-primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>Create Feedback</span>
+          </button>
+        </div>
+
+        <!-- Privacy Notice Banner (Requirement I) -->
+        <div class="tf-privacy-banner" role="note" aria-label="Student Privacy Protection">
+          <div class="tf-privacy-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+          </div>
+          <div class="tf-privacy-text">
+            <strong>Student Privacy Protection:</strong> Student identities are protected. Individual student answers are not shown. Only submission status and aggregated feedback are available.
+          </div>
+        </div>
+
+        <!-- KPI Summary Cards Grid (Requirement A) -->
+        <div class="tf-kpi-grid">
+          <!-- Card 1: My Feedback Forms -->
+          <div class="tf-kpi-card">
+            <div class="tf-kpi-icon-wrapper" style="background: #ccfbf1; color: #0f766e;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+              </svg>
+            </div>
+            <div class="tf-kpi-info">
+              <span class="tf-kpi-value" id="kpiMyForms">0</span>
+              <span class="tf-kpi-label">My Feedback Forms</span>
+            </div>
+          </div>
+
+          <!-- Card 2: Active Forms -->
+          <div class="tf-kpi-card">
+            <div class="tf-kpi-icon-wrapper" style="background: #dcfce7; color: #15803d;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 14 14"></polyline>
+              </svg>
+            </div>
+            <div class="tf-kpi-info">
+              <span class="tf-kpi-value" id="kpiActiveForms">0</span>
+              <span class="tf-kpi-label">Active Forms</span>
+            </div>
+          </div>
+
+          <!-- Card 3: Total Responses -->
+          <div class="tf-kpi-card">
+            <div class="tf-kpi-icon-wrapper" style="background: #e0f2fe; color: #0369a1;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <polyline points="16 11 18 13 22 9"></polyline>
+              </svg>
+            </div>
+            <div class="tf-kpi-info">
+              <span class="tf-kpi-value" id="kpiTotalResponses">0</span>
+              <span class="tf-kpi-label">Total Responses</span>
+            </div>
+          </div>
+
+          <!-- Card 4: Pending Responses -->
+          <div class="tf-kpi-card">
+            <div class="tf-kpi-icon-wrapper" style="background: #fef3c7; color: #b45309;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+            </div>
+            <div class="tf-kpi-info">
+              <span class="tf-kpi-value" id="kpiPendingResponses">0</span>
+              <span class="tf-kpi-label">Pending Responses</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filters & Search Toolbar -->
+        <div class="tf-toolbar">
+          <div class="tf-search-box">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="filterSearchInput" class="tf-search-input" placeholder="Search my feedback surveys..." aria-label="Search surveys">
+          </div>
+
+          <select id="filterTargetType" class="tf-filter-select" aria-label="Filter by Target Type">
+            <option value="">All Target Types</option>
+            <option value="COURSE">Course</option>
+            <option value="TEACHER">Teacher</option>
+            <option value="GENERAL">General</option>
+            <option value="EVENT">Event</option>
+          </select>
+
+          <select id="filterStatus" class="tf-filter-select" aria-label="Filter by Status">
+            <option value="">All Statuses</option>
+            <option value="1">Active</option>
+            <option value="0">Inactive</option>
+          </select>
+
+          <input type="text" id="filterAcademicYear" class="tf-form-input" style="width: 140px;" placeholder="Academic Year" aria-label="Filter Academic Year">
+
+          <select id="filterSemester" class="tf-filter-select" style="min-width: 120px;" aria-label="Filter Semester">
+            <option value="">All Semesters</option>
+            <option value="1">Sem 1</option>
+            <option value="2">Sem 2</option>
+            <option value="3">Sem 3</option>
+            <option value="4">Sem 4</option>
+            <option value="5">Sem 5</option>
+            <option value="6">Sem 6</option>
+            <option value="7">Sem 7</option>
+            <option value="8">Sem 8</option>
+          </select>
+
+          <button type="button" id="btnResetFilters" class="btn-tf-reset" title="Reset all filters">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+              <path d="M3 3v5h5"></path>
+            </svg>
+            <span>Reset</span>
+          </button>
+        </div>
+
+        <!-- My Created Feedback Section / Data Table (Requirement C) -->
+        <div class="tf-card">
+          <div class="tf-card-header">
+            <h3 class="tf-card-title">My Created Feedback Surveys</h3>
+            <span id="formsCountBadge" style="font-size: 13px; font-weight: 600; color: var(--tf-teal-700); background: var(--tf-teal-100); padding: 3px 10px; border-radius: 12px;">0 Forms</span>
+          </div>
+
+          <div class="tf-table-container">
+            <table class="tf-table" id="formsTable">
+              <thead>
+                <tr>
+                  <th>Survey Title & Description</th>
+                  <th>Target Type</th>
+                  <th>Target Details</th>
+                  <th>Period</th>
+                  <th>Active Window</th>
+                  <th>Status</th>
+                  <th>Questions</th>
+                  <th>Responses</th>
+                  <th style="text-align: right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="formsTableBody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+
+            <!-- Empty State -->
+            <div id="formsEmptyState" class="tf-empty-state hidden">
+              <div class="tf-empty-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+              </div>
+              <h4 class="tf-empty-title">No Feedback Surveys Found</h4>
+              <p class="tf-empty-subtitle">You have not created any feedback surveys matching the selected criteria yet. Click "Create Feedback" to start collecting student responses.</p>
+              <button type="button" id="btnEmptyCreateForm" class="btn-tf-primary" style="margin: 0 auto;">
+                + Create Feedback Form
+              </button>
+            </div>
+          </div>
+
+          <!-- Pagination Bar -->
+          <div id="formsPagination" class="tf-pagination-bar hidden">
+            <span id="paginationInfo">Showing 0 to 0 of 0 surveys</span>
+            <div class="tf-pagination-controls">
+              <button type="button" id="btnPrevPage" class="btn-tf-action" disabled>&larr; Previous</button>
+              <button type="button" id="btnNextPage" class="btn-tf-action" disabled>Next &rarr;</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ========================================================================
+       MODAL 1: CREATE / EDIT FEEDBACK FORM (Requirement D)
+       ======================================================================== -->
+  <div id="formModal" class="tf-modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="formModalTitle">
+    <div class="tf-modal-card">
+      <div class="tf-modal-header">
+        <h3 class="tf-modal-title" id="formModalTitle">Create Feedback Survey</h3>
+        <button type="button" class="tf-modal-close-btn" data-close-modal="formModal" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="tf-modal-body">
+        <!-- Error Alert Container -->
+        <div id="formModalAlert" class="tf-alert tf-alert-error hidden" role="alert">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          <span id="formModalAlertText"></span>
+        </div>
+
+        <form id="feedbackFormElement" novalidate>
+          <input type="hidden" id="formIdHidden">
+
+          <div class="tf-form-group">
+            <label for="formTitleInput" class="tf-form-label">Survey Title <span class="req">*</span></label>
+            <input type="text" id="formTitleInput" class="tf-form-input" placeholder="e.g. Mid-Sem Course Evaluation" required>
+          </div>
+
+          <div class="tf-form-group">
+            <label for="formDescriptionInput" class="tf-form-label">Description / Instructions</label>
+            <textarea id="formDescriptionInput" class="tf-form-textarea" rows="2" placeholder="Brief explanation of the survey scope and objectives..."></textarea>
+          </div>
+
+          <div class="tf-form-row">
+            <div class="tf-form-group">
+              <label for="formTargetTypeSelect" class="tf-form-label">Target Type <span class="req">*</span></label>
+              <select id="formTargetTypeSelect" class="tf-form-select" required>
+                <option value="GENERAL">General Institutional</option>
+                <option value="COURSE">Course / Subject</option>
+                <option value="TEACHER">Other Faculty Member</option>
+                <option value="EVENT">Academic Event</option>
+              </select>
+            </div>
+
+            <!-- Target Entity Dropdown (Anti-Self-Evaluation: own assigned course & self are filtered out!) -->
+            <div class="tf-form-group" id="formTargetIdGroup">
+              <label for="formTargetIdSelect" class="tf-form-label" id="formTargetIdLabel">Target Entity <span class="req">*</span></label>
+              <select id="formTargetIdSelect" class="tf-form-select">
+                <!-- Dynamically populated based on target_type -->
+              </select>
+              <span class="tf-form-help" id="formTargetHelpText">Courses you currently teach are excluded to prevent self-evaluation.</span>
+            </div>
+          </div>
+
+          <div class="tf-form-row">
+            <div class="tf-form-group">
+              <label for="formAcademicYearInput" class="tf-form-label">Academic Year</label>
+              <input type="text" id="formAcademicYearInput" class="tf-form-input" placeholder="e.g. 2025-2026">
+            </div>
+            <div class="tf-form-group">
+              <label for="formSemesterSelect" class="tf-form-label">Semester</label>
+              <select id="formSemesterSelect" class="tf-form-select">
+                <option value="">All Semesters</option>
+                <option value="1">Semester 1</option>
+                <option value="2">Semester 2</option>
+                <option value="3">Semester 3</option>
+                <option value="4">Semester 4</option>
+                <option value="5">Semester 5</option>
+                <option value="6">Semester 6</option>
+                <option value="7">Semester 7</option>
+                <option value="8">Semester 8</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="tf-form-row">
+            <div class="tf-form-group">
+              <label for="formStartDateInput" class="tf-form-label">Start Date & Time <span class="req">*</span></label>
+              <input type="datetime-local" id="formStartDateInput" class="tf-form-input" required>
+            </div>
+            <div class="tf-form-group">
+              <label for="formEndDateInput" class="tf-form-label">End Date & Time <span class="req">*</span></label>
+              <input type="datetime-local" id="formEndDateInput" class="tf-form-input" required>
+            </div>
+          </div>
+
+          <div class="tf-form-group">
+            <label class="tf-checkbox-label">
+              <input type="checkbox" id="formIsActiveCheckbox" checked>
+              <span>Accepting student submissions (Active)</span>
+            </label>
+          </div>
+        </form>
+      </div>
+      <div class="tf-modal-footer">
+        <button type="button" class="btn-tf-reset" data-close-modal="formModal">Cancel</button>
+        <button type="button" id="btnSaveForm" class="btn-tf-primary">
+          <span id="btnSaveFormText">Save Feedback Survey</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL 2: QUESTION MANAGEMENT (Requirement E & F)
+       ======================================================================== -->
+  <div id="questionsModal" class="tf-modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="questionsModalTitle">
+    <div class="tf-modal-card tf-modal-card-lg">
+      <div class="tf-modal-header">
+        <div>
+          <h3 class="tf-modal-title" id="questionsModalTitle">Survey Questions</h3>
+          <p id="questionsModalSubtitle" style="margin: 3px 0 0 0; font-size: 13px; color: var(--tf-slate-500);"></p>
+        </div>
+        <button type="button" class="tf-modal-close-btn" data-close-modal="questionsModal" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="tf-modal-body">
+        <div id="questionsAlert" class="tf-alert tf-alert-error hidden" role="alert">
+          <span id="questionsAlertText"></span>
+        </div>
+
+        <!-- Questions List Container -->
+        <div id="questionsListContainer" class="tf-question-list">
+          <!-- Dynamically populated question cards -->
+        </div>
+
+        <!-- Empty questions state -->
+        <div id="questionsEmptyState" class="tf-empty-state hidden" style="padding: 24px;">
+          <p style="margin: 0; font-size: 13.5px; color: var(--tf-slate-500);">No questions added to this survey yet. Add questions below.</p>
+        </div>
+
+        <!-- Add / Edit Question Form Drawer -->
+        <div class="tf-add-q-box" id="addQuestionBox">
+          <h4 id="addQuestionBoxTitle" style="margin: 0 0 12px 0; font-size: 14px; font-weight: 700; color: var(--tf-slate-800);">+ Add Question</h4>
+          <input type="hidden" id="editingQuestionId">
+
+          <div class="tf-form-group">
+            <label for="qTextInput" class="tf-form-label">Question Text <span class="req">*</span></label>
+            <input type="text" id="qTextInput" class="tf-form-input" placeholder="e.g. How effective was the course content delivery?" required>
+          </div>
+
+          <div class="tf-form-row">
+            <div class="tf-form-group">
+              <label for="qTypeSelect" class="tf-form-label">Question Type <span class="req">*</span></label>
+              <select id="qTypeSelect" class="tf-form-select">
+                <option value="RATING">Rating (1 to 5 Stars)</option>
+                <option value="TEXT">Text / Qualitative Remark</option>
+                <option value="MULTIPLE_CHOICE">Multiple Choice</option>
+              </select>
+            </div>
+            <div class="tf-form-group">
+              <label for="qOrderInput" class="tf-form-label">Display Order</label>
+              <input type="number" id="qOrderInput" class="tf-form-input" value="1" min="0" max="99">
+            </div>
+          </div>
+
+          <div class="tf-form-group" style="margin-bottom: 12px;">
+            <label class="tf-checkbox-label">
+              <input type="checkbox" id="qRequiredCheckbox" checked>
+              <span>Mandatory question (Required)</span>
+            </label>
+          </div>
+
+          <div style="display: flex; gap: 8px;">
+            <button type="button" id="btnSaveQuestion" class="btn-tf-primary" style="padding: 7px 16px; font-size: 13px;">
+              <span id="btnSaveQuestionText">Add Question</span>
+            </button>
+            <button type="button" id="btnCancelEditQuestion" class="btn-tf-reset hidden" style="padding: 7px 14px; font-size: 13px;">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="tf-modal-footer">
+        <button type="button" class="btn-tf-primary" data-close-modal="questionsModal">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL 3: STUDENT SUBMISSION STATUS ROSTER (Requirement G)
+       STRICT PRIVACY: NEVER DISPLAYS INDIVIDUAL ANSWERS, RATINGS, OR RESPONSE IDS!
+       ======================================================================== -->
+  <div id="submissionsModal" class="tf-modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="submissionsModalTitle">
+    <div class="tf-modal-card tf-modal-card-lg">
+      <div class="tf-modal-header">
+        <div>
+          <h3 class="tf-modal-title" id="submissionsModalTitle">Student Submission Status</h3>
+          <p id="submissionsModalSubtitle" style="margin: 3px 0 0 0; font-size: 13px; color: var(--tf-slate-500);"></p>
+        </div>
+        <button type="button" class="tf-modal-close-btn" data-close-modal="submissionsModal" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="tf-modal-body">
+        
+        <!-- Privacy Notice inside Roster -->
+        <div class="tf-privacy-banner" style="margin-bottom: 16px; padding: 10px 14px;">
+          <div class="tf-privacy-icon" style="width: 28px; height: 28px;" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+          </div>
+          <div class="tf-privacy-text" style="font-size: 12.5px;">
+            <strong>Protected Roster:</strong> Student identities and submission flags are shown below. Individual answers and ratings are strictly excluded to preserve student confidentiality.
+          </div>
+        </div>
+
+        <!-- Summary KPI Chips -->
+        <div class="tf-submissions-summary">
+          <div class="tf-sub-chip">
+            <span class="tf-sub-chip-val" id="subTotalStudents">0</span>
+            <span class="tf-sub-chip-lbl">Total Students</span>
+          </div>
+          <div class="tf-sub-chip">
+            <span class="tf-sub-chip-val" style="color: #059669;" id="subSubmittedCount">0</span>
+            <span class="tf-sub-chip-lbl">Submitted</span>
+          </div>
+          <div class="tf-sub-chip">
+            <span class="tf-sub-chip-val" style="color: #d97706;" id="subPendingCount">0</span>
+            <span class="tf-sub-chip-lbl">Pending</span>
+          </div>
+          <div class="tf-sub-chip">
+            <span class="tf-sub-chip-val" style="color: var(--tf-teal-700);" id="subRate">0%</span>
+            <span class="tf-sub-chip-lbl">Turnout Rate</span>
+          </div>
+        </div>
+
+        <!-- Roster Controls: Tabs and Search -->
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 14px;">
+          <div class="tf-sub-tabs">
+            <button type="button" class="tf-sub-tab active" id="tabSubAll" data-status="all">All Students</button>
+            <button type="button" class="tf-sub-tab" id="tabSubSubmitted" data-status="submitted">Submitted</button>
+            <button type="button" class="tf-sub-tab" id="tabSubPending" data-status="pending">Pending</button>
+          </div>
+
+          <div style="width: 220px;">
+            <input type="text" id="subSearchInput" class="tf-search-input" style="padding: 6px 10px 6px 30px;" placeholder="Search student / PRN..." aria-label="Search student roster">
+          </div>
+        </div>
+
+        <!-- Roster Table (Zero answer data exposed!) -->
+        <div class="tf-table-container" style="border: 1px solid var(--tf-slate-200); border-radius: 8px;">
+          <table class="tf-table" id="submissionsTable">
+            <thead>
+              <tr>
+                <th>Student Name</th>
+                <th>PRN / Roll No</th>
+                <th>Department</th>
+                <th>Class / Div</th>
+                <th>Semester</th>
+                <th>Status</th>
+                <th>Submitted Date</th>
+              </tr>
+            </thead>
+            <tbody id="submissionsTableBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+          <div id="submissionsEmptyState" class="tf-empty-state hidden" style="padding: 28px;">
+            <p style="margin: 0; font-size: 13.5px; color: var(--tf-slate-500);">No students match the selected filter.</p>
+          </div>
+        </div>
+
+      </div>
+      <div class="tf-modal-footer">
+        <button type="button" class="btn-tf-primary" data-close-modal="submissionsModal">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL 4: OVERALL FEEDBACK / ANALYTICS (Requirement H)
+       SHOWS ONLY AGGREGATED METRICS & ANONYMOUS TEXT FEED
+       ======================================================================== -->
+  <div id="analyticsModal" class="tf-modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="analyticsModalTitle">
+    <div class="tf-modal-card tf-modal-card-lg">
+      <div class="tf-modal-header">
+        <div>
+          <h3 class="tf-modal-title" id="analyticsModalTitle">Survey Analytics & Feedback</h3>
+          <p id="analyticsModalSubtitle" style="margin: 3px 0 0 0; font-size: 13px; color: var(--tf-slate-500);"></p>
+        </div>
+        <button type="button" class="tf-modal-close-btn" data-close-modal="analyticsModal" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="tf-modal-body">
+        
+        <!-- Summary KPI Metrics -->
+        <div class="tf-analytics-kpi-bar">
+          <div class="tf-analytics-card">
+            <div class="tf-analytics-card-val" id="analyticsTotalResponses">0</div>
+            <div class="tf-analytics-card-lbl">Total Submissions Received</div>
+          </div>
+          <div class="tf-analytics-card">
+            <div class="tf-analytics-card-val" id="analyticsOverallAverage" style="color: #d97706;">—</div>
+            <div class="tf-analytics-card-lbl">Overall Average Rating</div>
+          </div>
+        </div>
+
+        <!-- Rating Questions Section -->
+        <h4 class="tf-analytics-section-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="#f59e0b" stroke="#d97706" stroke-width="1.5">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+          </svg>
+          <span>Star Rating Distribution</span>
+        </h4>
+        <div id="analyticsRatingsContainer">
+          <!-- Rating questions breakdown -->
+        </div>
+
+        <!-- Multiple Choice Section -->
+        <div id="analyticsMcqSection" class="hidden">
+          <h4 class="tf-analytics-section-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+            <span>Multiple Choice Responses</span>
+          </h4>
+          <div id="analyticsMcqContainer"></div>
+        </div>
+
+        <!-- Anonymous Qualitative Text Feedback Feed -->
+        <h4 class="tf-analytics-section-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
+          <span>Anonymous Student Remarks</span>
+        </h4>
+        <div id="analyticsTextContainer" class="tf-text-feed-list">
+          <!-- Anonymous comments -->
+        </div>
+
+        <!-- Empty analytics state -->
+        <div id="analyticsEmptyState" class="tf-empty-state hidden">
+          <p style="margin: 0; font-size: 14px; color: var(--tf-slate-500);">No student responses received for this survey yet.</p>
+        </div>
+
+      </div>
+      <div class="tf-modal-footer">
+        <button type="button" class="btn-tf-primary" data-close-modal="analyticsModal">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL 5: DELETE CONFIRMATION MODAL
+       ======================================================================== -->
+  <div id="deleteModal" class="tf-modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle">
+    <div class="tf-modal-card" style="max-width: 480px;">
+      <div class="tf-modal-header" style="background: #fff5f5; border-bottom-color: #fee2e2;">
+        <h3 class="tf-modal-title" id="deleteModalTitle" style="color: #991b1b;">Delete Feedback Survey</h3>
+        <button type="button" class="tf-modal-close-btn" data-close-modal="deleteModal" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="tf-modal-body">
+        <p style="font-size: 14px; color: var(--tf-slate-700); margin: 0 0 12px 0; line-height: 1.5;">
+          Are you sure you want to permanently delete <strong id="deleteFormTitle" style="color: var(--tf-slate-900);">this survey</strong>?
+        </p>
+        <div style="background: #fff1f2; border: 1px solid #fecdd3; border-radius: 6px; padding: 10px 12px; font-size: 12.5px; color: #9f1239;">
+          <strong>Warning:</strong> All associated questions, student responses, and aggregated analytics for this survey will be permanently deleted. This action cannot be undone.
+        </div>
+      </div>
+      <div class="tf-modal-footer">
+        <button type="button" class="btn-tf-reset" data-close-modal="deleteModal">Cancel</button>
+        <button type="button" id="btnConfirmDelete" class="btn-tf-action btn-tf-action-danger" style="padding: 8px 16px; font-size: 13px;">
+          Confirm Delete
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/teacher-shell.js"></script>
+  <script src="/js/user-menu.js"></script>
+  <script src="/js/teacher-feedback.js"></script>
+</body>
+</html>

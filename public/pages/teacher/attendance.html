@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mark Attendance - Faculty Portal</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/teacher-dashboard.css">
+</head>
+<body class="teacher-layout">
+
+  <!-- Mobile Sidebar Backdrop -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop hidden"></div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- FIXED LEFT SIDEBAR -->
+  <aside id="teacherSidebar" class="teacher-sidebar" aria-label="Faculty Navigation"></aside>
+
+  <!-- MAIN WRAPPER -->
+  <div class="teacher-main-wrapper" style="margin-left: 260px; min-height: 100vh; display: flex; flex-direction: column;">
+    <!-- STICKY TOP HEADER -->
+    <header class="teacher-header" id="teacherHeader">
+      <div class="header-left">
+        <button type="button" id="toggleSidebarBtn" class="sidebar-toggle-btn" aria-label="Open menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <div class="header-heading-group">
+          <h1 class="header-title">Mark Attendance</h1>
+          <p class="header-subtitle">Track student presence, conduct lecture attendance, and view daily session rosters</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <button type="button" id="headerNotificationBtn" class="header-notify-btn" title="View notifications" aria-label="Notifications">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          <span id="headerNotificationDot" class="header-notify-badge hidden"></span>
+        </button>
+        <div class="profile-dropdown-wrapper" id="profileDropdownWrapper">
+          <button type="button" id="profileDropdownBtn" class="header-profile-btn" aria-haspopup="true" aria-expanded="false" aria-label="User profile menu">
+            <div class="header-avatar" id="headerUserAvatar" style="background: linear-gradient(135deg, #0d9488, #059669);">T</div>
+            <div class="header-profile-meta">
+              <span class="header-profile-name" id="navUserName">Faculty Member</span>
+              <span class="header-profile-badge" id="userRoleBadge" style="background: #ccfbf1; color: #0f766e;">TEACHER</span>
+            </div>
+            <svg class="dropdown-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="dashboard-main" style="padding: 24px; flex: 1;">
+      <!-- KPI Stats Row -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px;">
+        <div class="card" style="padding: 16px 20px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px;">
+          <div style="font-size: 13px; color: #64748b; font-weight: 500;">Total Records Logged</div>
+          <div id="attKpiTotal" style="font-size: 24px; font-weight: 700; color: #0f172a; margin-top: 4px;">0</div>
+        </div>
+        <div class="card" style="padding: 16px 20px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px;">
+          <div style="font-size: 13px; color: #64748b; font-weight: 500;">Present Students</div>
+          <div id="attKpiPresent" style="font-size: 24px; font-weight: 700; color: #16a34a; margin-top: 4px;">0</div>
+        </div>
+        <div class="card" style="padding: 16px 20px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px;">
+          <div style="font-size: 13px; color: #64748b; font-weight: 500;">Absent Students</div>
+          <div id="attKpiAbsent" style="font-size: 24px; font-weight: 700; color: #dc2626; margin-top: 4px;">0</div>
+        </div>
+        <div class="card" style="padding: 16px 20px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px;">
+          <div style="font-size: 13px; color: #64748b; font-weight: 500;">Average Attendance %</div>
+          <div id="attKpiAvg" style="font-size: 24px; font-weight: 700; color: #0d9488; margin-top: 4px;">--</div>
+        </div>
+      </div>
+
+      <!-- Today's Scheduled Lectures Card -->
+      <section class="card mb-4" id="todayScheduledLecturesSection" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 24px; overflow: hidden;">
+        <div style="padding: 16px 20px; border-bottom: 1px solid #e2e8f0; background: #f8fafc; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+          <div>
+            <h2 style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0;">Today's Scheduled Lectures</h2>
+            <p style="font-size: 13px; color: #64748b; margin: 2px 0 0 0;" id="scheduledLecturesSubtitle">Scheduled classes for today based on your active timetable</p>
+          </div>
+          <div id="todayDayBadgeContainer" style="display: flex; align-items: center; gap: 8px;">
+            <span id="todayDayBadge" style="padding: 4px 12px; background: #e0f2fe; color: #0369a1; border-radius: 9999px; font-size: 12px; font-weight: 600;">Today</span>
+          </div>
+        </div>
+        <div id="todayScheduledLecturesContainer" style="padding: 16px 20px;">
+          <div style="padding: 24px; text-align: center; color: #64748b; font-size: 13.5px;">Loading scheduled lectures...</div>
+        </div>
+      </section>
+
+      <!-- Dynamic QR Attendance Console Card -->
+      <section class="card mb-4" id="qrAttendanceSection" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 24px; overflow: hidden;">
+        <div style="padding: 16px 20px; border-bottom: 1px solid #e2e8f0; background: #f8fafc; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="width: 32px; height: 32px; border-radius: 6px; background: #ccfbf1; color: #0d9488; display: flex; align-items: center; justify-content: center;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+              </svg>
+            </div>
+            <div>
+              <h2 style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0;">Start QR Attendance</h2>
+              <p style="font-size: 13px; color: #64748b; margin: 2px 0 0 0;">Launch time-limited QR sessions for student self-check-in with auto-rotating tokens</p>
+            </div>
+          </div>
+          <div id="qrHeaderRight">
+            <span id="qrGlobalStatusBadge" style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; background: #f1f5f9; color: #64748b; border-radius: 9999px; font-size: 12px; font-weight: 600;">
+              <span style="width: 8px; height: 8px; border-radius: 50%; background: #94a3b8;"></span> Ready to Start
+            </span>
+          </div>
+        </div>
+
+        <!-- 1. SETUP PANEL (Visible when no session is active) -->
+        <div id="qrSetupPanel" style="padding: 20px;">
+          <!-- Mode Selector -->
+          <div style="margin-bottom: 18px;">
+            <label style="display: block; font-size: 12px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Select Attendance Mode</label>
+            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+              <label id="qrModeTimetableLabel" style="flex: 1; min-width: 220px; display: flex; align-items: center; gap: 10px; padding: 12px 16px; border: 2px solid #0d9488; background: #f0fdfa; border-radius: 8px; cursor: pointer; transition: all 0.2s;">
+                <input type="radio" name="qrLectureMode" id="qrModeTimetable" value="timetable" checked style="accent-color: #0d9488; width: 16px; height: 16px;">
+                <div>
+                  <div style="font-size: 13.5px; font-weight: 700; color: #0f172a;">Regular / Timetable Lecture</div>
+                  <div style="font-size: 12px; color: #64748b;">From your scheduled timetable slots</div>
+                </div>
+              </label>
+              <label id="qrModeCustomLabel" style="flex: 1; min-width: 220px; display: flex; align-items: center; gap: 10px; padding: 12px 16px; border: 2px solid #e2e8f0; background: #ffffff; border-radius: 8px; cursor: pointer; transition: all 0.2s;">
+                <input type="radio" name="qrLectureMode" id="qrModeCustom" value="custom" style="accent-color: #0d9488; width: 16px; height: 16px;">
+                <div>
+                  <div style="font-size: 13.5px; font-weight: 700; color: #0f172a;">Extra / Custom Lecture</div>
+                  <div style="font-size: 12px; color: #64748b;">Specify custom timing, room, and lecture type</div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- A. Timetable Mode Container -->
+          <div id="qrTimetableModeContainer">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 16px;">
+              <div>
+                <label for="qrTimetableSelect" style="display: block; font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 4px;">Choose Timetable Lecture Slot</label>
+                <select id="qrTimetableSelect" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; background: #ffffff;">
+                  <option value="">Loading your timetable slots...</option>
+                </select>
+              </div>
+              <div>
+                <label for="qrTimetableValiditySelect" style="display: block; font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 4px;">QR Validity Duration</label>
+                <select id="qrTimetableValiditySelect" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; background: #ffffff;">
+                  <option value="30 seconds">30 seconds</option>
+                  <option value="1 minute">1 minute</option>
+                  <option value="2 minutes">2 minutes</option>
+                  <option value="5 minutes" selected>5 minutes (Default)</option>
+                  <option value="10 minutes">10 minutes</option>
+                  <option value="15 minutes">15 minutes</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Read-only Slot Preview Box -->
+            <div id="qrTimetableSlotPreview" style="padding: 12px 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 18px; display: none;">
+              <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; font-size: 13px;">
+                  <span id="qrSlotPreviewCourse" style="font-weight: 700; color: #0f172a;">Course</span>
+                  <span id="qrSlotPreviewTime" style="padding: 3px 8px; background: #e0f2fe; color: #0369a1; border-radius: 4px; font-weight: 600;">Time</span>
+                  <span id="qrSlotPreviewMeta" style="color: #64748b;">Div / Room</span>
+                </div>
+                <span style="font-size: 11.5px; color: #0f766e; background: #f0fdfa; padding: 2px 8px; border-radius: 4px; border: 1px solid #ccfbf1; font-weight: 600;">Server-Controlled Schedule</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- B. Custom / Extra Mode Container -->
+          <div id="qrCustomModeContainer" style="display: none;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 16px;">
+              <div>
+                <label for="qrCustomCourseSelect" style="display: block; font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 4px;">Assigned Course</label>
+                <select id="qrCustomCourseSelect" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; background: #ffffff;">
+                  <option value="">Loading assigned courses...</option>
+                </select>
+              </div>
+              <div>
+                <label for="qrCustomDate" style="display: block; font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 4px;">Lecture Date</label>
+                <input type="date" id="qrCustomDate" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
+              </div>
+              <div>
+                <label for="qrCustomStartTime" style="display: block; font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 4px;">Start Time</label>
+                <input type="time" id="qrCustomStartTime" value="10:30" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
+              </div>
+              <div>
+                <label for="qrCustomEndTime" style="display: block; font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 4px;">End Time</label>
+                <input type="time" id="qrCustomEndTime" value="11:20" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
+              </div>
+              <div>
+                <label for="qrCustomRoomNo" style="display: block; font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 4px;">Room / Location</label>
+                <input type="text" id="qrCustomRoomNo" placeholder="e.g. Room 301, Lab 2" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
+              </div>
+              <div>
+                <label for="qrCustomLectureType" style="display: block; font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 4px;">Lecture Type</label>
+                <select id="qrCustomLectureType" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; background: #ffffff;">
+                  <option value="Extra / Additional Lecture" selected>Extra / Additional Lecture</option>
+                  <option value="Makeup Lecture">Makeup Lecture</option>
+                  <option value="Practical / Lab">Practical / Lab</option>
+                  <option value="Regular Lecture">Regular Lecture</option>
+                </select>
+              </div>
+              <div>
+                <label for="qrCustomValiditySelect" style="display: block; font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 4px;">QR Validity Duration</label>
+                <select id="qrCustomValiditySelect" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; background: #ffffff;">
+                  <option value="30 seconds">30 seconds</option>
+                  <option value="1 minute">1 minute</option>
+                  <option value="2 minutes">2 minutes</option>
+                  <option value="5 minutes" selected>5 minutes (Default)</option>
+                  <option value="10 minutes">10 minutes</option>
+                  <option value="15 minutes">15 minutes</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Launch Button -->
+          <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 8px;">
+            <button type="button" id="btnStartQRSession" class="btn btn-primary" style="padding: 10px 24px; font-size: 13.5px; font-weight: 700; background: #0d9488; color: #ffffff; border: none; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+              Start QR Attendance Session
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. LIVE SESSION DISPLAY PANEL (Shown when session is active or recovered) -->
+        <div id="qrLivePanel" style="display: none; padding: 24px;">
+          <!-- Top Bar: Status and Countdown -->
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; padding-bottom: 18px; border-bottom: 1px solid #e2e8f0; margin-bottom: 20px;">
+            <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+              <span id="qrLiveStatusBadge" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; border-radius: 9999px; font-size: 13px; font-weight: 700; letter-spacing: 0.5px;">
+                <span id="qrLiveStatusDot" style="width: 8px; height: 8px; border-radius: 50%; background: #22c55e;"></span>
+                <span id="qrLiveStatusText">ACTIVE</span>
+              </span>
+              <span id="qrSessionIdDisplay" style="font-size: 12.5px; color: #64748b; font-family: monospace;">Session #--</span>
+            </div>
+
+            <!-- Student QR Visibility Toggle Box (Default OFF for safety) -->
+            <div id="qrStudentVisibilityBox" style="display: inline-flex; align-items: center; gap: 10px; background: #ffffff; padding: 6px 14px; border: 1px solid #cbd5e1; border-radius: 8px; transition: all 0.2s ease;">
+              <span style="font-size: 12.5px; font-weight: 600; color: #334155;">Show QR to Students:</span>
+              <button type="button" id="btnToggleStudentVisibility" role="switch" aria-checked="false" title="Toggle student QR visibility" style="position: relative; width: 44px; height: 24px; background: #cbd5e1; border: none; border-radius: 9999px; cursor: pointer; transition: background 0.2s ease; padding: 2px; outline: none;">
+                <span id="btnToggleStudentVisibilityThumb" style="position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; background: #ffffff; border-radius: 50%; box-shadow: 0 1px 3px rgba(0,0,0,0.3); transition: transform 0.2s ease;"></span>
+              </button>
+              <span id="qrStudentVisibilityLabel" style="font-size: 12px; font-weight: 700; color: #64748b; min-width: 140px;">
+                Hidden from Students
+              </span>
+            </div>
+
+            <!-- Countdown Timer Display -->
+            <div id="qrCountdownWrapper" style="display: flex; align-items: center; gap: 10px; background: #f0fdfa; padding: 8px 16px; border: 1px solid #ccfbf1; border-radius: 8px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0d9488" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              <div>
+                <div style="font-size: 11px; font-weight: 600; color: #0f766e; text-transform: uppercase;">Remaining Validity</div>
+                <div id="qrCountdownText" style="font-size: 20px; font-weight: 800; color: #0f766e; font-family: monospace; line-height: 1;">--:--</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Main Live Grid: QR on Left, Details on Right -->
+          <div style="display: grid; grid-template-columns: minmax(260px, 320px) 1fr; gap: 24px; align-items: start;">
+            <!-- Left: QR Code Display -->
+            <div style="display: flex; flex-direction: column; align-items: center; text-align: center; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; position: relative;">
+              <!-- Container for QRCode library -->
+              <div id="qrCodeContainer" style="width: 256px; height: 256px; background: #ffffff; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.05); position: relative; overflow: hidden;">
+                <div id="qrCodeTarget" style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;"></div>
+                <!-- Overlay shown when Expired or Closed -->
+                <div id="qrOverlay" style="display: none; position: absolute; inset: 0; background: rgba(255,255,255,0.94); backdrop-filter: blur(2px); flex-direction: column; align-items: center; justify-content: center; padding: 16px; text-align: center;">
+                  <div id="qrOverlayIcon" style="width: 44px; height: 44px; border-radius: 50%; background: #fee2e2; color: #dc2626; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+                  </div>
+                  <div id="qrOverlayTitle" style="font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 4px;">Attendance Session Expired</div>
+                  <div id="qrOverlaySubtitle" style="font-size: 12px; color: #64748b;">No more check-ins accepted</div>
+                </div>
+              </div>
+
+              <!-- Refresh indicator & instruction -->
+              <div style="margin-top: 14px; font-size: 12px; color: #64748b; line-height: 1.4; max-width: 260px;">
+                <span id="qrTokenRotateBadge" style="display: inline-flex; align-items: center; gap: 5px; color: #0d9488; font-weight: 600;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                  Auto-Rotating Token Active
+                </span>
+                <div style="margin-top: 4px;">Students scan this QR code via their portal. Token auto-refreshes every ~25s for security.</div>
+              </div>
+            </div>
+
+            <!-- Right: Lecture Metadata & Actions -->
+            <div style="display: flex; flex-direction: column; justify-content: space-between; height: 100%; gap: 20px;">
+              <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px;">
+                <h3 style="font-size: 14px; font-weight: 700; color: #0f172a; margin: 0 0 14px 0; display: flex; align-items: center; gap: 6px;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0d9488" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                  Lecture Session Information
+                </h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; font-size: 13px;">
+                  <div>
+                    <div style="font-size: 11.5px; color: #64748b; font-weight: 500;">Course / Subject</div>
+                    <div id="qrLiveCourseName" style="font-weight: 700; color: #0f172a; margin-top: 2px;">--</div>
+                  </div>
+                  <div>
+                    <div style="font-size: 11.5px; color: #64748b; font-weight: 500;">Teacher</div>
+                    <div id="qrLiveFacultyName" style="font-weight: 600; color: #0f172a; margin-top: 2px;">--</div>
+                  </div>
+                  <div>
+                    <div style="font-size: 11.5px; color: #64748b; font-weight: 500;">Lecture Type</div>
+                    <div id="qrLiveLectureType" style="font-weight: 600; color: #0f172a; margin-top: 2px;">--</div>
+                  </div>
+                  <div>
+                    <div style="font-size: 11.5px; color: #64748b; font-weight: 500;">Lecture Date</div>
+                    <div id="qrLiveDate" style="font-weight: 600; color: #0f172a; margin-top: 2px;">--</div>
+                  </div>
+                  <div>
+                    <div style="font-size: 11.5px; color: #64748b; font-weight: 500;">Time Window</div>
+                    <div id="qrLiveTime" style="font-weight: 600; color: #0f172a; margin-top: 2px;">--</div>
+                  </div>
+                  <div>
+                    <div style="font-size: 11.5px; color: #64748b; font-weight: 500;">Room / Location</div>
+                    <div id="qrLiveRoom" style="font-weight: 600; color: #0f172a; margin-top: 2px;">--</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Session Control Actions -->
+              <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center; justify-content: flex-end; padding-top: 12px;">
+                <button type="button" id="btnManualRefreshQR" style="padding: 8px 14px; font-size: 12.5px; font-weight: 600; color: #475569; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                  Rotate Token
+                </button>
+                <button type="button" id="btnCloseQRSession" class="btn btn-danger" style="padding: 8px 18px; font-size: 13px; font-weight: 600; background: #dc2626; color: #ffffff; border: none; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="9" x2="15" y2="15"></line><line x1="15" y1="9" x2="9" y2="15"></line></svg>
+                  Close Session
+                </button>
+                <button type="button" id="btnNewQRSession" class="btn btn-primary" style="display: none; padding: 8px 18px; font-size: 13px; font-weight: 600; background: #0d9488; color: #ffffff; border: none; border-radius: 6px; cursor: pointer;">
+                  + Start New QR Session
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Attendance Marking Console Card -->
+      <section class="card mb-4" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 24px; overflow: hidden;">
+        <div style="padding: 18px 20px; border-bottom: 1px solid #e2e8f0; background: #f8fafc;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+            <div>
+              <h2 style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0;">Record Lecture Attendance</h2>
+              <p style="font-size: 13px; color: #64748b; margin: 2px 0 0 0;">Select course, lecture session, and mark student presence</p>
+            </div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+              <button type="button" class="btn btn-secondary" id="btnMarkAllPresent" style="padding: 8px 14px; font-size: 13px; border: 1px solid #cbd5e1; background: #ffffff; color: #334155; border-radius: 6px; font-weight: 600; cursor: pointer;">
+                Mark All Present
+              </button>
+              <button type="button" class="btn btn-primary" id="btnSaveAttendance" style="padding: 8px 18px; font-size: 13px; border: none; background: #0d9488; color: #ffffff; border-radius: 6px; font-weight: 600; cursor: pointer;">
+                Save Attendance
+              </button>
+            </div>
+          </div>
+
+          <!-- Controls Filter Bar -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-top: 16px;">
+            <div>
+              <label for="attendanceCourseSelect" style="display: block; font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 4px;">Course / Subject</label>
+              <select id="attendanceCourseSelect" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; background: #ffffff;">
+                <option value="">Loading courses...</option>
+              </select>
+            </div>
+            <div>
+              <label for="attendanceDate" style="display: block; font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 4px;">Attendance Date</label>
+              <input type="date" id="attendanceDate" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
+            </div>
+            <div>
+              <label for="attendancePeriodOption" style="display: block; font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 4px;">Time Period</label>
+              <select id="attendancePeriodOption" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; background: #ffffff;">
+                <option value="Admin Timetable Time" selected>Admin Timetable Time</option>
+                <option value="Custom Time">Custom Time</option>
+              </select>
+            </div>
+            <div>
+              <label for="attendanceLectureType" style="display: block; font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 4px;">Lecture Type</label>
+              <select id="attendanceLectureType" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; background: #ffffff;">
+                <option value="Regular Lecture">Regular Lecture</option>
+                <option value="Extra / Additional Lecture">Extra / Additional Lecture</option>
+                <option value="Practical / Lab">Practical / Lab</option>
+                <option value="Makeup Lecture">Makeup Lecture</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Admin Timetable Time Display (Read-Only) -->
+          <div id="adminTimetableContainer" style="display: block; margin-top: 14px; padding: 12px 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px;">
+            <div style="font-size: 13px; color: #64748b;">Loading timetable entry...</div>
+          </div>
+
+          <!-- Custom Lecture Time Fields (Displayed when Custom Time is selected) -->
+          <div id="customTimeContainer" style="display: none; margin-top: 14px; padding: 12px 16px; background: #f0fdfa; border: 1px solid #99f6e4; border-radius: 6px;">
+            <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <label for="attendanceStartTime" style="font-size: 12px; font-weight: 600; color: #0f766e;">Start Time:</label>
+                <input type="time" id="attendanceStartTime" style="padding: 6px 10px; border: 1px solid #0d9488; border-radius: 4px; font-size: 13px; background: #ffffff;">
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <label for="attendanceEndTime" style="font-size: 12px; font-weight: 600; color: #0f766e;">End Time:</label>
+                <input type="time" id="attendanceEndTime" style="padding: 6px 10px; border: 1px solid #0d9488; border-radius: 4px; font-size: 13px; background: #ffffff;">
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 12px; color: #0f766e; font-weight: 500;">Formatted (12-hr):</span>
+                <span id="customTimePreviewBadge" style="display: inline-block; padding: 3px 10px; background: #ccfbf1; color: #0f766e; border-radius: 9999px; font-size: 12px; font-weight: 700;">--:-- -- - --:-- --</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Roster Controls Header (Course Title, Student Count, Live Search) -->
+        <div id="rosterHeaderToolbar" style="display: none; padding: 16px 20px 0 20px; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+          <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+            <h3 style="font-size: 15px; font-weight: 700; color: #0f172a; margin: 0;">
+              Students for <span id="rosterCourseName" style="color: #0d9488;">Selected Course</span>
+            </h3>
+            <span id="rosterStudentCount" style="display: inline-flex; align-items: center; padding: 2px 10px; background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; border-radius: 9999px; font-size: 12px; font-weight: 700;">
+              0 Students
+            </span>
+          </div>
+          <div style="min-width: 240px; max-width: 320px; flex-grow: 1;">
+            <input type="text" id="rosterSearchInput" placeholder="Search by name or PRN..." style="width: 100%; padding: 7px 12px; font-size: 13px; border: 1px solid #cbd5e1; border-radius: 6px; background: #ffffff;">
+          </div>
+        </div>
+
+        <!-- Student Roster Table Container -->
+        <div id="attendanceRosterContainer" style="padding: 16px 20px;">
+          <div class="teacher-empty-state" style="padding: 40px 20px; text-align: center; background: #ffffff; border: 1px dashed #cbd5e1; border-radius: 8px;">
+            <div class="teacher-empty-icon" style="width: 48px; height: 48px; margin: 0 auto 12px; border-radius: 50%; background: #ccfbf1; display: flex; align-items: center; justify-content: center; color: #0d9488;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+              </svg>
+            </div>
+            <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 6px 0; color: #0f172a;">No Attendance Sessions Scheduled</h3>
+            <p style="color: #64748b; max-width: 400px; margin: 0 auto; font-size: 13.5px;">Select an assigned course to record classroom attendance or view historical lecture presence.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Recent History Logs Card (Redesigned as Grouped Session Cards) -->
+      <section class="card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+          <div>
+            <h3 style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0;">Recent Lecture Attendance Sessions</h3>
+            <p style="font-size: 13px; color: #64748b; margin: 2px 0 0 0;">Grouped lecture sessions with breakdown metrics, verification, editing, and deletion</p>
+          </div>
+          <button type="button" id="btnRefreshSessions" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; font-size: 12.5px; font-weight: 600; color: #475569; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+            Refresh Sessions
+          </button>
+        </div>
+
+        <!-- Session Filters Bar -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; padding: 14px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 16px;">
+          <div>
+            <label for="sessionFilterCourse" style="display: block; font-size: 11.5px; font-weight: 600; color: #475569; margin-bottom: 4px;">Filter by Course</label>
+            <select id="sessionFilterCourse" style="width: 100%; padding: 6px 10px; font-size: 12.5px; border: 1px solid #cbd5e1; border-radius: 6px; background: #ffffff;">
+              <option value="">All Assigned Courses</option>
+            </select>
+          </div>
+          <div>
+            <label for="sessionFilterDate" style="display: block; font-size: 11.5px; font-weight: 600; color: #475569; margin-bottom: 4px;">Filter by Date</label>
+            <input type="date" id="sessionFilterDate" style="width: 100%; padding: 6px 10px; font-size: 12.5px; border: 1px solid #cbd5e1; border-radius: 6px; background: #ffffff;">
+          </div>
+          <div>
+            <label for="sessionFilterType" style="display: block; font-size: 11.5px; font-weight: 600; color: #475569; margin-bottom: 4px;">Lecture Type</label>
+            <select id="sessionFilterType" style="width: 100%; padding: 6px 10px; font-size: 12.5px; border: 1px solid #cbd5e1; border-radius: 6px; background: #ffffff;">
+              <option value="">All Lecture Types</option>
+              <option value="Regular Lecture">Regular Lecture</option>
+              <option value="Extra / Additional Lecture">Extra / Additional Lecture</option>
+              <option value="Practical / Lab">Practical / Lab</option>
+              <option value="Makeup Lecture">Makeup Lecture</option>
+            </select>
+          </div>
+          <div>
+            <label for="sessionFilterSearch" style="display: block; font-size: 11.5px; font-weight: 600; color: #475569; margin-bottom: 4px;">Search Term</label>
+            <input type="text" id="sessionFilterSearch" placeholder="Remarks, faculty..." style="width: 100%; padding: 6px 10px; font-size: 12.5px; border: 1px solid #cbd5e1; border-radius: 6px; background: #ffffff;">
+          </div>
+          <div style="display: flex; align-items: flex-end;">
+            <button type="button" id="btnResetSessionFilters" style="width: 100%; padding: 7px 12px; font-size: 12.5px; font-weight: 600; color: #64748b; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer;">
+              Reset Filters
+            </button>
+          </div>
+        </div>
+
+        <!-- Grouped Session Cards Container -->
+        <div id="attendanceHistoryContainer">
+          <div style="padding: 24px; text-align: center; color: #64748b; font-size: 13.5px;">Loading recent lecture sessions...</div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- SESSION VIEW MODAL -->
+  <div id="sessionViewModal" class="custom-modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="viewModalTitle">
+    <div class="custom-modal-dialog" style="max-width: 780px;">
+      <div class="custom-modal-header">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="width: 28px; height: 28px; border-radius: 6px; background: #ccfbf1; color: #0f766e; display: flex; align-items: center; justify-content: center;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </div>
+          <h2 id="viewModalTitle" class="custom-modal-title">Session Roster Details</h2>
+        </div>
+        <button type="button" class="custom-modal-close" id="btnCloseViewModal" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="custom-modal-body" id="viewModalContent">
+        <div style="padding: 32px; text-align: center; color: #64748b;">Loading session roster...</div>
+      </div>
+      <div class="custom-modal-footer">
+        <button type="button" class="btn btn-secondary" id="btnDismissViewModal" style="padding: 7px 16px; font-size: 13px; font-weight: 600; border: 1px solid #cbd5e1; background: #ffffff; color: #334155; border-radius: 6px; cursor: pointer;">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SESSION EDIT MODAL -->
+  <div id="sessionEditModal" class="custom-modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
+    <div class="custom-modal-dialog" style="max-width: 860px;">
+      <div class="custom-modal-header">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="width: 28px; height: 28px; border-radius: 6px; background: #dbeafe; color: #1d4ed8; display: flex; align-items: center; justify-content: center;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </div>
+          <h2 id="editModalTitle" class="custom-modal-title">Edit Session Attendance</h2>
+        </div>
+        <button type="button" class="custom-modal-close" id="btnCloseEditModal" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="custom-modal-body" id="editModalContent">
+        <div style="padding: 32px; text-align: center; color: #64748b;">Loading session for editing...</div>
+      </div>
+      <div class="custom-modal-footer">
+        <button type="button" class="btn btn-secondary" id="btnCancelEditModal" style="padding: 7px 16px; font-size: 13px; font-weight: 600; border: 1px solid #cbd5e1; background: #ffffff; color: #334155; border-radius: 6px; cursor: pointer;">
+          Cancel
+        </button>
+        <button type="button" class="btn btn-primary" id="btnSubmitEditModal" style="padding: 7px 20px; font-size: 13px; font-weight: 600; border: none; background: #0d9488; color: #ffffff; border-radius: 6px; cursor: pointer;">
+          Save Changes
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SESSION DELETE CONFIRMATION MODAL -->
+  <div id="sessionDeleteModal" class="custom-modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle">
+    <div class="custom-modal-dialog" style="max-width: 480px;">
+      <div class="custom-modal-header" style="background: #fef2f2; border-bottom-color: #fee2e2;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="width: 28px; height: 28px; border-radius: 6px; background: #fee2e2; color: #dc2626; display: flex; align-items: center; justify-content: center;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+          </div>
+          <h2 id="deleteModalTitle" class="custom-modal-title" style="color: #991b1b;">Delete Attendance?</h2>
+        </div>
+        <button type="button" class="custom-modal-close" id="btnCloseDeleteModal" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="custom-modal-body" id="deleteModalContent">
+        <p style="font-size: 14px; color: #334155; margin: 0 0 12px 0;">
+          Are you sure you want to permanently delete this lecture attendance session?
+        </p>
+        <div id="deleteModalSessionDetails" style="padding: 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 13px; color: #475569; margin-bottom: 14px;">
+        </div>
+        <p style="font-size: 12px; color: #dc2626; margin: 0; font-weight: 500;">
+          Warning: This action will permanently remove student attendance records for this session and automatically recalculate student attendance percentages.
+        </p>
+      </div>
+      <div class="custom-modal-footer">
+        <button type="button" class="btn btn-secondary" id="btnCancelDeleteModal" style="padding: 7px 16px; font-size: 13px; font-weight: 600; border: 1px solid #cbd5e1; background: #ffffff; color: #334155; border-radius: 6px; cursor: pointer;">
+          Cancel
+        </button>
+        <button type="button" class="btn btn-danger" id="btnConfirmDeleteModal" style="padding: 7px 20px; font-size: 13px; font-weight: 600; border: none; background: #dc2626; color: #ffffff; border-radius: 6px; cursor: pointer;">
+          Delete Attendance
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CORE SCRIPTS -->
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/teacher-shell.js"></script>
+  <script src="/js/user-menu.js"></script>
+  <script src="/js/libs/qrcode.min.js"></script>
+  <script src="/js/teacher-attendance.js"></script>
+</body>
+</html>

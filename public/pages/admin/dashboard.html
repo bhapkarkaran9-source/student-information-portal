@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Student Information Portal</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/admin-dashboard.css">
+  <link rel="stylesheet" href="/css/admin-theme.css">
+</head>
+<body class="admin-dashboard-body">
+
+  <!-- Mobile Backdrop Overlay -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop hidden" aria-hidden="true"></div>
+
+  <!-- ========================================================================
+       1. FIXED ADMIN SIDEBAR (CANONICAL)
+       ======================================================================== -->
+  <aside id="adminSidebar" class="admin-sidebar" aria-label="Portal Navigation">
+    <!-- Brand Header -->
+    <div class="sidebar-header">
+      <a href="/pages/admin/dashboard.html" class="sidebar-brand">
+        <div class="sidebar-logo" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/>
+          </svg>
+        </div>
+        <div class="sidebar-title">
+          <span class="brand-main">Student Portal</span>
+          <span class="brand-sub">ADMINISTRATION</span>
+        </div>
+      </a>
+      <button type="button" id="sidebarCloseBtn" class="sidebar-close-btn" aria-label="Close menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Scrollable Navigation Groups -->
+    <nav class="sidebar-nav" id="sidebarNavContainer">
+      <!-- OVERVIEW -->
+      <div class="nav-group-title">Overview</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/admin/dashboard.html" class="nav-link active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+            <span>Dashboard</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- USER MANAGEMENT -->
+      <div class="nav-group-title">User Management</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/admin/users.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            <span>Users</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/students.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span>Students</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/teachers.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+            </svg>
+            <span>Teachers</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- ACADEMICS -->
+      <div class="nav-group-title">Academics</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/admin/departments.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+              <path d="M9 22v-4h6v4"></path>
+              <path d="M8 6h.01M16 6h.01M12 6h.01M8 10h.01M16 10h.01M12 10h.01M8 14h.01M16 14h.01M12 14h.01"></path>
+            </svg>
+            <span>Departments</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/courses.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            </svg>
+            <span>Courses</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/enrollments.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="8.5" cy="7" r="4"></circle>
+              <polyline points="17 11 19 13 23 9"></polyline>
+            </svg>
+            <span>Enrollment</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/timetable.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span>Timetable</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- ACADEMIC OPERATIONS -->
+      <div class="nav-group-title">Academic Operations</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/admin/attendance.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 11 12 14 22 4"></polyline>
+              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+            </svg>
+            <span>Attendance</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/grades.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="9" y1="15" x2="15" y2="15"></line>
+            </svg>
+            <span>Grades</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/assignments.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            <span>Assignments</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/study-material.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            <span>Study Material</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- COMMUNICATION -->
+      <div class="nav-group-title">Communication</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/admin/notices.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span>Notices</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/notifications.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span>Notifications</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/queries.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+            <span>Queries</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- REPORTS -->
+      <div class="nav-group-title">Reports</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/admin/reports.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            <span>Reports</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/audit-logs.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <span>Audit Logs</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/backups.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            <span>Backup & Restore</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Sidebar Footer / Current Admin Info -->
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sidebarAdminAvatar">S</div>
+        <div class="sidebar-user-info">
+          <span class="sidebar-user-name" id="sidebarAdminName">System Admin</span>
+          <span class="sidebar-user-role" id="sidebarAdminEmail">admin@portal.local</span>
+        </div>
+      </div>
+      <button type="button" class="btn-sidebar-logout" id="sidebarLogoutBtn" title="Sign Out">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16 17 21 12 16 7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ========================================================================
+       2. MAIN CONTENT WRAPPER & TOP HEADER
+       ======================================================================== -->
+  <div class="admin-layout-main">
+    <!-- Top Header -->
+    <header class="admin-header">
+      <div class="header-left">
+        <button type="button" id="sidebarToggleBtn" class="sidebar-toggle-btn" aria-label="Toggle navigation menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <div class="header-breadcrumbs">
+          <a href="/pages/admin/dashboard.html" class="breadcrumb-item">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            <span>Dashboard</span>
+          </a>
+          <span class="breadcrumb-separator">/</span>
+          <span class="breadcrumb-current">Overview</span>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <!-- Exactly ONE Notification Bell -->
+        <button type="button" id="headerNotificationBtn" class="header-notify-btn" aria-label="Notifications" title="Notifications">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          <span id="headerNotificationDot" class="header-notify-badge hidden"></span>
+        </button>
+
+        <!-- Profile Dropdown Trigger -->
+        <div class="profile-dropdown-wrapper">
+          <button type="button" class="header-profile-btn" id="profileDropdownTrigger" aria-haspopup="true" aria-expanded="false" aria-label="Administrator Menu">
+            <div class="header-avatar" id="headerAdminAvatar">S</div>
+            <div class="header-admin-info">
+              <span class="header-admin-name" id="headerAdminName">System Admin</span>
+              <span class="header-admin-badge">ADMIN</span>
+            </div>
+            <svg class="dropdown-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+
+          <!-- Standardized 7-Item Dropdown Menu -->
+          <div class="profile-dropdown-menu" id="profileDropdownMenu" role="menu">
+            <div class="dropdown-header">
+              <div id="dropdownAdminName" class="dropdown-user-name">System Admin</div>
+              <div id="dropdownAdminEmail" class="dropdown-email">admin@portal.local</div>
+            </div>
+            
+            <button type="button" id="dropdownMyProfile" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <span>My Profile</span>
+            </button>
+
+            <button type="button" id="dropdownEditProfile" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
+              <span>Edit Profile</span>
+            </button>
+
+            <button type="button" id="dropdownChangePassword" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              <span>Change Password</span>
+            </button>
+
+            <button type="button" id="dropdownAccountSettings" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+              </svg>
+              <span>Account Settings</span>
+            </button>
+
+            <a href="/pages/admin/notifications.html" id="dropdownNotifications" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+              <span>Notifications</span>
+            </a>
+
+            <a href="/pages/admin/audit-logs.html" id="dropdownAuditActivity" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+              </svg>
+              <span>Audit Activity</span>
+            </a>
+
+            <div class="dropdown-divider"></div>
+
+            <button type="button" id="dropdownLogoutBtn" class="dropdown-item dropdown-item-danger" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
+              <span>Logout</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ========================================================================
+         3. DASHBOARD MAIN CONTENT
+         ======================================================================== -->
+    <main class="admin-content">
+
+      <!-- Admin Compact Welcome Card -->
+      <section class="admin-welcome-card" id="adminWelcomeCard" aria-label="Welcome Summary">
+        <div class="welcome-info">
+          <h1 class="welcome-title">Welcome back, <span id="welcomeAdminName">System Admin</span></h1>
+          <p class="welcome-subtext">Monitor students, academics, attendance and campus activity from one place.</p>
+        </div>
+        <div class="welcome-meta-pills">
+          <div class="meta-pill">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span id="welcomeCurrentDate">Today</span>
+          </div>
+          <div class="meta-pill meta-pill-live">
+            <span class="meta-pill-dot"></span>
+            <span>System Active</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Admin Quick Actions Bar -->
+      <section class="quick-actions-section" aria-label="Admin Quick Actions">
+        <div class="section-label-row">
+          <h2 class="section-heading-sm">Quick Actions</h2>
+        </div>
+        <div class="quick-actions-grid">
+          <a href="/pages/admin/students.html" class="quick-action-btn">
+            <div class="quick-action-icon qa-purple">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="8.5" cy="7" r="4"></circle>
+                <line x1="20" y1="8" x2="20" y2="14"></line>
+                <line x1="23" y1="11" x2="17" y2="11"></line>
+              </svg>
+            </div>
+            <span>Add Student</span>
+          </a>
+          <a href="/pages/admin/teachers.html" class="quick-action-btn">
+            <div class="quick-action-icon qa-violet">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+              </svg>
+            </div>
+            <span>Add Teacher</span>
+          </a>
+          <a href="/pages/admin/courses.html" class="quick-action-btn">
+            <div class="quick-action-icon qa-plum">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+              </svg>
+            </div>
+            <span>Add Course</span>
+          </a>
+          <a href="/pages/admin/attendance.html" class="quick-action-btn">
+            <div class="quick-action-icon qa-amber">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9 11 12 14 22 4"></polyline>
+                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+              </svg>
+            </div>
+            <span>Attendance</span>
+          </a>
+          <a href="/pages/admin/grades.html" class="quick-action-btn">
+            <div class="quick-action-icon qa-orange">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="9" y1="15" x2="15" y2="15"></line>
+              </svg>
+            </div>
+            <span>Grades</span>
+          </a>
+          <a href="/pages/admin/reports.html" class="quick-action-btn">
+            <div class="quick-action-icon qa-rose">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+              </svg>
+            </div>
+            <span>Reports</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- Summary Metric Cards (6 cards) -->
+      <section class="stats-grid" aria-label="Key Performance Indicators">
+        <!-- 1. Total Students (Purple) -->
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <span class="stat-label">Total Students</span>
+            <div class="stat-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/>
+              </svg>
+            </div>
+          </div>
+          <div class="stat-value" id="statTotalStudents">0</div>
+          <div class="stat-desc">Active registered students</div>
+        </div>
+
+        <!-- 2. Total Teachers (Violet) -->
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <span class="stat-label">Total Teachers</span>
+            <div class="stat-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="stat-value" id="statTotalTeachers">0</div>
+          <div class="stat-desc">Active faculty members</div>
+        </div>
+
+        <!-- 3. Total Courses (Plum) -->
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <span class="stat-label">Total Courses</span>
+            <div class="stat-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="stat-value" id="statTotalCourses">0</div>
+          <div class="stat-desc">Academic course offerings</div>
+        </div>
+
+        <!-- 4. Departments (Amber) -->
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <span class="stat-label">Departments</span>
+            <div class="stat-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+                <path d="M9 22v-4h6v4"></path>
+                <path d="M8 6h.01M16 6h.01M12 6h.01M8 10h.01M16 10h.01M12 10h.01M8 14h.01M16 14h.01M12 14h.01"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="stat-value" id="statTotalDepartments">0</div>
+          <div class="stat-desc">Active academic branches</div>
+        </div>
+
+        <!-- 5. Overall Attendance (Orange) -->
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <span class="stat-label">Overall Attendance</span>
+            <div class="stat-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 11l3 3L22 4"></path>
+                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="stat-value" id="statOverallAttendance">No data</div>
+          <div class="stat-desc">Campus attendance avg</div>
+        </div>
+
+        <!-- 6. Total Enrollments (Rose) -->
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <span class="stat-label">Total Enrollments</span>
+            <div class="stat-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+              </svg>
+            </div>
+          </div>
+          <div class="stat-value" id="statTotalEnrollments">0</div>
+          <div class="stat-desc">Registered course entries</div>
+        </div>
+      </section>
+
+      <!-- Charts Section (2 Large Analytics Cards Side-by-Side) -->
+      <section class="charts-grid" aria-label="Academic Analytics">
+        <!-- Chart 1: Student Performance -->
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <div class="chart-title-group">
+              <h2 class="chart-title">Student Performance</h2>
+              <span class="chart-subtitle">Grade Distribution & Academic Standing</span>
+            </div>
+            <span class="chart-badge">Evaluation Analytics</span>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="performanceChartCanvas" class="hidden"></canvas>
+            <div id="performanceChartEmpty" class="chart-empty-state">
+              <div class="empty-state-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="18" y1="20" x2="18" y2="10"></line>
+                  <line x1="12" y1="20" x2="12" y2="4"></line>
+                  <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+              </div>
+              <p class="empty-state-text">No performance data available yet</p>
+              <p class="empty-state-subtext">Analytics will appear once academic grades are recorded.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chart 2: Attendance Analytics -->
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <div class="chart-title-group">
+              <h2 class="chart-title">Attendance Analytics</h2>
+              <span class="chart-subtitle">Campus Attendance Status Ratios</span>
+            </div>
+            <span class="chart-badge">Trend Analysis</span>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="attendanceChartCanvas" class="hidden"></canvas>
+            <div id="attendanceChartEmpty" class="chart-empty-state">
+              <div class="empty-state-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                </svg>
+              </div>
+              <p class="empty-state-text">No attendance analytics available yet</p>
+              <p class="empty-state-subtext">Attendance analytics will appear once attendance sessions are recorded.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Lower Grid: Low Attendance Students & Recent Activities -->
+      <section class="lower-grid">
+        <!-- Low Attendance Students -->
+        <div class="data-section-card">
+          <div class="section-header">
+            <h2 class="section-title">
+              <span class="section-title-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                  <line x1="12" y1="9" x2="12" y2="13"></line>
+                  <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+              </span>
+              <span>Low Attendance Students</span>
+            </h2>
+            <span class="section-badge-alert">&lt; 75% Threshold</span>
+          </div>
+
+          <div class="table-responsive">
+            <table class="erp-table">
+              <thead>
+                <tr>
+                  <th>Student</th>
+                  <th>PRN</th>
+                  <th>Department</th>
+                  <th>Attendance</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="lowAttendanceTableBody">
+                <!-- Populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Empty State -->
+          <div id="lowAttendanceEmpty" class="chart-empty-state">
+            <div class="empty-state-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+            </div>
+            <p class="empty-state-text">No students currently below the attendance threshold</p>
+            <p class="empty-state-subtext">Students with attendance rate below 75% will be flagged here.</p>
+          </div>
+        </div>
+
+        <!-- Recent Activities -->
+        <div class="data-section-card">
+          <div class="section-header">
+            <h2 class="section-title">
+              <span class="section-title-icon section-title-icon-purple">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 14 14"></polyline>
+                </svg>
+              </span>
+              <span>Recent Activities</span>
+            </h2>
+          </div>
+
+          <div id="recentActivitiesList" class="activities-container">
+            <!-- Populated dynamically -->
+          </div>
+
+          <!-- Empty State -->
+          <div id="recentActivitiesEmpty" class="activity-empty">
+            <div class="empty-state-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+              </svg>
+            </div>
+            <p class="empty-state-text">No recent activities</p>
+            <p class="empty-state-subtext">System audit logs and campus events will appear here.</p>
+          </div>
+        </div>
+
+        <!-- Upcoming Academic Events & Exams -->
+        <div class="data-section-card" id="upcomingEventsCard" style="grid-column: 1 / -1;">
+          <div class="section-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <h2 class="section-title">
+              <span class="section-title-icon section-title-icon-purple">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+              </span>
+              <span>Upcoming Academic Events & Exams</span>
+            </h2>
+            <a href="/pages/admin/calendar.html" class="chart-badge" style="text-decoration: none; font-size: 12px; font-weight: 600; color: var(--admin-primary);">View Calendar &rarr;</a>
+          </div>
+
+          <div id="upcomingEventsList" class="activities-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; padding: 12px;">
+            <!-- Populated dynamically -->
+          </div>
+
+          <div id="upcomingEventsEmpty" class="activity-empty">
+            <div class="empty-state-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+            </div>
+            <p class="empty-state-text">No upcoming academic events</p>
+            <p class="empty-state-subtext">Exams, holidays, and campus seminars will appear here.</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ========================================================================
+       4. PROFILE DETAILS MODAL
+       ======================================================================== -->
+  <div id="profileModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="profileModalTitle" class="modal-title">Admin Account Profile</h3>
+        <button type="button" id="profileModalClose" class="modal-close-btn" aria-label="Close modal">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ul class="info-list">
+          <li class="info-item">
+            <span class="info-label">Full Name</span>
+            <span class="info-value" id="modalProfileFullName">-</span>
+          </li>
+          <li class="info-item">
+            <span class="info-label">Username</span>
+            <span class="info-value" id="modalProfileUsername">-</span>
+          </li>
+          <li class="info-item">
+            <span class="info-label">Email Address</span>
+            <span class="info-value" id="modalProfileEmail">-</span>
+          </li>
+          <li class="info-item">
+            <span class="info-label">Phone</span>
+            <span class="info-value" id="modalProfilePhone">-</span>
+          </li>
+          <li class="info-item">
+            <span class="info-label">Assigned Role</span>
+            <span class="info-value"><span class="badge badge-admin" id="modalProfileRole">ADMIN</span></span>
+          </li>
+          <li class="info-item">
+            <span class="info-label">Account Created</span>
+            <span class="info-value" id="modalProfileCreated">-</span>
+          </li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('profileModal').classList.add('hidden')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Safe Chart.js CDN (falls back safely if offline) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+
+  <!-- Core Portal Scripts -->
+  <script src="/js/api.js"></script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/admin-dashboard.js"></script>
+  <script src="/js/admin-shell.js"></script>
+  <script src="/js/user-menu.js"></script>
+</body>
+</html>

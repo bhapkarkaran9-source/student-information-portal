@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile - Student Information Portal</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/student-dashboard.css">
+</head>
+<body class="student-portal-body">
+
+  <!-- Mobile Sidebar Backdrop -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop hidden"></div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- FIXED LEFT SIDEBAR -->
+  <aside id="studentSidebar" class="student-sidebar" aria-label="Student Navigation">
+    <div class="sidebar-header">
+      <a href="/pages/student/dashboard.html" class="sidebar-brand">
+        <div class="sidebar-logo" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/>
+          </svg>
+        </div>
+        <div class="sidebar-title">
+          <span class="brand-main">Student Portal</span>
+          <span class="brand-sub">STUDENT</span>
+        </div>
+      </a>
+      <button type="button" id="closeSidebarBtn" class="sidebar-close-btn" aria-label="Close menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Navigation List -->
+    <nav class="sidebar-nav">
+      <div class="nav-group-title">ACADEMIC MODULES</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/student/dashboard.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/profile.html" class="nav-link active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span>My Profile</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/courses.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            </svg>
+            <span>My Courses / Enrollment</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/attendance.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 11l3 3L22 4"></path>
+              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+            </svg>
+            <span>My Attendance</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/grades.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+            <span>My Results / Grades</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/timetable.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span>Timetable</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/assignments.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+              <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+            </svg>
+            <span>Assignments</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/study-material.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+            </svg>
+            <span>Study Material</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="nav-group-title">CAMPUS & SERVICES</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/student/notices.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span>Notices</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/notifications.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 14 14"></polyline>
+            </svg>
+            <span>Notifications</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/queries.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+            <span>Queries</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/reports.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            <span>Reports</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Pinned Sidebar User Profile Footer -->
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sidebarAvatar">S</div>
+        <div class="sidebar-user-info">
+          <span class="sidebar-user-name" id="sidebarUserName">Student</span>
+          <span class="sidebar-user-role">STUDENT</span>
+        </div>
+      </div>
+      <button type="button" id="sidebarLogoutBtn" class="btn-sidebar-logout" title="Sign Out" aria-label="Sign Out">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16 17 21 12 16 7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN WRAPPER -->
+  <div class="student-main-wrapper">
+    <!-- STICKY TOP HEADER -->
+    <header class="student-header" id="studentHeader">
+      <div class="header-left">
+        <button type="button" id="toggleSidebarBtn" class="sidebar-toggle-btn" aria-label="Open menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <div class="header-heading-group">
+          <h1 class="header-title">My Profile</h1>
+          <p class="header-subtitle">Personal credentials, academic records, and security profile</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <button type="button" id="headerNotificationBtn" class="header-notify-btn" title="View notifications" aria-label="Notifications">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          <span id="headerNotificationDot" class="header-notify-badge"></span>
+        </button>
+        <div class="profile-dropdown-wrapper" id="profileDropdownWrapper">
+          <button type="button" id="profileDropdownBtn" class="header-profile-btn" aria-haspopup="true" aria-expanded="false" aria-label="User profile menu">
+            <div class="header-avatar" id="headerUserAvatar">S</div>
+            <div class="header-profile-meta">
+              <span class="header-profile-name" id="navUserName">Student</span>
+              <span class="header-profile-badge" id="userRoleBadge">STUDENT</span>
+            </div>
+            <svg class="dropdown-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="dashboard-main">
+
+      <!-- Profile Header Hero Card (Locked Minimal SaaS Styling) -->
+      <section class="card mb-4" style="background: #ffffff; color: #0f172a; border: 1px solid #e2e8f0; border-left: 4px solid #2563eb; border-radius: 8px; padding: 24px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);">
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
+          
+          <!-- LEFT: 92px Circular Avatar with Camera Overlay -->
+          <div style="display: flex; align-items: center; gap: 20px; flex: 1 1 320px; min-width: 0;">
+            <div style="position: relative; width: 92px; height: 92px; flex-shrink: 0;">
+              <div class="header-avatar" id="profileLargeAvatar" style="width: 92px; height: 92px; font-size: 34px; font-weight: 700; background: #eff6ff; color: #2563eb; border: 2px solid #bfdbfe; border-radius: 50%; display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: 0 2px 5px rgba(37,99,235,0.12);">S</div>
+              <button type="button" id="btnAvatarEdit" class="btn-avatar-camera" aria-label="Change profile photo" title="Change profile photo" style="position: absolute; bottom: 0; right: 0; width: 32px; height: 32px; border-radius: 50%; background: #2563eb; color: #ffffff; border: 2.5px solid #ffffff; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.18); transition: transform 0.15s ease, background 0.15s ease;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                  <circle cx="12" cy="13" r="4"/>
+                </svg>
+              </button>
+            </div>
+
+            <!-- MIDDLE: Identity & Academic Metadata Hierarchy -->
+            <div style="min-width: 0; flex: 1;">
+              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px;">
+                <h2 style="font-size: 22px; font-weight: 700; margin: 0; color: #0f172a; line-height: 1.25; word-break: break-word;" id="profFullName">Student</h2>
+                <span class="badge" style="font-size: 11px; font-weight: 700; padding: 2px 8px; background: #dbeafe; color: #1e40af; border-radius: 4px;">STUDENT</span>
+                <span id="profStatusBadge" class="badge badge-success" style="font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px;">Active Enrolled</span>
+              </div>
+              <p style="margin: 0; color: #64748b; font-size: 13.5px; line-height: 1.5; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                <span id="profPrn" style="font-weight: 600; color: #1e293b;">PRN</span>
+                <span aria-hidden="true">&bull;</span>
+                <span id="profDepartment">Information Technology</span>
+                <span aria-hidden="true">&bull;</span>
+                <span id="profClass">TY-IT</span>
+                <span aria-hidden="true">&bull;</span>
+                <span id="profSemester">Semester 5</span>
+              </p>
+            </div>
+          </div>
+
+          <!-- RIGHT: Quick Action Buttons -->
+          <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+            <button type="button" class="btn btn-secondary" id="btnChangePhoto" style="background: #f8fafc; color: #1e293b; border: 1px solid #cbd5e1; display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: 13.5px; padding: 8px 14px; border-radius: 6px; cursor: pointer;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                <circle cx="12" cy="13" r="4"/>
+              </svg>
+              Change Photo
+            </button>
+            <button type="button" class="btn btn-primary" id="btnOpenEditProfileModal" style="background: #2563eb; color: #ffffff; border: 1px solid #2563eb; display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: 13.5px; padding: 8px 14px; border-radius: 6px; cursor: pointer;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
+              Edit Profile
+            </button>
+            <button type="button" class="btn btn-secondary" id="btnOpenPasswordModal" style="background: #ffffff; color: #1e293b; border: 1px solid #cbd5e1; display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: 13.5px; padding: 8px 14px; border-radius: 6px; cursor: pointer;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              Change Password
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Details 2-Column Grid -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
+
+        <!-- Card 1: Academic Details (Blue Left Border) -->
+        <section class="card" style="background: #ffffff; border: 1px solid #e2e8f0; border-left: 4px solid #2563eb; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); padding: 20px;">
+          <div style="border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+              <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/>
+            </svg>
+            <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: #0f172a;">Academic Details</h3>
+          </div>
+          <table style="width: 100%; border-collapse: collapse; font-size: 13.5px;">
+            <tbody>
+              <tr style="border-bottom: 1px solid #f8fafc;">
+                <td style="padding: 9px 0; font-weight: 600; color: #64748b; width: 42%;">PRN Number</td>
+                <td id="detPrn" style="padding: 9px 0; font-weight: 600; color: #0f172a;">-</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #f8fafc;">
+                <td style="padding: 9px 0; font-weight: 600; color: #64748b;">Roll Number</td>
+                <td id="detRollNo" style="padding: 9px 0; color: #0f172a;">-</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #f8fafc;">
+                <td style="padding: 9px 0; font-weight: 600; color: #64748b;">Department</td>
+                <td id="detDept" style="padding: 9px 0; color: #0f172a;">-</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #f8fafc;">
+                <td style="padding: 9px 0; font-weight: 600; color: #64748b;">Current Semester</td>
+                <td id="detSem" style="padding: 9px 0; color: #0f172a;">-</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #f8fafc;">
+                <td style="padding: 9px 0; font-weight: 600; color: #64748b;">Class</td>
+                <td id="detClass" style="padding: 9px 0; color: #0f172a;">-</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #f8fafc;">
+                <td style="padding: 9px 0; font-weight: 600; color: #64748b;">Division</td>
+                <td id="detDiv" style="padding: 9px 0; color: #0f172a;">-</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #f8fafc;">
+                <td style="padding: 9px 0; font-weight: 600; color: #64748b;">Admission Batch</td>
+                <td id="detBatch" style="padding: 9px 0; color: #0f172a;">-</td>
+              </tr>
+              <tr>
+                <td style="padding: 9px 0; font-weight: 600; color: #64748b;">Academic Status</td>
+                <td id="detAcademicStatus" style="padding: 9px 0;"><span class="badge badge-success" style="font-size: 11px; padding: 2px 8px;">Active</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- Card 2: Personal & Contact Details (Indigo Left Border) -->
+        <section class="card" style="background: #ffffff; border: 1px solid #e2e8f0; border-left: 4px solid #4f46e5; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); padding: 20px;">
+          <div style="border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+            <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: #0f172a;">Personal &amp; Contact Details</h3>
+          </div>
+          <table style="width: 100%; border-collapse: collapse; font-size: 13.5px;">
+            <tbody>
+              <tr style="border-bottom: 1px solid #f8fafc;">
+                <td style="padding: 9px 0; font-weight: 600; color: #64748b; width: 42%;">Institutional Email</td>
+                <td id="detEmail" style="padding: 9px 0; color: #0f172a; word-break: break-all;">-</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #f8fafc;">
+                <td style="padding: 9px 0; font-weight: 600; color: #64748b;">Phone Number</td>
+                <td id="detPhone" style="padding: 9px 0; color: #0f172a;">Not Provided</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #f8fafc;">
+                <td style="padding: 9px 0; font-weight: 600; color: #64748b;">Gender</td>
+                <td id="detGender" style="padding: 9px 0; color: #0f172a;">Not Provided</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #f8fafc;">
+                <td style="padding: 9px 0; font-weight: 600; color: #64748b;">Date of Birth</td>
+                <td id="detDob" style="padding: 9px 0; color: #0f172a;">Not Provided</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #f8fafc;">
+                <td style="padding: 9px 0; font-weight: 600; color: #64748b;">Permanent Address</td>
+                <td id="detAddress" style="padding: 9px 0; color: #0f172a;">Not Provided</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #f8fafc;">
+                <td style="padding: 9px 0; font-weight: 600; color: #64748b;">Blood Group</td>
+                <td id="detBlood" style="padding: 9px 0; color: #0f172a;">Not Provided</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #f8fafc;">
+                <td style="padding: 9px 0; font-weight: 600; color: #64748b;">Faculty Mentor</td>
+                <td id="detMentor" style="padding: 9px 0; color: #0f172a;">Dr. Rohini Rankhamb (Assistant Professor)</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #f8fafc;">
+                <td style="padding: 9px 0; font-weight: 600; color: #64748b;">Emergency Contact</td>
+                <td id="detEmergency" style="padding: 9px 0; color: #0f172a;">Not Provided</td>
+              </tr>
+              <tr>
+                <td style="padding: 9px 0; font-weight: 600; color: #64748b;">Parent / Guardian</td>
+                <td id="detGuardian" style="padding: 9px 0; color: #0f172a;">Not Provided</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- Card 3: Biometric Face Authentication (PRESERVED INTACT) -->
+        <section class="card" id="faceAuthCard" style="background: #ffffff; border: 1px solid #e2e8f0; border-left: 4px solid #0d9488; border-radius: 8px; padding: 20px; display: flex; flex-direction: column; box-shadow: 0 1px 3px rgba(0,0,0,0.05); grid-column: 1 / -1;">
+          <div class="card-header" style="border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between;">
+            <h3 class="card-title" style="margin: 0; font-size: 16px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0d9488" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+                <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                <line x1="15" y1="9" x2="15.01" y2="9"></line>
+              </svg>
+              Face Authentication
+            </h3>
+            <span id="faceAuthStatusBadge" class="badge" style="font-size: 12px; padding: 4px 10px; background: #f1f5f9; color: #475569; font-weight: 700; border-radius: 4px;">Loading...</span>
+          </div>
+          <div class="card-body" style="display: flex; flex-direction: column; justify-content: space-between; flex: 1;">
+            <div>
+              <p style="margin: 0 0 14px 0; font-size: 13.5px; color: #64748b; line-height: 1.5;">
+                Biometric face authentication allows instant and passwordless verification using your camera and anti-spoofing liveness detection.
+              </p>
+              
+              <div id="faceAuthInfoRow" class="hidden" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px 14px; margin-bottom: 14px; font-size: 13px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span style="color: #64748b; font-weight: 600;">Registered On:</span>
+                  <span id="faceAuthRegisteredDate" style="color: #0f172a; font-weight: 700;">-</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px;">
+                  <span style="color: #64748b; font-weight: 600;">Liveness Protection:</span>
+                  <span id="faceAuthLivenessMethod" style="color: #166534; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    Active EAR Eye Blink
+                  </span>
+                </div>
+              </div>
+
+              <div style="background: #eff6ff; border: 1px solid #dbeafe; border-radius: 6px; padding: 10px 12px; margin-bottom: 16px; font-size: 12px; color: #1e40af; line-height: 1.4;">
+                <strong>🔒 Privacy Notice:</strong> Your camera video is processed locally. Raw photos and video are not stored or uploaded. Only the encrypted face representation is used for authentication.
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px;">
+              <button type="button" id="btnRegisterFace" class="btn btn-primary hidden" style="flex: 1 1 200px; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 9px 14px; font-size: 13.5px; font-weight: 600; border-radius: 6px; background: #0d9488; color: #fff; border: none; cursor: pointer;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                Register Face
+              </button>
+              <button type="button" id="btnTestFace" class="btn btn-secondary hidden" style="flex: 1 1 200px; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 9px 14px; font-size: 13.5px; font-weight: 600; border-radius: 6px; background: #f1f5f9; color: #1e293b; border: 1px solid #cbd5e1; cursor: pointer;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                Test Face Recognition
+              </button>
+              <button type="button" id="btnRemoveFace" class="btn btn-danger hidden" style="flex: 1 1 200px; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 9px 14px; font-size: 13.5px; font-weight: 600; border-radius: 6px; background: #fff1f2; color: #be123c; border: 1px solid #fecdd3; cursor: pointer;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                Remove Face Credential
+              </button>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Reusable Profile Photo Modal -->
+  <div id="photoUploadModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="photoModalTitle">
+    <div class="modal-card" style="max-width: 480px; width: 92%; margin: 20px auto; background: #ffffff; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); overflow: hidden;">
+      <div class="modal-header" style="padding: 16px 20px; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between;">
+        <h3 id="photoModalTitle" class="modal-title" style="margin: 0; font-size: 17px; font-weight: 700; color: #0f172a;">Update Profile Photo</h3>
+        <button type="button" class="modal-close-btn" data-close-modal="photoUploadModal" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body" style="padding: 20px;">
+        <div id="photoModalError" class="alert alert-danger hidden" style="background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; font-size: 13px; padding: 10px 14px; border-radius: 6px; margin-bottom: 16px;"></div>
+
+        <!-- Dropzone -->
+        <div id="photoDropzone" style="border: 2px dashed #cbd5e1; border-radius: 8px; padding: 24px 16px; text-align: center; background: #f8fafc; cursor: pointer; transition: all 0.2s ease;">
+          <input type="file" id="photoFileInput" accept="image/jpeg,image/png,image/webp" style="display: none;">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="margin: 0 auto 10px; display: block;">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+          <p style="margin: 0 0 6px 0; font-size: 14px; font-weight: 600; color: #1e293b;">
+            Drag &amp; drop an image here, or <span style="color: #2563eb; text-decoration: underline;">browse</span>
+          </p>
+          <p style="margin: 0; font-size: 12px; color: #64748b;">
+            JPG, PNG or WEBP &bull; Maximum 5 MB
+          </p>
+        </div>
+
+        <!-- Circular Preview Container (shown when file is selected) -->
+        <div id="photoPreviewContainer" class="hidden" style="text-align: center; padding: 10px 0;">
+          <div style="width: 120px; height: 120px; border-radius: 50%; overflow: hidden; margin: 0 auto 12px; border: 3px solid #2563eb; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+            <img id="photoPreviewImg" src="" alt="Selected profile preview" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+          </div>
+          <p id="photoFileMeta" style="margin: 0 0 8px 0; font-size: 13px; font-weight: 600; color: #334155; word-break: break-all;"></p>
+          <button type="button" class="btn btn-sm btn-secondary" onclick="document.getElementById('photoFileInput').click();" style="font-size: 12px; padding: 4px 10px; background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; border-radius: 4px; cursor: pointer;">
+            Choose Different Image
+          </button>
+        </div>
+      </div>
+      <div class="modal-footer" style="padding: 14px 20px; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;">
+        <button type="button" id="btnRemovePhoto" class="btn btn-danger hidden" style="background: #fff1f2; color: #be123c; border: 1px solid #fecdd3; font-size: 13px; padding: 8px 14px; border-radius: 6px; cursor: pointer;">
+          Remove Current Photo
+        </button>
+        <div style="display: flex; gap: 10px; margin-left: auto;">
+          <button type="button" id="btnCancelPhotoUpload" class="btn btn-secondary" style="background: #ffffff; color: #475569; border: 1px solid #cbd5e1; font-size: 13px; padding: 8px 14px; border-radius: 6px; cursor: pointer;">
+            Cancel
+          </button>
+          <button type="button" id="btnConfirmPhotoUpload" class="btn btn-primary" disabled style="background: #2563eb; color: #ffffff; border: none; font-size: 13px; font-weight: 600; padding: 8px 16px; border-radius: 6px; cursor: pointer;">
+            Upload Photo
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Profile Modal -->
+  <div id="editProfileModal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Edit Contact Information</h3>
+        <button type="button" class="modal-close-btn" data-close-modal="editProfileModal">&times;</button>
+      </div>
+      <form id="profileEditForm">
+        <div class="modal-body">
+          <div class="modal-form-group">
+            <label for="inputFirst">First Name</label>
+            <input type="text" id="inputFirst" required class="form-control">
+          </div>
+          <div class="modal-form-group">
+            <label for="inputLast">Last Name</label>
+            <input type="text" id="inputLast" required class="form-control">
+          </div>
+          <div class="modal-form-group">
+            <label for="inputEmail">Email Address</label>
+            <input type="email" id="inputEmail" required class="form-control">
+          </div>
+          <div class="modal-form-group">
+            <label for="inputPhone">Phone Number</label>
+            <input type="tel" id="inputPhone" class="form-control">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal="editProfileModal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Change Password Modal -->
+  <div id="pwdModal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Change Password</h3>
+        <button type="button" class="modal-close-btn" data-close-modal="pwdModal">&times;</button>
+      </div>
+      <form id="pwdForm">
+        <div class="modal-body">
+          <div class="modal-form-group">
+            <label for="curPwd">Current Password</label>
+            <input type="password" id="curPwd" required class="form-control">
+          </div>
+          <div class="modal-form-group">
+            <label for="newPwd">New Password</label>
+            <input type="password" id="newPwd" required minlength="6" class="form-control">
+          </div>
+          <div class="modal-form-group">
+            <label for="confPwd">Confirm New Password</label>
+            <input type="password" id="confPwd" required minlength="6" class="form-control">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal="pwdModal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Update Password</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/js/api.js"></script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/student-shell.js"></script>
+  <script src="/js/user-menu.js"></script>
+  <script src="/js/profile-photo.js"></script>
+  <!-- BIOMETRIC FACE AUTH SCRIPTS (PRESERVED INTACT) -->
+  <script src="/vendor/face-api/face-api.min.js"></script>
+  <script src="/js/face-auth-modal.js"></script>
+  <script src="/js/face-auth-profile.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const authUser = await requireAuth('STUDENT');
+      if (!authUser) return;
+
+      let currentUser = Object.assign({}, authUser);
+
+      function renderUser(u) {
+        const first = u.first_name || u.username || 'Student';
+        const full = [u.first_name, u.last_name].filter(Boolean).join(' ') || u.username || 'Student';
+        const initial = (first[0] || 'S').toUpperCase();
+
+        document.getElementById('profFullName').textContent = full;
+        document.getElementById('detEmail').textContent = u.email || 'Not Provided';
+        document.getElementById('detPhone').textContent = u.phone || 'Not Provided';
+
+        // Avatar rendering with image support and initials fallback
+        const largeAvatar = document.getElementById('profileLargeAvatar');
+        if (largeAvatar) {
+          if (typeof window.renderAvatarElement === 'function') {
+            window.renderAvatarElement(largeAvatar, u.profile_photo_url, initial, full + ' Profile Photo');
+          } else if (u.profile_photo_url) {
+            largeAvatar.innerHTML = `<img src="${u.profile_photo_url}" alt="${full} Profile Photo" style="width: 100%; height: 100%; object-fit: cover; border-radius: inherit; display: block;" onerror="this.onerror=null;this.parentElement.textContent='${initial}'">`;
+          } else {
+            largeAvatar.innerHTML = '';
+            largeAvatar.textContent = initial;
+          }
+        }
+
+        const prn = u.prn_number || u.enrollment_number || `PRN-${new Date(u.created_at || Date.now()).getFullYear()}-${String(u.id || u.user_id || 1).padStart(4, '0')}`;
+        document.getElementById('profPrn').textContent = prn;
+        document.getElementById('detPrn').textContent = prn;
+        document.getElementById('detRollNo').textContent = u.enrollment_number || prn;
+        
+        const dept = u.department_name || 'Information Technology';
+        document.getElementById('profDepartment').textContent = dept;
+        document.getElementById('detDept').textContent = dept;
+
+        const className = u.class_name || 'TY-IT';
+        const divName = u.division || 'A';
+        document.getElementById('profClass').textContent = `${className}${u.division ? ' (Div ' + u.division + ')' : ''}`;
+        document.getElementById('detClass').textContent = className;
+        document.getElementById('detDiv').textContent = divName;
+
+        const semStr = u.semester ? `Semester ${u.semester}` : 'Semester 5';
+        document.getElementById('profSemester').textContent = semStr;
+        document.getElementById('detSem').textContent = semStr;
+
+        document.getElementById('detBatch').textContent = u.academic_year || (u.admission_date ? new Date(u.admission_date).getFullYear() : '2026-2027');
+        
+        if (u.gender) document.getElementById('detGender').textContent = u.gender;
+        if (u.date_of_birth) {
+          const d = new Date(u.date_of_birth);
+          document.getElementById('detDob').textContent = isNaN(d.getTime()) ? u.date_of_birth : d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+        }
+        if (u.address) document.getElementById('detAddress').textContent = u.address;
+        if (u.blood_group) document.getElementById('detBlood').textContent = u.blood_group;
+        document.getElementById('detMentor').textContent = 'Dr. Rohini Rankhamb (Assistant Professor)';
+        if (u.emergency_contact || u.phone) document.getElementById('detEmergency').textContent = u.emergency_contact || u.phone;
+        if (u.guardian_name) document.getElementById('detGuardian').textContent = u.guardian_name;
+      }
+
+      // Initial render from local session
+      renderUser(currentUser);
+
+      // Fetch live details from canonical /api/profile/me
+      try {
+        const res = await apiRequest('/profile/me');
+        if (res.ok && res.data && res.data.user) {
+          currentUser = Object.assign({}, currentUser, res.data.user);
+          localStorage.setItem('user', JSON.stringify(currentUser));
+          renderUser(currentUser);
+        }
+      } catch (e) {
+        console.warn('Failed to refresh user profile from canonical API:', e);
+      }
+
+      // Listen for reactive profile photo updates
+      window.addEventListener('user-profile-updated', (event) => {
+        if (event.detail && event.detail.user) {
+          currentUser = Object.assign({}, currentUser, event.detail.user);
+          renderUser(currentUser);
+        }
+      });
+
+      // Modal openers
+      document.getElementById('btnOpenEditProfileModal')?.addEventListener('click', () => {
+        document.getElementById('inputFirst').value = currentUser.first_name || '';
+        document.getElementById('inputLast').value = currentUser.last_name || '';
+        document.getElementById('inputEmail').value = currentUser.email || '';
+        document.getElementById('inputPhone').value = currentUser.phone || '';
+        document.getElementById('editProfileModal').classList.remove('hidden');
+      });
+
+      document.getElementById('btnOpenPasswordModal')?.addEventListener('click', () => {
+        document.getElementById('pwdForm')?.reset();
+        document.getElementById('pwdModal').classList.remove('hidden');
+      });
+
+      // Close buttons
+      document.querySelectorAll('[data-close-modal]').forEach(b => {
+        b.addEventListener('click', () => {
+          document.getElementById(b.getAttribute('data-close-modal'))?.classList.add('hidden');
+        });
+      });
+
+      // Edit profile submit (calls PUT /api/users/me)
+      document.getElementById('profileEditForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const first_name = document.getElementById('inputFirst').value.trim();
+        const last_name = document.getElementById('inputLast').value.trim();
+        const email = document.getElementById('inputEmail').value.trim();
+        const phone = document.getElementById('inputPhone').value.trim();
+
+        try {
+          const res = await apiRequest('/users/me', {
+            method: 'PUT',
+            body: JSON.stringify({ first_name, last_name, email, phone })
+          });
+
+          if (res.ok) {
+            currentUser.first_name = first_name;
+            currentUser.last_name = last_name;
+            currentUser.email = email;
+            currentUser.phone = phone;
+            localStorage.setItem('user', JSON.stringify(currentUser));
+            renderUser(currentUser);
+            window.dispatchEvent(new CustomEvent('user-profile-updated', { detail: { user: currentUser } }));
+            document.getElementById('editProfileModal').classList.add('hidden');
+            showToast('Profile information updated successfully.', 'success');
+          } else {
+            showToast(res.data?.message || 'Failed to update profile.', 'error');
+          }
+        } catch (err) {
+          showToast('Network error while updating profile.', 'error');
+        }
+      });
+
+      // Change password submit (calls PUT /api/auth/change-password)
+      document.getElementById('pwdForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const current_password = document.getElementById('curPwd').value;
+        const new_password = document.getElementById('newPwd').value;
+        const confirm_password = document.getElementById('confPwd').value;
+
+        if (new_password !== confirm_password) {
+          showToast('New passwords do not match!', 'error');
+          return;
+        }
+
+        if (new_password.length < 6) {
+          showToast('New password must be at least 6 characters long.', 'error');
+          return;
+        }
+
+        try {
+          const res = await apiRequest('/auth/change-password', {
+            method: 'PUT',
+            body: JSON.stringify({ current_password, new_password, confirm_password })
+          });
+
+          if (res.ok) {
+            document.getElementById('pwdModal').classList.add('hidden');
+            document.getElementById('pwdForm').reset();
+            showToast('Password updated successfully.', 'success');
+          } else {
+            showToast(res.data?.message || 'Failed to change password.', 'error');
+          }
+        } catch (err) {
+          showToast('Network error while changing password.', 'error');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

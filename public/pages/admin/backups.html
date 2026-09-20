@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Backup & Restore - Student Information Portal</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/admin-erp-modules.css">
+  <link rel="stylesheet" href="/css/admin-theme.css">
+</head>
+<body class="admin-dashboard-body">
+
+  <!-- Floating Toast Notifications -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- Mobile Backdrop Overlay -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop hidden" aria-hidden="true"></div>
+
+  <!-- ========================================================================
+       1. FIXED ADMIN SIDEBAR (CANONICAL)
+       ======================================================================== -->
+  <aside id="adminSidebar" class="admin-sidebar" aria-label="Portal Navigation">
+    <!-- Brand Header -->
+    <div class="sidebar-header">
+      <a href="/pages/admin/dashboard.html" class="sidebar-brand">
+        <div class="sidebar-logo" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/>
+          </svg>
+        </div>
+        <div class="sidebar-title">
+          <span class="brand-main">Student Portal</span>
+          <span class="brand-sub">ADMINISTRATION</span>
+        </div>
+      </a>
+      <button type="button" id="sidebarCloseBtn" class="sidebar-close-btn" aria-label="Close menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Scrollable Navigation Groups -->
+    <nav class="sidebar-nav" id="sidebarNavContainer">
+      <!-- OVERVIEW -->
+      <div class="nav-group-title">Overview</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/admin/dashboard.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+            <span>Dashboard</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- USER MANAGEMENT -->
+      <div class="nav-group-title">User Management</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/admin/users.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            <span>Users</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/students.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span>Students</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/teachers.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+            </svg>
+            <span>Teachers</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- ACADEMICS -->
+      <div class="nav-group-title">Academics</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/admin/departments.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+              <path d="M9 22v-4h6v4"></path>
+              <path d="M8 6h.01M16 6h.01M12 6h.01M8 10h.01M16 10h.01M12 10h.01M8 14h.01M16 14h.01M12 14h.01"></path>
+            </svg>
+            <span>Departments</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/courses.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            </svg>
+            <span>Courses</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/enrollments.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="8.5" cy="7" r="4"></circle>
+              <polyline points="17 11 19 13 23 9"></polyline>
+            </svg>
+            <span>Enrollment</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/timetable.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span>Timetable</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- ACADEMIC OPERATIONS -->
+      <div class="nav-group-title">Academic Operations</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/admin/attendance.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 11 12 14 22 4"></polyline>
+              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+            </svg>
+            <span>Attendance</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/grades.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="9" y1="15" x2="15" y2="15"></line>
+            </svg>
+            <span>Grades</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/performance.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+            <span>Performance</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- ACADEMIC RESOURCES -->
+      <div class="nav-group-title">Academic Resources</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/admin/assignments.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            <span>Assignments</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/study-material.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            <span>Study Material</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/notices.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span>Notice Board</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- COMMUNICATION & SYSTEM -->
+      <div class="nav-group-title">Communication & System</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/admin/notifications.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span>Notifications</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/queries.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+            <span>Queries</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/reports.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            <span>Reports</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/audit-logs.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <span>Audit Logs</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/backups.html" class="nav-link active" aria-current="page">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            <span>Backup & Restore</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Sidebar Footer / Current Admin Info -->
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sidebarAdminAvatar">S</div>
+        <div class="sidebar-user-info">
+          <span class="sidebar-user-name" id="sidebarAdminName">System Admin</span>
+          <span class="sidebar-user-role" id="sidebarAdminEmail">admin@portal.local</span>
+        </div>
+      </div>
+      <button type="button" class="btn-sidebar-logout" id="sidebarLogoutBtn" title="Sign Out">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16 17 21 12 16 7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ========================================================================
+       2. MAIN CONTENT WRAPPER
+       ======================================================================== -->
+  <div class="admin-layout">
+    
+    <!-- Top Header -->
+    <header class="admin-header">
+      <div class="header-left">
+        <button type="button" id="sidebarToggleBtn" class="sidebar-toggle-btn" aria-label="Toggle navigation menu">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <div class="header-breadcrumbs">
+          <a href="/pages/admin/dashboard.html" class="breadcrumb-item">Dashboard</a>
+          <span class="breadcrumb-separator">/</span>
+          <span class="breadcrumb-current">Backup & Restore</span>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <!-- Profile Dropdown Trigger -->
+        <div class="profile-dropdown-wrapper">
+          <button type="button" class="header-profile-btn" id="profileDropdownTrigger" aria-haspopup="true" aria-expanded="false" aria-label="Administrator Menu">
+            <div class="header-avatar" id="headerAdminAvatar">S</div>
+            <div class="header-admin-info">
+              <span class="header-admin-name" id="headerAdminName">System Admin</span>
+              <span class="header-admin-badge">ADMIN</span>
+            </div>
+            <svg class="dropdown-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+
+          <!-- Standardized 7-Item Dropdown Menu -->
+          <div class="profile-dropdown-menu" id="profileDropdownMenu" role="menu">
+            <div class="dropdown-header">
+              <div id="dropdownAdminName" class="dropdown-user-name">System Admin</div>
+              <div id="dropdownAdminEmail" class="dropdown-email">admin@portal.local</div>
+            </div>
+            
+            <button type="button" id="dropdownMyProfile" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <span>My Profile</span>
+            </button>
+
+            <button type="button" id="dropdownEditProfile" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
+              <span>Edit Profile</span>
+            </button>
+
+            <button type="button" id="dropdownChangePassword" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              <span>Change Password</span>
+            </button>
+
+            <button type="button" id="dropdownAccountSettings" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+              </svg>
+              <span>Account Settings</span>
+            </button>
+
+            <a href="/pages/admin/notifications.html" id="dropdownNotifications" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+              <span>Notifications</span>
+            </a>
+
+            <a href="/pages/admin/audit-logs.html" id="dropdownAuditActivity" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+              </svg>
+              <span>Audit Activity</span>
+            </a>
+
+            <div class="dropdown-divider"></div>
+
+            <button type="button" id="dropdownLogoutBtn" class="dropdown-item dropdown-item-danger" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
+              <span>Logout</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- PAGE BODY -->
+    <main class="admin-main">
+      
+      <!-- PAGE HEADER -->
+      <div class="erp-page-header-row">
+        <div>
+          <h1 class="erp-page-title">Backup & Restore Management</h1>
+          <p class="erp-page-subtitle">Enterprise database snapshots, SHA-256 validation, authenticated downloads, and fail-safe restoration for student_portal_db.</p>
+        </div>
+        <div class="erp-header-actions">
+          <button type="button" id="btnRefresh" class="btn-erp btn-erp-secondary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="23 4 23 10 17 10"></polyline>
+              <polyline points="1 20 1 14 7 14"></polyline>
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+            </svg>
+            <span>Refresh</span>
+          </button>
+          <button type="button" id="btnCreateBackup" class="btn-erp btn-erp-primary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            <span id="createBackupBtnText">Create Backup</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- SAFETY INTEGRITY ALERT -->
+      <div class="erp-safety-alert">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+          <line x1="12" y1="9" x2="12" y2="13"></line>
+          <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </svg>
+        <div class="erp-safety-alert-text">
+          <strong>Protected Database Architecture:</strong> Backups and restores are restricted exclusively to the active database <code>student_portal_db</code>. The legacy schema <code>student_information_portal</code> is immutable, safely isolated, and will never be touched by automated routines. An automatic pre-restore safety snapshot is created before any database rewrite.
+        </div>
+      </div>
+
+      <!-- KPI METRIC CARDS (4 GRID) -->
+      <div class="erp-kpi-grid-4">
+        <div class="erp-kpi-card">
+          <div class="erp-kpi-top">
+            <span class="erp-kpi-label">Total Backups</span>
+            <div class="erp-kpi-icon erp-kpi-icon-blue">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+            </div>
+          </div>
+          <div class="erp-kpi-value" id="kpiTotalBackups">0</div>
+          <div class="erp-kpi-meta">All recorded snapshots</div>
+        </div>
+
+        <div class="erp-kpi-card">
+          <div class="erp-kpi-top">
+            <span class="erp-kpi-label">Successful Backups</span>
+            <div class="erp-kpi-icon erp-kpi-icon-green">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+            </div>
+          </div>
+          <div class="erp-kpi-value" id="kpiSuccessfulBackups">0</div>
+          <div class="erp-kpi-meta">Completed & SHA-256 verified</div>
+        </div>
+
+        <div class="erp-kpi-card">
+          <div class="erp-kpi-top">
+            <span class="erp-kpi-label">Failed Backups</span>
+            <div class="erp-kpi-icon erp-kpi-icon-rose">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="15" y1="9" x2="9" y2="15"></line>
+                <line x1="9" y1="9" x2="15" y2="15"></line>
+              </svg>
+            </div>
+          </div>
+          <div class="erp-kpi-value" id="kpiFailedBackups">0</div>
+          <div class="erp-kpi-meta">Errors logged & investigated</div>
+        </div>
+
+        <div class="erp-kpi-card">
+          <div class="erp-kpi-top">
+            <span class="erp-kpi-label">Latest Snapshot</span>
+            <div class="erp-kpi-icon erp-kpi-icon-amber">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+            </div>
+          </div>
+          <div class="erp-kpi-value" id="kpiLatestBackup" style="font-size: 14px; line-height: 1.3;">None</div>
+          <div class="erp-kpi-meta">Most recent completed snapshot</div>
+        </div>
+      </div>
+
+      <!-- ENTERPRISE ACTION CARDS -->
+      <div class="erp-action-cards-grid">
+        <div class="erp-action-card">
+          <div class="erp-action-card-top">
+            <div class="erp-action-card-icon" style="background-color: #eff6ff; color: #7c3aed;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+            </div>
+            <div>
+              <h3 class="erp-action-card-title">Create Database Backup</h3>
+              <p class="erp-action-card-desc">Execute an on-demand SQL snapshot of <code>student_portal_db</code> with automatic SHA-256 checksum hashing.</p>
+            </div>
+          </div>
+          <button type="button" class="btn-erp btn-erp-primary" onclick="document.getElementById('btnCreateBackup').click()" style="width: 100%;">
+            Execute Instant Snapshot
+          </button>
+        </div>
+
+        <div class="erp-action-card">
+          <div class="erp-action-card-top">
+            <div class="erp-action-card-icon" style="background-color: #fef2f2; color: #dc2626;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="erp-action-card-title">Safe Two-Step Restore</h3>
+              <p class="erp-action-card-desc">Two-factor confirmation with automatic pre-restore safety snapshot creation and verification safeguards.</p>
+            </div>
+          </div>
+          <div style="font-size: 12px; color: #64748b; margin-top: 4px; padding: 6px 10px; background-color: #f8fafc; border-radius: 6px; border: 1px solid #e2e8f0;">
+            Use the "Restore" action button on any verified COMPLETED backup in the table below.
+          </div>
+        </div>
+
+        <div class="erp-action-card">
+          <div class="erp-action-card-top">
+            <div class="erp-action-card-icon" style="background-color: #ecfdf5; color: #059669;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="erp-action-card-title">Cryptographic Integrity</h3>
+              <p class="erp-action-card-desc">Verify file availability, exact file size, valid SQL header signature, and SHA-256 checksum authenticity.</p>
+            </div>
+          </div>
+          <div style="font-size: 12px; color: #64748b; margin-top: 4px; padding: 6px 10px; background-color: #f8fafc; border-radius: 6px; border: 1px solid #e2e8f0;">
+            Click "Validate" on any backup row to run deep disk & checksum verification.
+          </div>
+        </div>
+      </div>
+
+      <!-- FILTER & SEARCH BAR -->
+      <div class="erp-filter-card">
+        <div class="erp-filter-grid">
+          
+          <div class="erp-form-group erp-search-group">
+            <label class="erp-form-label" for="filterSearch">Search Backups</label>
+            <div class="erp-search-input-wrapper">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input type="text" id="filterSearch" class="erp-form-control" placeholder="Search filename, status, creator...">
+            </div>
+          </div>
+
+          <div class="erp-form-group">
+            <label class="erp-form-label" for="filterStatus">Status</label>
+            <select id="filterStatus" class="erp-form-select">
+              <option value="">All Statuses</option>
+              <option value="COMPLETED">COMPLETED</option>
+              <option value="IN_PROGRESS">IN_PROGRESS</option>
+              <option value="FAILED">FAILED</option>
+            </select>
+          </div>
+
+          <div class="erp-form-group">
+            <label class="erp-form-label" for="filterType">Backup Type</label>
+            <select id="filterType" class="erp-form-select">
+              <option value="">All Types</option>
+              <option value="FULL_DATABASE">FULL_DATABASE</option>
+            </select>
+          </div>
+
+          <div class="erp-form-group">
+            <label class="erp-form-label" for="filterDateFrom">Date From</label>
+            <input type="date" id="filterDateFrom" class="erp-form-control">
+          </div>
+
+          <div class="erp-form-group">
+            <label class="erp-form-label" for="filterDateTo">Date To</label>
+            <input type="date" id="filterDateTo" class="erp-form-control">
+          </div>
+
+          <div class="erp-form-group" style="align-self: flex-end;">
+            <button type="button" id="btnClearFilters" class="btn-erp btn-erp-secondary" style="width: 100%;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+              <span>Clear Filters</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- BACKUPS TABLE CARD -->
+      <div class="erp-table-card">
+        <div class="erp-table-toolbar">
+          <div>
+            <h3 class="erp-table-title">Backup Snapshots Registry</h3>
+            <p class="erp-table-subtitle">All encrypted and unencrypted backups created for student_portal_db with real-time health checks</p>
+          </div>
+        </div>
+
+        <div class="erp-table-responsive">
+          <table class="erp-table" id="backupsTable">
+            <thead>
+              <tr>
+                <th style="width: 70px;">ID</th>
+                <th>Date & Time</th>
+                <th>Created By</th>
+                <th>Type</th>
+                <th>File Name</th>
+                <th>Size</th>
+                <th>Status</th>
+                <th>Checksum</th>
+                <th style="text-align: right; width: 170px;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="backupsTableBody">
+              <tr>
+                <td colspan="9" style="text-align: center; padding: 2.5rem; color: #64748b;">
+                  Loading backup history...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- PAGINATION BAR -->
+        <div class="erp-pagination" id="paginationWrapper">
+          <div class="erp-pagination-info" id="paginationInfo">
+            Showing 0 to 0 of 0 backups
+          </div>
+          <div class="erp-pagination-btns" id="paginationControls">
+            <button type="button" class="erp-page-btn" id="btnPrevPage" disabled>Previous</button>
+            <span class="page-indicator" id="pageIndicator" style="font-size: 12.5px; font-weight: 600; color: #475569; padding: 0 8px;">Page 1 of 1</span>
+            <button type="button" class="erp-page-btn" id="btnNextPage" disabled>Next</button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ========================================================================
+       MODAL 1: VIEW BACKUP DETAILS
+       ======================================================================== -->
+  <div id="viewModal" class="erp-modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="viewModalTitle">
+    <div class="erp-modal-card erp-modal-card-lg">
+      <div class="erp-modal-header">
+        <h3 class="erp-modal-title" id="viewModalTitle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px; color: #7c3aed;">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+          <span>Backup Snapshot Details</span>
+        </h3>
+        <button type="button" class="erp-modal-close" data-close="viewModal" aria-label="Close modal">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="erp-modal-body">
+        <div class="erp-log-details-grid">
+          <div class="erp-log-detail-item">
+            <div class="erp-log-detail-label">Backup ID</div>
+            <div class="erp-log-detail-value" id="detailId">-</div>
+          </div>
+          <div class="erp-log-detail-item">
+            <div class="erp-log-detail-label">Backup Type</div>
+            <div class="erp-log-detail-value" id="detailType">-</div>
+          </div>
+          <div class="erp-log-detail-item">
+            <div class="erp-log-detail-label">File Name</div>
+            <div class="erp-log-detail-value" id="detailFileName" style="font-family: monospace;">-</div>
+          </div>
+          <div class="erp-log-detail-item">
+            <div class="erp-log-detail-label">Status</div>
+            <div class="erp-log-detail-value" id="detailStatus">-</div>
+          </div>
+          <div class="erp-log-detail-item">
+            <div class="erp-log-detail-label">Created By</div>
+            <div class="erp-log-detail-value" id="detailCreatedBy">-</div>
+          </div>
+          <div class="erp-log-detail-item">
+            <div class="erp-log-detail-label">File Size</div>
+            <div class="erp-log-detail-value" id="detailFileSize">-</div>
+          </div>
+          <div class="erp-log-detail-item">
+            <div class="erp-log-detail-label">Started At</div>
+            <div class="erp-log-detail-value" id="detailStartedAt">-</div>
+          </div>
+          <div class="erp-log-detail-item">
+            <div class="erp-log-detail-label">Completed At</div>
+            <div class="erp-log-detail-value" id="detailCompletedAt">-</div>
+          </div>
+        </div>
+
+        <div class="erp-form-group" style="margin-bottom: 14px;">
+          <label class="erp-form-label">Storage Path on Server</label>
+          <div id="detailFilePath" style="font-family: monospace; font-size: 12px; background: #f8fafc; border: 1px solid #e2e8f0; padding: 8px 12px; border-radius: 6px; color: #334155; word-break: break-all;">-</div>
+        </div>
+
+        <div class="erp-form-group" style="margin-bottom: 14px;">
+          <label class="erp-form-label">Cryptographic SHA-256 Checksum</label>
+          <div id="detailChecksum" style="font-family: monospace; font-size: 12px; background: #f8fafc; border: 1px solid #e2e8f0; padding: 8px 12px; border-radius: 6px; color: #0f172a; word-break: break-all;">-</div>
+        </div>
+
+        <div id="detailErrorRow" style="display: none; margin-top: 14px;">
+          <div class="erp-safety-alert" style="margin-bottom: 0;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <div>
+              <strong>Error Details:</strong>
+              <div id="detailErrorMessage" style="margin-top: 4px; font-family: monospace; font-size: 12px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="erp-modal-footer">
+        <button type="button" class="btn-erp btn-erp-secondary" data-close="viewModal">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL 2: VALIDATION RESULTS
+       ======================================================================== -->
+  <div id="validationModal" class="erp-modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="validationModalTitle">
+    <div class="erp-modal-card">
+      <div class="erp-modal-header">
+        <h3 class="erp-modal-title" id="validationModalTitle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px; color: #059669;">
+            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <span>Backup Integrity Validation</span>
+        </h3>
+        <button type="button" class="erp-modal-close" data-close="validationModal" aria-label="Close modal">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="erp-modal-body">
+        <div id="validationResultBox"></div>
+        <div style="margin-top: 1.25rem;">
+          <h4 style="font-size: 13px; font-weight: 700; color: #334155; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 0.03em;">Integrity Verification Checklist</h4>
+          <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; font-size: 13px;">
+            <li id="valItemFile" style="display: flex; align-items: center; gap: 10px; padding: 8px 12px; background-color: #f8fafc; border-radius: 6px; border: 1px solid #e2e8f0;">
+              <span>📁</span> File existence on server disk
+            </li>
+            <li id="valItemSize" style="display: flex; align-items: center; gap: 10px; padding: 8px 12px; background-color: #f8fafc; border-radius: 6px; border: 1px solid #e2e8f0;">
+              <span>📏</span> File size & readability inspection
+            </li>
+            <li id="valItemChecksum" style="display: flex; align-items: center; gap: 10px; padding: 8px 12px; background-color: #f8fafc; border-radius: 6px; border: 1px solid #e2e8f0;">
+              <span>🔒</span> Cryptographic SHA-256 match
+            </li>
+            <li id="valItemHeader" style="display: flex; align-items: center; gap: 10px; padding: 8px 12px; background-color: #f8fafc; border-radius: 6px; border: 1px solid #e2e8f0;">
+              <span>📜</span> Valid MySQL dump format header signature
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="erp-modal-footer">
+        <button type="button" class="btn-erp btn-erp-secondary" data-close="validationModal">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL 3: TWO-STEP SAFE RESTORE
+       ======================================================================== -->
+  <div id="restoreModal" class="erp-modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="restoreModalTitle">
+    <div class="erp-modal-card">
+      <div class="erp-modal-header">
+        <h3 class="erp-modal-title" id="restoreModalTitle" style="color: #dc2626;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px; color: #dc2626;">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+            <line x1="12" y1="9" x2="12" y2="13"></line>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+          <span>Safe Database Restoration</span>
+        </h3>
+        <button type="button" class="erp-modal-close" data-close="restoreModal" aria-label="Close modal">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="erp-modal-body">
+        
+        <div class="erp-safety-alert" style="margin-bottom: 14px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+            <line x1="12" y1="9" x2="12" y2="13"></line>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+          <div class="erp-safety-alert-text">
+            <strong>CRITICAL SAFETY WARNING:</strong> This operation will replace tables and academic records in <strong>student_portal_db</strong> with the contents of this snapshot.
+            <div style="margin-top: 4px; font-weight: 600;">The legacy database <u>student_information_portal</u> is protected and will NEVER be modified.</div>
+          </div>
+        </div>
+
+        <div style="background-color: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 10px 14px; color: #1e40af; font-size: 12.5px; line-height: 1.45; margin-bottom: 14px;">
+          <strong>Automatic Safety Snapshot:</strong> Before executing the restore, the backend creates and verifies a fresh pre-restore safety snapshot of <code>student_portal_db</code>. If this safety snapshot fails, the restore is instantly aborted.
+        </div>
+
+        <div class="erp-log-details-grid" style="margin-bottom: 14px;">
+          <div class="erp-log-detail-item">
+            <div class="erp-log-detail-label">Target Backup ID</div>
+            <div class="erp-log-detail-value" id="restoreTargetId">-</div>
+          </div>
+          <div class="erp-log-detail-item">
+            <div class="erp-log-detail-label">Target Database</div>
+            <div class="erp-log-detail-value" style="color: #059669;">student_portal_db</div>
+          </div>
+          <div class="erp-log-detail-item" style="grid-column: span 2;">
+            <div class="erp-log-detail-label">Source Snapshot File</div>
+            <div class="erp-log-detail-value" id="restoreTargetFile" style="font-family: monospace; font-size: 12px;">-</div>
+          </div>
+        </div>
+
+        <!-- Step 1 Container -->
+        <div id="restoreStep1">
+          <p style="font-size: 13px; color: #475569; margin-bottom: 12px;">
+            Click <strong>"Prepare Restore Session"</strong> to validate snapshot integrity and generate a single-use authorization token.
+          </p>
+          <button type="button" id="btnPrepareRestore" class="btn-erp btn-erp-secondary" style="width: 100%;">
+            Prepare Restore Session
+          </button>
+        </div>
+
+        <!-- Step 2 Container (Hidden until prepared) -->
+        <div id="restoreStep2" style="display: none;">
+          <div style="background-color: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 10px 12px; font-size: 12.5px; color: #92400e; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+            <span>⚠️</span> Session Prepared! One-time token generated (valid for 5 minutes).
+          </div>
+          <div class="erp-form-group" style="margin-bottom: 14px;">
+            <label for="restoreConfirmInput" class="erp-form-label" style="font-weight: 700; color: #0f172a;">
+              Type <span style="color: #dc2626;">RESTORE</span> in all caps to confirm execution:
+            </label>
+            <input type="text" id="restoreConfirmInput" class="erp-form-control" placeholder="Type RESTORE here" autocomplete="off">
+          </div>
+          <button type="button" id="btnConfirmRestore" class="btn-erp btn-erp-danger" style="width: 100%;" disabled>
+            Confirm & Execute Restore Now
+          </button>
+        </div>
+      </div>
+      <div class="erp-modal-footer">
+        <button type="button" class="btn-erp btn-erp-secondary" data-close="restoreModal">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/admin-backups.js"></script>
+  <script src="/js/admin-shell.js"></script>
+  <script src="/js/user-menu.js"></script>
+</body>
+</html>

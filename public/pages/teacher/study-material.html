@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Study Materials & Handouts - Faculty Portal</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/teacher-dashboard.css">
+  <style>
+    .btn-action-group {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .btn-mat-action {
+      padding: 5px 10px;
+      font-size: 12px;
+      border-radius: 5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+    .btn-mat-view {
+      background: #f8fafc;
+      color: #475569;
+      border: 1px solid #cbd5e1;
+    }
+    .btn-mat-view:hover {
+      background: #e2e8f0;
+    }
+    .btn-mat-download {
+      background: #ccfbf1;
+      color: #0f766e;
+      border: 1px solid #99f6e4;
+    }
+    .btn-mat-download:hover {
+      background: #99f6e4;
+    }
+    .btn-mat-del {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+    .btn-mat-del:hover {
+      background: #fecaca;
+    }
+  </style>
+</head>
+<body class="teacher-layout">
+
+  <!-- Mobile Sidebar Backdrop -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop hidden"></div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- FIXED LEFT SIDEBAR -->
+  <aside id="teacherSidebar" class="teacher-sidebar" aria-label="Faculty Navigation"></aside>
+
+  <!-- MAIN WRAPPER -->
+  <div class="teacher-main-wrapper" style="margin-left: 260px; min-height: 100vh; display: flex; flex-direction: column;">
+    <!-- STICKY TOP HEADER -->
+    <header class="teacher-header" id="teacherHeader">
+      <div class="header-left">
+        <button type="button" id="toggleSidebarBtn" class="sidebar-toggle-btn" aria-label="Open menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <div class="header-heading-group">
+          <h1 class="header-title">Study Materials & Handouts</h1>
+          <p class="header-subtitle">Upload verified lecture slides, course notes, references, and syllabus documents</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <button type="button" id="headerNotificationBtn" class="header-notify-btn" title="View notifications" aria-label="Notifications">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          <span id="headerNotificationDot" class="header-notify-badge hidden"></span>
+        </button>
+        <div class="profile-dropdown-wrapper" id="profileDropdownWrapper">
+          <button type="button" id="profileDropdownBtn" class="header-profile-btn" aria-haspopup="true" aria-expanded="false" aria-label="User profile menu">
+            <div class="header-avatar" id="headerUserAvatar" style="background: linear-gradient(135deg, #0d9488, #059669);">T</div>
+            <div class="header-profile-meta">
+              <span class="header-profile-name" id="navUserName">Faculty Member</span>
+              <span class="header-profile-badge" id="userRoleBadge" style="background: #ccfbf1; color: #0f766e;">TEACHER</span>
+            </div>
+            <svg class="dropdown-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="dashboard-main" style="padding: 24px; flex: 1;">
+      <!-- KPI Stats Row -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px;">
+        <div class="card" style="padding: 16px 20px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px;">
+          <div style="font-size: 13px; color: #64748b; font-weight: 500;">My Uploaded Materials</div>
+          <div id="statTotalMaterials" style="font-size: 24px; font-weight: 700; color: #0f172a; margin-top: 4px;">0</div>
+        </div>
+        <div class="card" style="padding: 16px 20px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px;">
+          <div style="font-size: 13px; color: #64748b; font-weight: 500;">Reference Books &amp; Links</div>
+          <div id="statReferenceBooks" style="font-size: 24px; font-weight: 700; color: #0d9488; margin-top: 4px;">0</div>
+        </div>
+        <div class="card" style="padding: 16px 20px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px;">
+          <div style="font-size: 13px; color: #64748b; font-weight: 500;">Notes &amp; Syllabus Handouts</div>
+          <div id="statLectureSlides" style="font-size: 24px; font-weight: 700; color: #2563eb; margin-top: 4px;">0</div>
+        </div>
+      </div>
+
+      <!-- Toolbar Card -->
+      <div class="card mb-4" style="padding: 16px 20px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+          <label for="materialCourseFilter" style="font-size: 13px; font-weight: 600; color: #475569;">Filter Course:</label>
+          <select id="materialCourseFilter" style="padding: 6px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; background: #ffffff;">
+            <option value="">All Assigned Courses</option>
+          </select>
+        </div>
+        <div>
+          <button type="button" class="btn btn-primary" id="btnOpenUploadMaterial" style="padding: 8px 18px; font-size: 13px; border: none; background: #0d9488; color: #ffffff; border-radius: 6px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            Upload Material
+          </button>
+        </div>
+      </div>
+
+      <!-- Study Materials Container -->
+      <div id="studyMaterialsContainer">
+        <div class="card" style="padding: 48px 24px; text-align: center; background: #ffffff; border: 1px dashed #cbd5e1; border-radius: 8px;">
+          <div style="width: 56px; height: 56px; margin: 0 auto 16px; border-radius: 50%; background: #ccfbf1; display: flex; align-items: center; justify-content: center; color: #0d9488;">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+          </div>
+          <h3 style="font-size: 18px; font-weight: 700; margin: 0 0 8px 0; color: #0f172a;">No Study Materials Uploaded</h3>
+          <p style="color: #64748b; max-width: 480px; margin: 0 auto; font-size: 14px;">Upload lecture slides, reference PDFs, or class notes to distribute to enrolled students.</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Upload Material Modal -->
+  <div id="uploadMaterialModal" class="modal-backdrop" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); z-index: 999; align-items: center; justify-content: center; padding: 20px;">
+    <div style="background: #ffffff; border-radius: 10px; width: 100%; max-width: 520px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); overflow: hidden;">
+      <div style="padding: 16px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; background: #f8fafc;">
+        <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: #0f172a;">Upload Course Material</h3>
+        <button type="button" id="btnCloseMaterialModal" style="background: none; border: none; font-size: 20px; color: #64748b; cursor: pointer;">&times;</button>
+      </div>
+      <form id="uploadMaterialForm" style="padding: 20px;">
+        <div style="margin-bottom: 14px;">
+          <label for="modalMaterialCourse" style="display: block; font-size: 12.5px; font-weight: 600; color: #475569; margin-bottom: 4px;">Assigned Course *</label>
+          <select id="modalMaterialCourse" required style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; background: #ffffff;">
+            <option value="">Loading assigned courses...</option>
+          </select>
+        </div>
+        <div style="margin-bottom: 14px;">
+          <label for="modalMaterialTitle" style="display: block; font-size: 12.5px; font-weight: 600; color: #475569; margin-bottom: 4px;">Document Title *</label>
+          <input type="text" id="modalMaterialTitle" required placeholder="e.g. Chapter 4 Data Normalization Handout" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;">
+          <div>
+            <label for="modalMaterialType" style="display: block; font-size: 12.5px; font-weight: 600; color: #475569; margin-bottom: 4px;">Material Type *</label>
+            <select id="modalMaterialType" required style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; background: #ffffff;">
+              <option value="Notes">Notes / Lecture Slides</option>
+              <option value="Syllabus">Syllabus</option>
+              <option value="Question Paper">Question Paper</option>
+              <option value="Presentation">Presentation</option>
+              <option value="Reference Link">Reference Document</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div>
+            <label for="modalMaterialFile" style="display: block; font-size: 12.5px; font-weight: 600; color: #475569; margin-bottom: 4px;">Document File (Max 10MB) *</label>
+            <input type="file" id="modalMaterialFile" required accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt" style="width: 100%; padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 12.5px; background: #ffffff;">
+          </div>
+        </div>
+        <div style="margin-bottom: 20px;">
+          <label for="modalMaterialDesc" style="display: block; font-size: 12.5px; font-weight: 600; color: #475569; margin-bottom: 4px;">Description / Context Notes</label>
+          <textarea id="modalMaterialDesc" rows="3" placeholder="Additional notes or topics covered in this resource..." style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-family: inherit; resize: vertical;"></textarea>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 10px;">
+          <button type="button" id="btnCancelMaterialModal" style="padding: 8px 16px; border: 1px solid #cbd5e1; background: #ffffff; color: #334155; border-radius: 6px; font-size: 13px; cursor: pointer; font-weight: 600;">Cancel</button>
+          <button type="submit" id="btnSubmitMaterialForm" style="padding: 8px 18px; border: none; background: #0d9488; color: #ffffff; border-radius: 6px; font-size: 13px; cursor: pointer; font-weight: 600;">Upload &amp; Publish</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- CORE SCRIPTS -->
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/teacher-shell.js"></script>
+  <script src="/js/user-menu.js"></script>
+  <script src="/js/teacher-study-material.js"></script>
+</body>
+</html>

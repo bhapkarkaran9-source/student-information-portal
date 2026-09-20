@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Course Report - Student Information Portal</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/grades.css">
+  <link rel="stylesheet" href="/css/admin-theme.css">
+</head>
+<body class="admin-dashboard-body">
+
+  <!-- Floating Toast Notifications -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- Mobile Backdrop Overlay -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop hidden" aria-hidden="true"></div>
+
+  <!-- ========================================================================
+       1. FIXED ADMIN SIDEBAR (CANONICAL)
+       ======================================================================== -->
+  <aside id="adminSidebar" class="admin-sidebar" aria-label="Portal Navigation">
+    <!-- Brand Header -->
+    <div class="sidebar-header">
+      <a href="/pages/admin/dashboard.html" class="sidebar-brand">
+        <div class="sidebar-logo" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/>
+          </svg>
+        </div>
+        <div class="sidebar-title">
+          <span class="brand-main">Student Portal</span>
+          <span class="brand-sub">ADMINISTRATION</span>
+        </div>
+      </a>
+      <button type="button" id="sidebarCloseBtn" class="sidebar-close-btn" aria-label="Close menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Scrollable Navigation Groups -->
+    <nav class="sidebar-nav" id="sidebarNavContainer">
+      <!-- OVERVIEW -->
+      <div class="nav-group-title">Overview</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/admin/dashboard.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+            <span>Dashboard</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- USER MANAGEMENT -->
+      <div class="nav-group-title">User Management</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/admin/users.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            <span>Users</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/students.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span>Students</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/teachers.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+            </svg>
+            <span>Teachers</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- ACADEMICS -->
+      <div class="nav-group-title">Academics</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/admin/departments.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+              <path d="M9 22v-4h6v4"></path>
+              <path d="M8 6h.01M16 6h.01M12 6h.01M8 10h.01M16 10h.01M12 10h.01M8 14h.01M16 14h.01M12 14h.01"></path>
+            </svg>
+            <span>Departments</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/courses.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            </svg>
+            <span>Courses</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/enrollments.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="8.5" cy="7" r="4"></circle>
+              <polyline points="17 11 19 13 23 9"></polyline>
+            </svg>
+            <span>Enrollment</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/timetable.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span>Timetable</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- ACADEMIC OPERATIONS -->
+      <div class="nav-group-title">Academic Operations</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/admin/attendance.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 11 12 14 22 4"></polyline>
+              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+            </svg>
+            <span>Attendance</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/grades.html" class="nav-link active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="9" y1="15" x2="15" y2="15"></line>
+            </svg>
+            <span>Grades</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/performance.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+            <span>Performance</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- ACADEMIC RESOURCES -->
+      <div class="nav-group-title">Academic Resources</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/admin/assignments.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            <span>Assignments</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/study-material.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            <span>Study Material</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/notices.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span>Notice Board</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- COMMUNICATION & SYSTEM -->
+      <div class="nav-group-title">Communication & System</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/admin/notifications.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span>Notifications</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/queries.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+            <span>Queries</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/reports.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            <span>Reports</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/audit-logs.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <span>Audit Logs</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/backups.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            <span>System Backups</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Sidebar Footer -->
+    <div class="sidebar-footer">
+      <div class="sidebar-user-card">
+        <div class="sidebar-user-avatar" id="sidebarAvatar">A</div>
+        <div class="sidebar-user-details">
+          <span class="sidebar-user-name" id="sidebarUserName">System Admin</span>
+          <span class="sidebar-user-role">ADMINISTRATOR</span>
+        </div>
+      </div>
+      <button type="button" id="sidebarLogoutBtn" class="sidebar-logout-btn" title="Sign Out" aria-label="Sign Out">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16 17 21 12 16 7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ========================================================================
+       2. MAIN LAYOUT WRAPPER
+       ======================================================================== -->
+  <div class="admin-layout" id="adminLayout">
+
+    <!-- TOP HEADER -->
+    <header class="admin-header" id="adminHeader">
+      <div class="header-left">
+        <button type="button" id="mobileSidebarToggle" class="mobile-sidebar-toggle" aria-label="Toggle navigation">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <div class="header-breadcrumb-area">
+          <ol class="erp-breadcrumb" aria-label="Breadcrumb">
+            <li class="erp-breadcrumb-item">
+              <a href="/pages/admin/dashboard.html" class="erp-breadcrumb-link">Dashboard</a>
+            </li>
+            <li class="erp-breadcrumb-sep" aria-hidden="true">/</li>
+            <li class="erp-breadcrumb-item">
+              <a href="/pages/admin/grades.html" class="erp-breadcrumb-link">Grades</a>
+            </li>
+            <li class="erp-breadcrumb-sep" aria-hidden="true">/</li>
+            <li class="erp-breadcrumb-item">
+              <span class="erp-breadcrumb-current" aria-current="page">Course Report</span>
+            </li>
+          </ol>
+          <span class="header-page-title">Course Report</span>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <!-- Notification Bell Button -->
+        <button type="button" id="headerNotificationBtn" class="header-action-btn" title="View notifications" aria-label="Notifications">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          <span id="headerNotificationBadge" class="notification-indicator hidden"></span>
+        </button>
+
+        <!-- User Profile Dropdown -->
+        <div class="profile-dropdown-container">
+          <button type="button" id="profileDropdownToggle" class="profile-dropdown-btn" aria-haspopup="true" aria-expanded="false">
+            <div class="header-avatar" id="headerAdminAvatar">S</div>
+            <div class="header-admin-info">
+              <span class="header-admin-name" id="headerAdminName">System Admin</span>
+              <span class="header-admin-badge">ADMIN</span>
+            </div>
+            <svg class="dropdown-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+
+          <!-- Standardized 7-Item Dropdown Menu -->
+          <div class="profile-dropdown-menu" id="profileDropdownMenu" role="menu">
+            <div class="dropdown-header">
+              <div id="dropdownAdminName" class="dropdown-user-name">System Admin</div>
+              <div id="dropdownAdminEmail" class="dropdown-email">admin@portal.local</div>
+            </div>
+            
+            <button type="button" id="dropdownMyProfile" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <span>My Profile</span>
+            </button>
+
+            <button type="button" id="dropdownEditProfile" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
+              <span>Edit Profile</span>
+            </button>
+
+            <button type="button" id="dropdownChangePassword" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              <span>Change Password</span>
+            </button>
+
+            <button type="button" id="dropdownAccountSettings" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+              </svg>
+              <span>Account Settings</span>
+            </button>
+
+            <a href="/pages/admin/notifications.html" id="dropdownNotifications" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+              <span>Notifications</span>
+            </a>
+
+            <a href="/pages/admin/audit-logs.html" id="dropdownAuditActivity" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+              </svg>
+              <span>Audit Activity</span>
+            </a>
+
+            <div class="dropdown-divider"></div>
+
+            <button type="button" id="dropdownLogoutBtn" class="dropdown-item dropdown-item-danger" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
+              <span>Logout</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- PAGE BODY -->
+    <main class="admin-main">
+      
+      <!-- PAGE HEADER ROW -->
+      <div class="grades-header-row">
+        <div>
+          <h1 class="grades-header-title">Course Report</h1>
+          <p class="grades-header-subtitle">Analyze student results and course performance</p>
+        </div>
+        <div class="grades-header-actions">
+          <a href="/pages/admin/grades.html" class="btn-erp btn-erp-secondary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Back to Grades
+          </a>
+          <button type="button" id="btnExportCourseCsv" class="btn-erp btn-erp-primary" disabled>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Export CSV
+          </button>
+        </div>
+      </div>
+
+      <!-- COURSE SELECTION CARD -->
+      <section class="course-report-selector-card" id="courseSelectorCard" aria-label="Course Selection">
+        <div class="course-report-filter-grid">
+          <!-- DEPARTMENT SELECT -->
+          <div class="filter-field-group">
+            <label for="selectDepartment" class="filter-field-label">Department</label>
+            <select id="selectDepartment" class="erp-select">
+              <option value="">All Departments</option>
+            </select>
+          </div>
+
+          <!-- COURSE SELECT -->
+          <div class="filter-field-group">
+            <label for="selectCourse" class="filter-field-label">Course *</label>
+            <select id="selectCourse" class="erp-select">
+              <option value="">-- Select a Course --</option>
+            </select>
+          </div>
+
+          <!-- SEMESTER SELECT -->
+          <div class="filter-field-group">
+            <label for="selectSemester" class="filter-field-label">Semester</label>
+            <select id="selectSemester" class="erp-select">
+              <option value="">All Semesters</option>
+              <option value="1">Semester 1</option>
+              <option value="2">Semester 2</option>
+              <option value="3">Semester 3</option>
+              <option value="4">Semester 4</option>
+              <option value="5">Semester 5</option>
+              <option value="6">Semester 6</option>
+              <option value="7">Semester 7</option>
+              <option value="8">Semester 8</option>
+            </select>
+          </div>
+
+          <!-- ACADEMIC YEAR SELECT -->
+          <div class="filter-field-group">
+            <label for="selectAcademicYear" class="filter-field-label">Academic Year</label>
+            <select id="selectAcademicYear" class="erp-select">
+              <option value="">All Academic Years</option>
+              <option value="2025-2026">2025-2026</option>
+              <option value="2024-2025">2024-2025</option>
+              <option value="2023-2024">2023-2024</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="course-report-actions-row">
+          <button type="button" id="btnResetCourseReport" class="btn-erp btn-erp-secondary">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+              <path d="M21 3v5h-5"></path>
+              <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
+              <path d="M3 21v-5h5"></path>
+            </svg>
+            Reset
+          </button>
+          <button type="button" id="btnGenerateReport" class="btn-erp btn-erp-primary">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+            Generate Report
+          </button>
+        </div>
+      </section>
+
+      <!-- COURSE SUMMARY KPIS (6-GRID) -->
+      <section class="course-report-kpi-grid" aria-label="Course Summary KPIs">
+        <!-- 1. TOTAL STUDENTS -->
+        <div class="grades-kpi-card">
+          <div class="grades-kpi-top">
+            <span class="grades-kpi-label">Total Students</span>
+            <div class="grades-kpi-icon grades-kpi-icon-blue">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+              </svg>
+            </div>
+          </div>
+          <div id="kpiTotalStudents" class="grades-kpi-value">--</div>
+          <div class="grades-kpi-footer">
+            <span class="grades-kpi-subtext">Registered candidates</span>
+          </div>
+        </div>
+
+        <!-- 2. RESULTS RECORDED -->
+        <div class="grades-kpi-card">
+          <div class="grades-kpi-top">
+            <span class="grades-kpi-label">Results Recorded</span>
+            <div class="grades-kpi-icon grades-kpi-icon-indigo">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+              </svg>
+            </div>
+          </div>
+          <div id="kpiResultsRecorded" class="grades-kpi-value">--</div>
+          <div class="grades-kpi-footer">
+            <span class="grades-kpi-subtext">Evaluated grade entries</span>
+          </div>
+        </div>
+
+        <!-- 3. PASSED -->
+        <div class="grades-kpi-card">
+          <div class="grades-kpi-top">
+            <span class="grades-kpi-label">Passed</span>
+            <div class="grades-kpi-icon grades-kpi-icon-emerald">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+          </div>
+          <div id="kpiPassed" class="grades-kpi-value">--</div>
+          <div class="grades-kpi-footer">
+            <span class="grades-kpi-subtext">Met passing criteria</span>
+          </div>
+        </div>
+
+        <!-- 4. FAILED -->
+        <div class="grades-kpi-card">
+          <div class="grades-kpi-top">
+            <span class="grades-kpi-label">Failed</span>
+            <div class="grades-kpi-icon grades-kpi-icon-rose">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+            </div>
+          </div>
+          <div id="kpiFailed" class="grades-kpi-value">--</div>
+          <div class="grades-kpi-footer">
+            <span class="grades-kpi-subtext">Below threshold (F)</span>
+          </div>
+        </div>
+
+        <!-- 5. PASS RATE -->
+        <div class="grades-kpi-card">
+          <div class="grades-kpi-top">
+            <span class="grades-kpi-label">Pass Rate</span>
+            <div class="grades-kpi-icon grades-kpi-icon-emerald">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M16 12l-4-4-4 4M12 16V8"></path>
+              </svg>
+            </div>
+          </div>
+          <div id="kpiPassRate" class="grades-kpi-value">--</div>
+          <div class="grades-kpi-footer">
+            <span class="grades-kpi-subtext">Overall pass percentage</span>
+          </div>
+        </div>
+
+        <!-- 6. AVERAGE MARKS -->
+        <div class="grades-kpi-card">
+          <div class="grades-kpi-top">
+            <span class="grades-kpi-label">Average Marks</span>
+            <div class="grades-kpi-icon grades-kpi-icon-purple">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="20" x2="18" y2="10"></line>
+                <line x1="12" y1="20" x2="12" y2="4"></line>
+                <line x1="6" y1="20" x2="6" y2="14"></line>
+              </svg>
+            </div>
+          </div>
+          <div id="kpiAverageMarks" class="grades-kpi-value">--</div>
+          <div class="grades-kpi-footer">
+            <span class="grades-kpi-subtext">Class mean percentage</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- PERFORMANCE OVERVIEW CARD -->
+      <section id="performanceOverviewCard" class="performance-overview-card hidden" aria-label="Performance Overview">
+        <div class="performance-overview-header">
+          <h2 class="performance-overview-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            Performance Overview & Statistical Metrics
+          </h2>
+          <span id="selectedCourseBadge" class="grade-card-prn-badge">--</span>
+        </div>
+
+        <div class="performance-overview-grid">
+          <div class="performance-metric-box">
+            <span class="performance-metric-label">Average Marks</span>
+            <span class="performance-metric-val" id="overviewAvgMarks">--</span>
+          </div>
+          <div class="performance-metric-box">
+            <span class="performance-metric-label">Pass Rate</span>
+            <span class="performance-metric-val" id="overviewPassRate">--</span>
+          </div>
+          <div class="performance-metric-box">
+            <span class="performance-metric-label">Highest Marks</span>
+            <span class="performance-metric-val" id="overviewHighestMarks">--</span>
+          </div>
+          <div class="performance-metric-box">
+            <span class="performance-metric-label">Lowest Marks</span>
+            <span class="performance-metric-val" id="overviewLowestMarks">--</span>
+          </div>
+          <div class="performance-metric-box">
+            <span class="performance-metric-label">Highest Grade</span>
+            <span class="performance-metric-val" id="overviewHighestGrade">--</span>
+          </div>
+          <div class="performance-metric-box">
+            <span class="performance-metric-label">Average GP</span>
+            <span class="performance-metric-val" id="overviewAvgGp">--</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- STUDENT RESULT TABLE CARD -->
+      <section class="grades-table-card" aria-label="Course Results Table">
+        <div class="grades-table-header">
+          <div class="grades-table-title-group">
+            <h2 class="grades-table-title">Student Performance List</h2>
+            <span id="courseTableCountBadge" class="grades-badge-count">0 Students</span>
+          </div>
+
+          <!-- Real-Time Search Inside Results -->
+          <div class="grades-search-box search-within-results" style="max-width: 280px;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="searchCourseResultsInput" placeholder="Filter by name or PRN..." aria-label="Filter results">
+          </div>
+        </div>
+
+        <div class="grades-table-container">
+          <table class="erp-table" id="courseReportTable">
+            <thead>
+              <tr>
+                <th style="width: 60px;">Rank</th>
+                <th>Student</th>
+                <th>PRN</th>
+                <th>Assessment Type</th>
+                <th>Internal</th>
+                <th>External</th>
+                <th>Practical</th>
+                <th>Total</th>
+                <th>%</th>
+                <th>Grade</th>
+                <th>Grade Points</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="courseReportTableBody">
+              <tr>
+                <td colspan="12">
+                  <div class="erp-empty-state">
+                    <div class="erp-empty-icon">
+                      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                      </svg>
+                    </div>
+                    <h3 class="erp-empty-title">Select a course to generate the report.</h3>
+                    <p class="erp-empty-desc">Choose a course and academic filters above, then click Generate Report to evaluate class results.</p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="/js/user-menu.js"></script>
+  <script src="/js/admin-shell.js"></script>
+  <script src="/js/admin-course-report.js"></script>
+</body>
+</html>

@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard - Student Information Portal</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/student-dashboard.css">
+</head>
+<body class="student-portal-body">
+
+  <!-- Mobile Sidebar Backdrop -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop hidden"></div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- ========================================================================
+       1. FIXED LEFT SIDEBAR
+       ======================================================================== -->
+  <aside id="studentSidebar" class="student-sidebar" aria-label="Student Navigation">
+    <div class="sidebar-header">
+      <a href="/pages/student/dashboard.html" class="sidebar-brand">
+        <div class="sidebar-logo" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/>
+          </svg>
+        </div>
+        <div class="sidebar-title">
+          <span class="brand-main">Student Portal</span>
+          <span class="brand-sub">STUDENT</span>
+        </div>
+      </a>
+      <button type="button" id="closeSidebarBtn" class="sidebar-close-btn" aria-label="Close menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Navigation List -->
+    <nav class="sidebar-nav">
+      <div class="nav-group-title">ACADEMIC MODULES</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/student/dashboard.html" class="nav-link active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/profile.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span>My Profile</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/courses.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            </svg>
+            <span>My Courses / Enrollment</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/attendance.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 11l3 3L22 4"></path>
+              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+            </svg>
+            <span>My Attendance</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/grades.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+            <span>My Results / Grades</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/timetable.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span>Timetable</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/assignments.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+              <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+            </svg>
+            <span>Assignments</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/study-material.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+            </svg>
+            <span>Study Material</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="nav-group-title">CAMPUS & SERVICES</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/student/notices.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span>Notices</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/notifications.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 14 14"></polyline>
+            </svg>
+            <span>Notifications</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/queries.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+            <span>Queries</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/reports.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            <span>Reports</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Pinned Sidebar User Profile Footer -->
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sidebarAvatar">S</div>
+        <div class="sidebar-user-info">
+          <span class="sidebar-user-name" id="sidebarUserName">Student</span>
+          <span class="sidebar-user-role">STUDENT</span>
+        </div>
+      </div>
+      <button type="button" id="sidebarLogoutBtn" class="btn-sidebar-logout" title="Sign out" aria-label="Sign out">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16 17 21 12 16 7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ========================================================================
+       2. MAIN CONTENT WRAPPER & STICKY HEADER
+       ======================================================================== -->
+  <div class="student-main-wrapper">
+
+    <!-- Sticky Header -->
+    <header id="studentHeader" class="student-header">
+      <div class="header-left">
+        <button type="button" id="toggleSidebarBtn" class="sidebar-toggle-btn" aria-label="Open menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <div class="header-heading-group">
+          <h1 class="header-title">Student Dashboard</h1>
+          <p class="header-subtitle">Welcome back, <span id="headerGreetingName">Student</span></p>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <!-- Notification Button with Unread Dot -->
+        <button type="button" id="headerNotificationBtn" class="header-notify-btn" title="View notifications" aria-label="Notifications">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          <span id="headerNotificationDot" class="header-notify-badge"></span>
+        </button>
+
+        <!-- User Profile Dropdown Button & Popover -->
+        <div class="profile-dropdown-wrapper" id="profileDropdownWrapper">
+          <button type="button" id="profileDropdownBtn" class="header-profile-btn" aria-haspopup="true" aria-expanded="false" aria-label="User profile menu">
+            <div class="header-avatar" id="headerUserAvatar">S</div>
+            <div class="header-profile-meta">
+              <span class="header-profile-name" id="navUserName">Student</span>
+              <span class="header-profile-badge" id="userRoleBadge">STUDENT</span>
+            </div>
+            <svg class="dropdown-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+
+          <!-- Dropdown Popover Menu -->
+          <div class="profile-dropdown-menu" id="profileDropdownMenu" role="menu" aria-orientation="vertical">
+            <div class="dropdown-user-header">
+              <div class="dropdown-user-name" id="dropdownUserName">Student</div>
+              <div class="dropdown-user-email" id="dropdownUserEmail">student@studentportal.local</div>
+            </div>
+            <button type="button" class="dropdown-item" id="btnMyProfile" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              <span>My Profile</span>
+            </button>
+            <button type="button" class="dropdown-item" id="btnEditProfile" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+              <span>Edit Profile</span>
+            </button>
+            <button type="button" class="dropdown-item" id="btnChangePassword" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+              <span>Change Password</span>
+            </button>
+            <button type="button" class="dropdown-item" id="btnAccountSettings" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+              <span>Account Settings</span>
+            </button>
+            <button type="button" class="dropdown-item" id="btnNavNotifications" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+              <span>Notifications</span>
+            </button>
+            <div class="dropdown-divider"></div>
+            <button type="button" class="dropdown-item dropdown-item-danger" id="logoutBtn" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+              <span>Sign Out</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ======================================================================
+         3. DASHBOARD MAIN CONTENT
+         ====================================================================== -->
+    <main id="studentMainContent" class="student-content">
+
+      <!-- WELCOME BANNER (PURE CSS GRADIENTS & GLOWS) -->
+      <section class="student-welcome-card">
+        <div class="welcome-inner">
+          <h2 class="welcome-title" id="welcomeGreeting">Good Morning, <span id="welcomeUserName">Student</span> 👋</h2>
+          <p class="welcome-subtitle">Here's your academic overview for today.</p>
+        </div>
+        <!-- Academic Info Chips -->
+        <div class="welcome-chips-grid">
+          <div class="welcome-chip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            <span id="chipYear">Academic Year: 2026–2027</span>
+          </div>
+          <div class="welcome-chip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            <span id="chipSemester">Semester: Semester V</span>
+          </div>
+          <div class="welcome-chip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></svg>
+            <span id="chipDept">Dept: Information Technology</span>
+          </div>
+          <div class="welcome-chip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            <span id="chipDivision">Class: TY-IT (Div 1)</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4 TOP KPI METRIC CARDS -->
+      <section class="student-kpi-grid">
+        <!-- KPI 1: Attendance -->
+        <div class="student-kpi-card card-border-blue">
+          <div class="student-kpi-header">
+            <span class="kpi-title">Overall Attendance</span>
+            <div class="kpi-icon-badge kpi-badge-blue">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+            </div>
+          </div>
+          <div class="kpi-main-val card-val-blue" id="kpiAttendanceVal">--</div>
+          <div class="kpi-support-text">
+            <span class="badge" style="background:#e2e8f0; color:#475569;">No Data</span>
+            <span>Req. 75%</span>
+          </div>
+        </div>
+
+        <!-- KPI 2: SGPA -->
+        <div class="student-kpi-card card-border-indigo">
+          <div class="student-kpi-header">
+            <span class="kpi-title">Current SGPA</span>
+            <div class="kpi-icon-badge kpi-badge-indigo">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            </div>
+          </div>
+          <div class="kpi-main-val card-val-indigo" id="kpiSgpaVal">--</div>
+          <div class="kpi-support-text">
+            <span class="badge" style="background:#e2e8f0; color:#475569;">No Grades</span>
+            <span>CGPA: --</span>
+          </div>
+        </div>
+
+        <!-- KPI 3: Courses -->
+        <div class="student-kpi-card card-border-green" id="coursesSection">
+          <div class="student-kpi-header">
+            <span class="kpi-title">Enrolled Courses</span>
+            <div class="kpi-icon-badge kpi-badge-emerald">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            </div>
+          </div>
+          <div class="kpi-main-val card-val-green" id="kpiCoursesVal">0</div>
+          <div class="kpi-support-text">
+            <span class="badge" style="background:#e2e8f0; color:#475569;">No Courses</span>
+            <span>0 Credits Total</span>
+          </div>
+        </div>
+
+        <!-- KPI 4: Pending Assignments -->
+        <div class="student-kpi-card card-border-orange">
+          <div class="student-kpi-header">
+            <span class="kpi-title">Pending Assignments</span>
+            <div class="kpi-icon-badge kpi-badge-amber">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+            </div>
+          </div>
+          <div class="kpi-main-val card-val-orange" id="kpiAssignmentsVal">0</div>
+          <div class="kpi-support-text">
+            <span class="badge" style="background:#e2e8f0; color:#475569;">No Due Tasks</span>
+            <span>0 Submitted</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- PROMINENT NEXT LECTURE CARD -->
+      <section class="student-next-lecture-card" id="nextLectureSection" style="margin-bottom: 24px;">
+        <div style="background: #ffffff; color: #0f172a; border: 1px solid #e2e8f0; border-left: 4px solid #2563eb; border-radius: 8px; padding: 20px 24px; position: relative; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; margin-bottom: 12px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; background: #eff6ff; padding: 3px 10px; border-radius: 9999px; color: #2563eb;">
+                Next Lecture
+              </span>
+              <span id="nextLectureStatusBadge" class="badge" style="font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 9999px; display: none;"></span>
+            </div>
+            <div id="nextLectureCountdownWrap" style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #4f46e5;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              <span id="nextLectureCountdown">Loading schedule...</span>
+            </div>
+          </div>
+
+          <div id="nextLectureContent" style="display: none;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px;">
+              <div>
+                <h3 id="nextLectureCourse" style="font-size: 20px; font-weight: 700; margin: 0; color: #0f172a;">-</h3>
+                <p id="nextLectureMeta" style="font-size: 13.5px; color: #64748b; margin: 4px 0 0 0;">-</p>
+              </div>
+              <div style="display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; color: #475569;">
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                  <span id="nextLectureTime">-</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                  <span id="nextLectureRoom">-</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                  <span id="nextLectureTeacher">-</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Empty State (No more lectures today) -->
+          <div id="nextLectureEmptyState" style="padding: 10px 0;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              <div>
+                <div style="font-weight: 700; font-size: 15px; color: #0f172a;">No more lectures today</div>
+                <div style="font-size: 12.5px; color: #64748b; margin-top: 2px;">All scheduled classes for today have concluded or no sessions are scheduled.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ROW 1: ATTENDANCE & ACADEMIC PERFORMANCE -->
+      <section class="student-two-col-grid">
+        <!-- Attendance Overview -->
+        <div class="student-card" id="attendanceOverviewSection">
+          <div class="student-card-header">
+            <div class="card-title-group">
+              <div class="card-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+              </div>
+              <h3 class="card-main-title">Attendance Overview</h3>
+            </div>
+            <a href="/pages/student/attendance.html" class="card-action-link">
+              <span>View Full Attendance</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </a>
+          </div>
+          <div class="student-card-body">
+            <div class="attendance-overview-wrapper">
+              <!-- Conic Gradient Circular Gauge -->
+              <div class="attendance-gauge" id="attendanceGaugeCircle" aria-label="Attendance --">
+                <div class="attendance-gauge-inner">
+                  <span class="attendance-gauge-pct" id="gaugePct">--</span>
+                  <span class="attendance-gauge-lbl">Recorded</span>
+                </div>
+              </div>
+              <div class="attendance-stats-list">
+                <div class="attendance-stat-row">
+                  <span class="attendance-stat-label">
+                    <span class="stat-dot dot-present"></span>
+                    <span>Lectures Attended</span>
+                  </span>
+                  <span class="attendance-stat-val" id="statPresent">0</span>
+                </div>
+                <div class="attendance-stat-row">
+                  <span class="attendance-stat-label">
+                    <span class="stat-dot dot-absent"></span>
+                    <span>Lectures Missed</span>
+                  </span>
+                  <span class="attendance-stat-val" id="statAbsent">0</span>
+                </div>
+                <div class="attendance-stat-row">
+                  <span class="attendance-stat-label">
+                    <span class="stat-dot dot-late"></span>
+                    <span>Late / Exempt</span>
+                  </span>
+                  <span class="attendance-stat-val" id="statLate">0</span>
+                </div>
+                <div class="attendance-stat-row" style="border-top: 1px dashed #e2e8f0; padding-top: 8px; margin-top: 4px;">
+                  <span class="attendance-stat-label" style="font-weight: 600; color: #1e293b;">Total Sessions</span>
+                  <span class="attendance-stat-val" id="statTotal">0</span>
+                </div>
+              </div>
+            </div>
+            <div class="attendance-status-badge" style="background:#f1f5f9; color:#475569;" id="attendanceStatusBadge">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+              <span>No attendance sessions recorded yet</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Academic Performance & Results -->
+        <div class="student-card card-border-indigo" id="performanceSection">
+          <div id="resultsSection"></div>
+          <div class="student-card-header">
+            <div class="card-title-group">
+              <div class="card-icon" style="background:#eef2ff; color:#4f46e5;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              </div>
+              <h3 class="card-main-title">Academic Performance & Grades</h3>
+            </div>
+            <a href="/pages/student/grades.html" class="card-action-link">
+              <span>View Grades</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </a>
+          </div>
+          <div class="student-card-body">
+            <div class="performance-metrics-grid">
+              <div class="perf-box">
+                <span class="perf-box-lbl">Semester SGPA</span>
+                <span class="perf-box-val" id="perfSgpa">--</span>
+                <span style="font-size: 11px; color: #64748b; margin-top: 2px;">Grade Point Average</span>
+              </div>
+              <div class="perf-box">
+                <span class="perf-box-lbl">Credits Earned</span>
+                <span class="perf-box-val" id="perfCredits">0 / 0</span>
+                <span style="font-size: 11px; color: #64748b; margin-top: 2px;">No credits evaluated</span>
+              </div>
+              <div class="perf-box">
+                <span class="perf-box-lbl">Courses Cleared</span>
+                <span class="perf-box-val" id="perfCoursesCleared">0</span>
+                <span style="font-size: 11px; color: #64748b; margin-top: 2px;">No grade records</span>
+              </div>
+              <div class="perf-box">
+                <span class="perf-box-lbl">Academic Standing</span>
+                <div>
+                  <span class="academic-risk-badge" style="background:#e0e7ff; color:#4338ca;" id="perfRiskStatus">
+                    Regular Standing
+                  </span>
+                </div>
+                <span style="font-size: 11px; color: #64748b; margin-top: 2px;">Current Academic Term</span>
+              </div>
+            </div>
+            <div style="margin-top: 14px; font-size: 12px; color: #64748b; line-height: 1.5;">
+              Official semester transcripts and evaluated course grade sheets are verified by the university examination board.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ROW 2: TODAY'S CLASSES & UPCOMING ASSIGNMENTS -->
+      <section class="student-two-col-grid">
+        <!-- Today's Classes -->
+        <div class="student-card" id="timetableSection">
+          <div class="student-card-header">
+            <div class="card-title-group">
+              <div class="card-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+              </div>
+              <h3 class="card-main-title">Today's Class Schedule</h3>
+            </div>
+            <span class="badge badge-primary" style="font-size: 11px;">Thursday</span>
+          </div>
+          <div class="student-card-body">
+            <div class="timeline-list" id="timetableList">
+              <div class="p-4 text-center text-muted" style="padding: 32px 16px; text-align: center; color: #64748b;">
+                No timetable schedule published for today.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Upcoming Assignments -->
+        <div class="student-card card-border-orange" id="assignmentsSection">
+          <div class="student-card-header">
+            <div class="card-title-group">
+              <div class="card-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+              </div>
+              <h3 class="card-main-title">Upcoming Assignments & Tasks</h3>
+            </div>
+            <span class="badge" style="background:#e2e8f0; color:#475569; font-size: 11px;">0 Due</span>
+          </div>
+          <div class="student-card-body">
+            <div class="assignment-list" id="assignmentList">
+              <div class="p-4 text-center text-muted" style="padding: 32px 16px; text-align: center; color: #64748b;">
+                No pending assignments due.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- UPCOMING ACADEMIC EVENTS & EXAMS -->
+      <section class="student-two-col-grid" style="margin-bottom: 24px;">
+        <div class="student-card" id="calendarEventsSection" style="grid-column: 1 / -1;">
+          <div class="student-card-header">
+            <div class="card-title-group">
+              <div class="card-icon" style="background: #eff6ff; color: #2563eb;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+              </div>
+              <h3 class="card-main-title">Upcoming Academic Events & Exams</h3>
+            </div>
+            <a href="/pages/student/calendar.html" class="card-action-link">
+              <span>View Full Calendar</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </a>
+          </div>
+          <div class="student-card-body">
+            <div id="calendarEventsList" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; padding: 12px 16px;">
+              <div class="p-4 text-center text-muted" id="emptyCalendarEventsMsg" style="padding: 24px; text-align: center; color: #64748b; grid-column: 1 / -1;">
+                No upcoming events or examinations scheduled for your class or department.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ROW 3: NOTICES & NOTIFICATIONS -->
+      <section class="student-two-col-grid">
+        <!-- Campus Notices -->
+        <div class="student-card" id="noticesSection">
+          <div class="student-card-header">
+            <div class="card-title-group">
+              <div class="card-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+              </div>
+              <h3 class="card-main-title">Campus Notices & Bulletins</h3>
+            </div>
+            <span class="badge" style="background:#e2e8f0; color:#475569; font-size: 11px;">0 Active</span>
+          </div>
+          <div class="student-card-body">
+            <div class="notices-stream" id="noticesList">
+              <div class="p-4 text-center text-muted" style="padding: 32px 16px; text-align: center; color: #64748b;">
+                No campus notices or circulars posted.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- System Notifications -->
+        <div class="student-card" id="notificationsSection">
+          <div class="student-card-header">
+            <div class="card-title-group">
+              <div class="card-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+              </div>
+              <h3 class="card-main-title">System Notifications</h3>
+            </div>
+            <button type="button" id="btnMarkAllRead" class="btn btn-secondary btn-sm" style="font-size: 11px; padding: 3px 8px;">Mark All Read</button>
+          </div>
+          <div class="student-card-body">
+            <div class="notifications-stream" id="notificationsList">
+              <div class="p-4 text-center text-muted" style="padding: 32px 16px; text-align: center; color: #64748b;">
+                No new notifications. You are all caught up!
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ROW 4: QUICK ACTIONS & PROFILE SUMMARY -->
+      <section class="student-two-col-grid">
+        <!-- Quick Action Shortcuts -->
+        <div class="student-card">
+          <div class="student-card-header">
+            <div class="card-title-group">
+              <div class="card-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+              </div>
+              <h3 class="card-main-title">Quick Actions</h3>
+            </div>
+          </div>
+          <div class="student-card-body">
+            <div class="quick-actions-grid">
+              <a href="/pages/student/attendance.html" class="quick-action-tile">
+                <div class="quick-action-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                </div>
+                <span class="quick-action-label">My Attendance</span>
+              </a>
+
+              <a href="#resultsSection" class="quick-action-tile">
+                <div class="quick-action-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                </div>
+                <span class="quick-action-label">My Grades</span>
+              </a>
+
+              <a href="#timetableSection" class="quick-action-tile">
+                <div class="quick-action-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                </div>
+                <span class="quick-action-label">Timetable</span>
+              </a>
+
+              <a href="#assignmentsSection" class="quick-action-tile">
+                <div class="quick-action-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+                </div>
+                <span class="quick-action-label">Assignments</span>
+              </a>
+
+              <a href="/pages/student/queries.html" class="quick-action-tile">
+                <div class="quick-action-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                </div>
+                <span class="quick-action-label">Ask a Teacher</span>
+              </a>
+
+              <a href="/pages/student/reports.html" class="quick-action-tile">
+                <div class="quick-action-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                </div>
+                <span class="quick-action-label">All Reports</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Profile Summary Card -->
+        <div class="student-card" id="profileSection">
+          <div class="student-card-header">
+            <div class="card-title-group">
+              <div class="card-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              </div>
+              <h3 class="card-main-title">Profile Summary</h3>
+            </div>
+            <span class="badge badge-success" id="userStatus">Active</span>
+          </div>
+          <div class="student-card-body">
+            <ul class="profile-summary-list">
+              <li class="profile-summary-item">
+                <span class="profile-summary-lbl">Full Name</span>
+                <span class="profile-summary-val" id="userFullName">-</span>
+              </li>
+              <li class="profile-summary-item">
+                <span class="profile-summary-lbl">Username</span>
+                <span class="profile-summary-val" id="userUsername">-</span>
+              </li>
+              <li class="profile-summary-item">
+                <span class="profile-summary-lbl">Student ID / PRN</span>
+                <span class="profile-summary-val" id="userPRN">PRN-2024-0089</span>
+              </li>
+              <li class="profile-summary-item">
+                <span class="profile-summary-lbl">Institutional Email</span>
+                <span class="profile-summary-val" id="userEmail">-</span>
+              </li>
+              <li class="profile-summary-item">
+                <span class="profile-summary-lbl">Contact Phone</span>
+                <span class="profile-summary-val" id="userPhone">-</span>
+              </li>
+              <li class="profile-summary-item">
+                <span class="profile-summary-lbl">Portal Role</span>
+                <span class="profile-summary-val" id="userRole">STUDENT</span>
+              </li>
+              <li class="profile-summary-item">
+                <span class="profile-summary-lbl">Enrolled Since</span>
+                <span class="profile-summary-val" id="userCreatedAt">-</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ========================================================================
+       4. SHARED MODALS (My Profile, Edit Profile, Password, Settings)
+       ======================================================================== -->
+
+  <!-- Modal 1: My Profile -->
+  <div id="myProfileModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="myProfileTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title" id="myProfileTitle">Student Profile</h3>
+        <button type="button" class="modal-close-btn" data-close-modal="myProfileModal" aria-label="Close dialog">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="text-align: center; margin-bottom: 20px;">
+          <div class="header-avatar" id="modalAvatar" style="width: 64px; height: 64px; font-size: 24px; margin: 0 auto 10px;">S</div>
+          <h4 style="margin: 0; font-size: 16px; font-weight: 700;" id="modalProfileName">Student</h4>
+          <span class="badge badge-student" style="margin-top: 4px;">STUDENT</span>
+        </div>
+        <ul class="profile-summary-list">
+          <li class="profile-summary-item">
+            <span class="profile-summary-lbl">Username</span>
+            <span class="profile-summary-val" id="modalProfileUsername">-</span>
+          </li>
+          <li class="profile-summary-item">
+            <span class="profile-summary-lbl">Email</span>
+            <span class="profile-summary-val" id="modalProfileEmail">-</span>
+          </li>
+          <li class="profile-summary-item">
+            <span class="profile-summary-lbl">Phone</span>
+            <span class="profile-summary-val" id="modalProfilePhone">-</span>
+          </li>
+          <li class="profile-summary-item">
+            <span class="profile-summary-lbl">Program</span>
+            <span class="profile-summary-val">B.Tech - Computer Engineering</span>
+          </li>
+          <li class="profile-summary-item">
+            <span class="profile-summary-lbl">Status</span>
+            <span class="profile-summary-val"><span class="badge badge-success">Active Enrolled</span></span>
+          </li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-close-modal="myProfileModal">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Edit Profile -->
+  <div id="editProfileModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="editProfileTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title" id="editProfileTitle">Edit Contact Information</h3>
+        <button type="button" class="modal-close-btn" data-close-modal="editProfileModal" aria-label="Close dialog">&times;</button>
+      </div>
+      <form id="editProfileForm">
+        <div class="modal-body">
+          <div class="modal-form-group">
+            <label for="editFirstName">First Name</label>
+            <input type="text" id="editFirstName" required>
+          </div>
+          <div class="modal-form-group">
+            <label for="editLastName">Last Name</label>
+            <input type="text" id="editLastName" required>
+          </div>
+          <div class="modal-form-group">
+            <label for="editEmail">Email Address</label>
+            <input type="email" id="editEmail" required>
+          </div>
+          <div class="modal-form-group">
+            <label for="editPhone">Phone Number</label>
+            <input type="tel" id="editPhone" placeholder="Optional">
+          </div>
+          <div style="font-size: 11.5px; color: #64748b; line-height: 1.4;">
+            * Name and contact updates are saved locally. Official institutional records require verification by the university administrator.
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal="editProfileModal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 3: Change Password -->
+  <div id="changePasswordModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="changePasswordTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title" id="changePasswordTitle">Change Portal Password</h3>
+        <button type="button" class="modal-close-btn" data-close-modal="changePasswordModal" aria-label="Close dialog">&times;</button>
+      </div>
+      <form id="changePasswordForm">
+        <div class="modal-body">
+          <div class="modal-form-group">
+            <label for="currentPassword">Current Password</label>
+            <input type="password" id="currentPassword" required autocomplete="current-password">
+          </div>
+          <div class="modal-form-group">
+            <label for="newPassword">New Password</label>
+            <input type="password" id="newPassword" required minlength="6" autocomplete="new-password">
+          </div>
+          <div class="modal-form-group">
+            <label for="confirmPassword">Confirm New Password</label>
+            <input type="password" id="confirmPassword" required minlength="6" autocomplete="new-password">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal="changePasswordModal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Update Password</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 4: Account Settings -->
+  <div id="accountSettingsModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title" id="settingsTitle">Account Preferences</h3>
+        <button type="button" class="modal-close-btn" data-close-modal="accountSettingsModal" aria-label="Close dialog">&times;</button>
+      </div>
+      <form id="accountSettingsForm">
+        <div class="modal-body">
+          <div class="modal-form-group">
+            <label for="prefLanguage">Portal Language</label>
+            <select id="prefLanguage">
+              <option value="en" selected>English (Default)</option>
+              <option value="mr">Marathi</option>
+              <option value="hi">Hindi</option>
+            </select>
+          </div>
+          <div class="modal-form-group">
+            <label for="prefEmailAlerts">Email Alerts</label>
+            <select id="prefEmailAlerts">
+              <option value="all" selected>All Attendance & Grades Alerts</option>
+              <option value="critical">Critical Alerts Only</option>
+              <option value="none">Disabled</option>
+            </select>
+          </div>
+          <div class="modal-form-group">
+            <label for="prefTheme">Theme Mode</label>
+            <select id="prefTheme">
+              <option value="light" selected>Light Mode (Recommended)</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal="accountSettingsModal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Preferences</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/js/api.js"></script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/student-shell.js"></script>
+  <script src="/js/user-menu.js"></script>
+  <script src="/js/student-dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>First Login Setup - Student Information Portal</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/auth.css">
+  <style>
+    .first-login-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      background: #f8fafc;
+    }
+    .first-login-card {
+      background: #ffffff;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 15px 35px -5px rgba(15, 23, 42, 0.08);
+      max-width: 520px;
+      width: 100%;
+      padding: 32px 28px;
+    }
+    .step-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: #7c3aed;
+      background: #f5f3ff;
+      padding: 3px 8px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+    .first-login-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0 0 6px 0;
+    }
+    .first-login-subtitle {
+      font-size: 14px;
+      color: #64748b;
+      margin: 0 0 24px 0;
+      line-height: 1.5;
+    }
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #334155;
+      margin-bottom: 6px;
+    }
+    .form-control {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    .form-control:focus {
+      outline: none;
+      border-color: #7c3aed;
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+    }
+    .btn-full {
+      width: 100%;
+      padding: 11px 16px;
+      font-size: 14.5px;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      border: none;
+      transition: background 0.2s;
+    }
+    .btn-primary-purple {
+      background: #7c3aed;
+      color: #ffffff;
+    }
+    .btn-primary-purple:hover {
+      background: #6d28d9;
+    }
+    .btn-secondary-light {
+      background: #f1f5f9;
+      color: #334155;
+      border: 1px solid #cbd5e1;
+    }
+    .btn-secondary-light:hover {
+      background: #e2e8f0;
+    }
+    .alert-box {
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      margin-bottom: 16px;
+    }
+    .alert-box.error {
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+    .alert-box.success {
+      background: #f0fdf4;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+    .feature-point {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 12px;
+      font-size: 13px;
+      color: #475569;
+    }
+    .feature-point svg {
+      flex-shrink: 0;
+      color: #16a34a;
+      margin-top: 2px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="first-login-container">
+    <div class="first-login-card">
+
+      <!-- Brand Header -->
+      <div style="text-align: center; margin-bottom: 24px;">
+        <div style="width: 44px; height: 44px; margin: 0 auto 12px auto; background: #7c3aed; color: #fff; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+        <div class="step-badge" id="stepIndicatorBadge">STEP 1 OF 2</div>
+        <h1 class="first-login-title" id="setupTitle">Set Your Permanent Password</h1>
+        <p class="first-login-subtitle" id="setupSubtitle">Welcome to Student Information Portal. Please replace your temporary password with a secure personal password.</p>
+      </div>
+
+      <div id="setupAlert" class="alert-box error hidden"></div>
+
+      <!-- STEP 1: Set New Password Form -->
+      <form id="passwordForm">
+        <div class="form-group">
+          <label for="currentPassword">Temporary / Current Password</label>
+          <input type="password" id="currentPassword" class="form-control" placeholder="Enter temporary password" required autocomplete="current-password">
+        </div>
+        <div class="form-group">
+          <label for="newPassword">New Password (Min. 6 characters)</label>
+          <input type="password" id="newPassword" class="form-control" placeholder="Create secure password" required minlength="6" autocomplete="new-password">
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword">Confirm New Password</label>
+          <input type="password" id="confirmPassword" class="form-control" placeholder="Re-enter new password" required minlength="6" autocomplete="new-password">
+        </div>
+
+        <button type="submit" id="btnUpdatePassword" class="btn-full btn-primary-purple" style="margin-top: 8px;">
+          Update Password &amp; Continue &rarr;
+        </button>
+      </form>
+
+      <!-- STEP 2: Optional Face Registration Container -->
+      <div id="faceStepContainer" class="hidden">
+        <div style="background: #faf8fd; border: 1px solid #ede9fe; border-radius: 8px; padding: 18px; margin-bottom: 20px;">
+          <div class="feature-point">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <span><strong>Faster Sign-in:</strong> Authenticate seamlessly using your camera and facial biometrics.</span>
+          </div>
+          <div class="feature-point">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <span><strong>Anti-Spoofing Liveness:</strong> Automatic blink &amp; landmark detection protects your account from photos and screen recordings.</span>
+          </div>
+          <div class="feature-point">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <span><strong>Encrypted &amp; Private:</strong> Raw video is never stored. Only an AES-256-GCM encrypted mathematical vector is kept.</span>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <button type="button" id="btnStartFaceRegistration" class="btn-full btn-primary-purple" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            <span>Register Face with Camera</span>
+          </button>
+          <button type="button" id="btnSkipFace" class="btn-full btn-secondary-light">
+            Skip for Now &amp; Continue to Dashboard
+          </button>
+        </div>
+      </div>
+
+      <!-- STEP 3: Success Confirmation Container -->
+      <div id="successStepContainer" class="hidden" style="text-align: center;">
+        <div style="width: 56px; height: 56px; background: #dcfce7; color: #16a34a; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto;">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <h2 style="font-size: 20px; font-weight: 700; color: #0f172a; margin: 0 0 8px 0;">Setup Complete!</h2>
+        <p style="font-size: 14px; color: #475569; margin: 0 0 24px 0;" id="successSummaryText">Your account credentials and biometric security have been configured successfully.</p>
+        <button type="button" id="btnGoToDashboard" class="btn-full btn-primary-purple">
+          Proceed to Portal Dashboard &rarr;
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- VENDOR & CORE SCRIPTS -->
+  <script src="/vendor/face-api/face-api.min.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/face-auth-modal.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = auth.getUser();
+      const token = auth.getToken();
+
+      if (!token || !user) {
+        window.location.replace('/login.html');
+        return;
+      }
+
+      const passwordForm = document.getElementById('passwordForm');
+      const faceStepContainer = document.getElementById('faceStepContainer');
+      const successStepContainer = document.getElementById('successStepContainer');
+      const setupAlert = document.getElementById('setupAlert');
+      const stepBadge = document.getElementById('stepIndicatorBadge');
+      const setupTitle = document.getElementById('setupTitle');
+      const setupSubtitle = document.getElementById('setupSubtitle');
+      const btnSkipFace = document.getElementById('btnSkipFace');
+      const btnStartFace = document.getElementById('btnStartFaceRegistration');
+      const btnGoToDashboard = document.getElementById('btnGoToDashboard');
+
+      function showAlert(msg, isError = true) {
+        setupAlert.textContent = msg;
+        setupAlert.className = 'alert-box ' + (isError ? 'error' : 'success');
+        setupAlert.classList.remove('hidden');
+      }
+
+      function hideAlert() {
+        setupAlert.classList.add('hidden');
+      }
+
+      // Step 1: Handle Password Update
+      passwordForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        hideAlert();
+
+        const current_password = document.getElementById('currentPassword').value;
+        const new_password = document.getElementById('newPassword').value;
+        const confirm_password = document.getElementById('confirmPassword').value;
+
+        if (new_password.length < 6) {
+          showAlert('New password must be at least 6 characters long.');
+          return;
+        }
+
+        if (new_password !== confirm_password) {
+          showAlert('New password and confirmation password do not match.');
+          return;
+        }
+
+        try {
+          const res = await fetch('/api/auth/change-password', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify({ current_password, new_password, confirm_password })
+          });
+
+          const data = await res.json();
+          if (res.ok && data.success) {
+            // Update cached user session flag
+            user.must_change_password = false;
+            auth.setSession(token, user);
+
+            // Move to Step 2
+            passwordForm.classList.add('hidden');
+            faceStepContainer.classList.remove('hidden');
+            stepBadge.textContent = 'STEP 2 OF 2 (OPTIONAL)';
+            setupTitle.textContent = 'Setup Biometric Face Authentication';
+            setupSubtitle.textContent = 'Protect your account with fast, secure liveness-verified face authentication.';
+          } else {
+            showAlert(data.message || 'Failed to update password. Check your temporary password.');
+          }
+        } catch (err) {
+          showAlert('Network error: ' + err.message);
+        }
+      });
+
+      // Step 2A: Launch Face Registration Modal
+      btnStartFace.addEventListener('click', () => {
+        if (window.FaceAuthModal) {
+          window.FaceAuthModal.open({
+            mode: 'register',
+            onComplete: () => {
+              faceStepContainer.classList.add('hidden');
+              successStepContainer.classList.remove('hidden');
+              stepBadge.textContent = 'READY';
+              setupTitle.textContent = 'You are all set!';
+              setupSubtitle.textContent = 'Password and biometric credentials saved successfully.';
+            }
+          });
+        }
+      });
+
+      // Step 2B: Skip Face Setup
+      btnSkipFace.addEventListener('click', () => {
+        auth.redirectToDashboard(user.role);
+      });
+
+      // Step 3: Go to Dashboard
+      btnGoToDashboard.addEventListener('click', () => {
+        auth.redirectToDashboard(user.role);
+      });
+    });
+  </script>
+</body>
+</html>

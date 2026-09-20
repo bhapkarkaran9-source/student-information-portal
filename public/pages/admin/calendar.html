@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Academic Calendar & Exams - Student Information Portal</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/admin-theme.css">
+  <style>
+    /* Specific Calendar UI Components strictly adhering to Admin Theme */
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 1px;
+      background: var(--admin-border);
+      border: 1px solid var(--admin-border);
+      border-radius: var(--admin-radius-md);
+      overflow: hidden;
+    }
+    .calendar-day-header {
+      background: #faf8fd;
+      padding: 12px 8px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--admin-primary-darker);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .calendar-day-cell {
+      background: #ffffff;
+      min-height: 110px;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      transition: background var(--admin-transition);
+      position: relative;
+    }
+    .calendar-day-cell:hover {
+      background: #faf9fd;
+    }
+    .calendar-day-cell.other-month {
+      background: #fdfcfe;
+      color: var(--admin-light);
+    }
+    .calendar-day-cell.today {
+      background: #faf5ff;
+      border: 2px solid var(--admin-primary);
+      z-index: 2;
+    }
+    .day-number-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .day-number {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--admin-text);
+      width: 26px;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+    .calendar-day-cell.today .day-number {
+      background: var(--admin-primary);
+      color: #ffffff;
+    }
+    .day-events-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+      overflow: hidden;
+    }
+    .event-pill {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 6px;
+      border-radius: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      border-left: 3px solid transparent;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .event-pill:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+    }
+    /* Event types styling using admin color scheme */
+    .pill-exam {
+      background: #fff1f2;
+      color: #be123c;
+      border-left-color: #e11d48;
+    }
+    .pill-holiday {
+      background: #f0fdf4;
+      color: #15803d;
+      border-left-color: #16a34a;
+    }
+    .pill-seminar {
+      background: #f5f3ff;
+      color: #6d28d9;
+      border-left-color: #7c3aed;
+    }
+    .pill-meeting {
+      background: #fdf4ff;
+      color: #a21caf;
+      border-left-color: #c026d3;
+    }
+    .pill-college_event {
+      background: #fffbeb;
+      color: #b45309;
+      border-left-color: #f59e0b;
+    }
+    .pill-assignment {
+      background: #fff7ed;
+      color: #c2410c;
+      border-left-color: #ea580c;
+    }
+    .pill-result {
+      background: #ecfeff;
+      color: #0e7490;
+      border-left-color: #06b6d4;
+    }
+    .pill-other {
+      background: #f1f5f9;
+      color: #475569;
+      border-left-color: #64748b;
+    }
+
+    /* Week View Columns */
+    .week-view-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .week-day-col {
+      background: #ffffff;
+      border: 1px solid var(--admin-border);
+      border-radius: var(--admin-radius-md);
+      display: flex;
+      flex-direction: column;
+      min-height: 480px;
+      overflow: hidden;
+    }
+    .week-col-header {
+      padding: 12px;
+      background: #faf8fd;
+      border-bottom: 1px solid var(--admin-border);
+      text-align: center;
+    }
+    .week-col-header.today {
+      background: #f5f3ff;
+      border-bottom-color: var(--admin-primary);
+    }
+    .week-col-body {
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    /* =========================================================================
+       CALENDAR MODALS & RESPONSIVE FORM LAYOUT
+       ========================================================================= */
+
+    /* Modal Backdrop / Overlay */
+    .modal-backdrop {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      background-color: rgba(12, 8, 20, 0.65) !important;
+      backdrop-filter: blur(4px) !important;
+      -webkit-backdrop-filter: blur(4px) !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      z-index: 1100 !important;
+      padding: 16px !important;
+      box-sizing: border-box !important;
+      overflow-y: auto !important;
+    }
+
+    .modal-backdrop.hidden {
+      display: none !important;
+    }
+
+    /* Modal Dialog Container */
+    .modal-dialog {
+      background-color: #ffffff !important;
+      border-radius: var(--admin-radius-lg, 12px) !important;
+      border: 1px solid var(--admin-border, #e2e8f0) !important;
+      box-shadow: 0 20px 35px -5px rgba(12, 8, 20, 0.35) !important;
+      width: 100% !important;
+      max-width: 680px;
+      max-height: 90vh !important;
+      display: flex !important;
+      flex-direction: column !important;
+      overflow: hidden !important;
+      position: relative !important;
+      box-sizing: border-box !important;
+      margin: auto !important;
+      animation: modalScaleIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+
+    .details-modal-dialog {
+      max-width: 580px !important;
+    }
+
+    @keyframes modalScaleIn {
+      from { opacity: 0; transform: scale(0.96) translateY(8px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    /* Modal Form / Inner Layout */
+    .modal-dialog form {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .modal-header {
+      padding: 18px 22px !important;
+      border-bottom: 1px solid var(--admin-border-subtle, #f1f5f9) !important;
+      display: flex !important;
+      align-items: flex-start !important;
+      justify-content: space-between !important;
+      gap: 12px !important;
+      flex-shrink: 0 !important;
+      background: #ffffff !important;
+    }
+
+    .modal-title {
+      font-size: 18px !important;
+      font-weight: 700 !important;
+      color: var(--admin-text, #1e1b4b) !important;
+      margin: 0 !important;
+      line-height: 1.3 !important;
+    }
+
+    .modal-close-btn {
+      background: none !important;
+      border: none !important;
+      color: var(--admin-muted, #64748b) !important;
+      cursor: pointer !important;
+      padding: 4px 8px !important;
+      font-size: 24px !important;
+      line-height: 1 !important;
+      border-radius: var(--admin-radius-sm, 6px) !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      flex-shrink: 0 !important;
+      transition: all var(--admin-transition, 0.2s ease) !important;
+    }
+
+    .modal-close-btn:hover {
+      background-color: var(--admin-primary-light, #f5f3ff) !important;
+      color: var(--admin-primary, #7c3aed) !important;
+    }
+
+    .modal-body {
+      padding: 22px !important;
+      overflow-y: auto !important;
+      -webkit-overflow-scrolling: touch !important;
+      flex: 1 !important;
+      min-height: 0 !important;
+      box-sizing: border-box !important;
+    }
+
+    .modal-footer {
+      padding: 14px 22px !important;
+      border-top: 1px solid var(--admin-border-subtle, #f1f5f9) !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: flex-end !important;
+      gap: 10px !important;
+      background-color: #faf9fc !important;
+      flex-shrink: 0 !important;
+      box-sizing: border-box !important;
+      flex-wrap: wrap !important;
+    }
+
+    .details-modal-footer {
+      justify-content: space-between !important;
+    }
+
+    /* Modal Form Elements */
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      width: 100%;
+      margin-bottom: 16px;
+      box-sizing: border-box;
+    }
+
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--admin-text, #1e1b4b);
+      margin-bottom: 2px;
+      position: static;
+    }
+
+    .form-control {
+      width: 100% !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+    }
+
+    textarea.form-control {
+      min-height: 90px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+
+    /* Responsive styling for Tablet & Mobile */
+    @media (max-width: 767px) {
+      .admin-main {
+        padding: 16px 12px !important;
+      }
+
+      /* Modal Backdrop on Mobile */
+      .modal-backdrop {
+        padding: 12px !important;
+        align-items: center !important;
+      }
+
+      /* Modal Dialog on Mobile */
+      .modal-dialog {
+        width: calc(100vw - 24px) !important;
+        max-width: calc(100vw - 24px) !important;
+        max-height: calc(100vh - 24px) !important;
+        margin: 12px auto !important;
+        border-radius: var(--admin-radius-lg, 12px) !important;
+      }
+
+      .modal-header {
+        padding: 14px 16px !important;
+      }
+
+      .modal-title {
+        font-size: 16px !important;
+      }
+
+      .modal-body {
+        padding: 16px !important;
+        max-height: calc(100vh - 140px) !important;
+      }
+
+      .modal-footer {
+        padding: 12px 16px !important;
+        gap: 8px !important;
+      }
+
+      /* Single-Column Form Grid on Mobile */
+      .form-grid-2 {
+        grid-template-columns: 1fr !important;
+        gap: 14px !important;
+        margin-bottom: 14px !important;
+      }
+
+      .form-group {
+        margin-bottom: 14px !important;
+        gap: 5px !important;
+      }
+
+      .form-label {
+        font-size: 12.5px !important;
+        font-weight: 600 !important;
+      }
+
+      .form-control {
+        font-size: 14px !important;
+        padding: 9px 12px !important;
+      }
+
+      textarea.form-control {
+        min-height: 100px !important;
+      }
+
+      /* Details Modal Grid on Mobile */
+      .details-grid-2,
+      #detailsModalContent > div[style*="grid-template-columns"] {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+        margin-bottom: 12px !important;
+      }
+
+      /* Calendar UI adjustments on Mobile */
+      .calendar-day-header {
+        padding: 8px 2px;
+        font-size: 11px;
+      }
+      .calendar-day-cell {
+        min-height: 80px;
+        padding: 4px;
+      }
+      .day-number {
+        font-size: 11px;
+        width: 20px;
+        height: 20px;
+      }
+      .event-pill {
+        font-size: 9.5px;
+        padding: 2px 4px;
+      }
+      .week-view-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body class="admin-dashboard-body">
+
+  <!-- Floating Toast Notifications -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- Mobile Backdrop Overlay -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop hidden" aria-hidden="true"></div>
+
+  <!-- ========================================================================
+       1. FIXED ADMIN SIDEBAR
+       ======================================================================== -->
+  <aside id="adminSidebar" class="admin-sidebar" aria-label="Portal Navigation">
+    <div class="sidebar-header">
+      <a href="/pages/admin/dashboard.html" class="sidebar-brand">
+        <div class="sidebar-logo" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/>
+          </svg>
+        </div>
+        <div class="sidebar-title">
+          <span class="brand-main">Student Portal</span>
+          <span class="brand-sub">ADMINISTRATION</span>
+        </div>
+      </a>
+      <button type="button" id="sidebarCloseBtn" class="sidebar-close-btn" aria-label="Close menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Navigation items populated dynamically by admin-shell.js -->
+    <nav class="sidebar-nav" id="sidebarNavContainer"></nav>
+
+    <!-- Sidebar Footer -->
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sidebarAdminAvatar">S</div>
+        <div class="sidebar-user-info">
+          <span class="sidebar-user-name" id="sidebarAdminName">System Admin</span>
+          <span class="sidebar-user-role" id="sidebarAdminEmail">admin@portal.local</span>
+        </div>
+      </div>
+      <button type="button" class="btn-sidebar-logout" id="sidebarLogoutBtn" title="Sign Out">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16 17 21 12 16 7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ========================================================================
+       2. MAIN CONTENT AREA & TOP HEADER
+       ======================================================================== -->
+  <div class="admin-layout-main">
+    
+    <!-- Top Header (Exactly 1 Bell Icon + Profile Dropdown) -->
+    <header class="admin-header">
+      <div class="header-left">
+        <button type="button" id="sidebarToggleBtn" class="sidebar-toggle-btn" aria-label="Toggle navigation menu">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <div class="header-breadcrumbs">
+          <a href="/pages/admin/dashboard.html" class="breadcrumb-item">Dashboard</a>
+          <span class="breadcrumb-separator">/</span>
+          <span class="breadcrumb-current">Academic Calendar</span>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <!-- Exactly 1 Bell Icon -->
+        <button type="button" id="headerNotificationBtn" class="header-notify-btn" aria-label="Notifications" title="Notifications">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          <span id="headerNotificationDot" class="header-notify-badge hidden"></span>
+        </button>
+
+        <!-- Profile Dropdown Trigger -->
+        <div class="profile-dropdown-wrapper">
+          <button type="button" class="header-profile-btn" id="profileDropdownTrigger" aria-haspopup="true" aria-expanded="false" aria-label="Administrator Menu">
+            <div class="header-avatar" id="headerAdminAvatar">S</div>
+            <div class="header-admin-info">
+              <span class="header-admin-name" id="headerAdminName">System Admin</span>
+              <span class="header-admin-badge">ADMIN</span>
+            </div>
+            <svg class="dropdown-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+
+          <!-- Standardized 7-Item Dropdown Menu (managed by user-menu.js & admin-shell.js) -->
+          <div class="profile-dropdown-menu" id="profileDropdownMenu" role="menu">
+            <div class="dropdown-header">
+              <div id="dropdownAdminName" class="dropdown-user-name">System Admin</div>
+              <div id="dropdownAdminEmail" class="dropdown-email">admin@portal.local</div>
+            </div>
+            
+            <button type="button" id="dropdownMyProfile" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <span>My Profile</span>
+            </button>
+
+            <button type="button" id="dropdownEditProfile" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
+              <span>Edit Profile</span>
+            </button>
+
+            <button type="button" id="dropdownChangePassword" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              <span>Change Password</span>
+            </button>
+
+            <button type="button" id="dropdownAccountSettings" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+              </svg>
+              <span>Account Settings</span>
+            </button>
+
+            <a href="/pages/admin/notifications.html" id="dropdownNotifications" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+              <span>Notifications</span>
+            </a>
+
+            <a href="/pages/admin/audit-logs.html" id="dropdownAuditActivity" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+              </svg>
+              <span>Audit Activity</span>
+            </a>
+
+            <div class="dropdown-divider"></div>
+
+            <button type="button" id="dropdownLogoutBtn" class="dropdown-item dropdown-item-danger" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
+              <span>Sign Out</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="admin-main" style="padding: 24px; flex: 1;">
+      
+      <!-- Page Header & Action Buttons -->
+      <div class="page-header" style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 24px;">
+        <div>
+          <h1 class="page-title" style="font-size: 24px; font-weight: 700; color: var(--admin-text); margin: 0 0 6px 0;">Academic Calendar & Exam Schedule</h1>
+          <p class="page-subtitle" style="color: var(--admin-muted); margin: 0; font-size: 14px;">Manage term dates, examinations, institutional events, deadlines, and automated reminders</p>
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <button type="button" id="triggerRemindersBtn" class="btn btn-secondary" style="display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; border-radius: var(--admin-radius-sm); font-weight: 600;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+            <span>Trigger Reminders</span>
+          </button>
+          <button type="button" id="addExamBtn" class="btn" style="background: var(--admin-accent-dark); color: #fff; display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; border-radius: var(--admin-radius-sm); font-weight: 600; border: none; cursor: pointer;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+            <span>+ Schedule Exam</span>
+          </button>
+          <button type="button" id="addEventBtn" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: var(--admin-radius-sm); font-weight: 600;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            <span>+ Add Academic Event</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- KPI Summary Cards -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px;">
+        <div class="card" style="padding: 18px 20px; border-left: 4px solid var(--admin-primary);">
+          <div style="font-size: 13px; color: var(--admin-muted); font-weight: 500;">Total Active Events</div>
+          <div id="statTotalEvents" style="font-size: 26px; font-weight: 700; color: var(--admin-text); margin-top: 4px;">0</div>
+        </div>
+        <div class="card" style="padding: 18px 20px; border-left: 4px solid #e11d48;">
+          <div style="font-size: 13px; color: var(--admin-muted); font-weight: 500;">Scheduled Exams</div>
+          <div id="statTotalExams" style="font-size: 26px; font-weight: 700; color: #e11d48; margin-top: 4px;">0</div>
+        </div>
+        <div class="card" style="padding: 18px 20px; border-left: 4px solid #16a34a;">
+          <div style="font-size: 13px; color: var(--admin-muted); font-weight: 500;">Upcoming Holidays</div>
+          <div id="statTotalHolidays" style="font-size: 26px; font-weight: 700; color: #16a34a; margin-top: 4px;">0</div>
+        </div>
+        <div class="card" style="padding: 18px 20px; border-left: 4px solid var(--admin-secondary);">
+          <div style="font-size: 13px; color: var(--admin-muted); font-weight: 500;">Seminars & Meetings</div>
+          <div id="statTotalSeminars" style="font-size: 26px; font-weight: 700; color: var(--admin-secondary); margin-top: 4px;">0</div>
+        </div>
+      </div>
+
+      <!-- Main Toolbar: View Tabs & Filters -->
+      <div class="card" style="padding: 16px 20px; margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
+          <!-- View Switcher Tabs -->
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;" id="viewModeTabs">
+            <button type="button" class="btn btn-sm cal-view-btn active" data-view="MONTH" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: var(--admin-radius-sm); font-weight: 600; background: var(--admin-primary); color: #fff; border: none; cursor: pointer;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+              <span>Month View</span>
+            </button>
+            <button type="button" class="btn btn-sm cal-view-btn" data-view="WEEK" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: var(--admin-radius-sm); font-weight: 600; background: #f1f5f9; color: var(--admin-text); border: none; cursor: pointer;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+              <span>Week View</span>
+            </button>
+            <button type="button" class="btn btn-sm cal-view-btn" data-view="LIST" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: var(--admin-radius-sm); font-weight: 600; background: #f1f5f9; color: var(--admin-text); border: none; cursor: pointer;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+              <span>List / Agenda</span>
+            </button>
+            <button type="button" class="btn btn-sm cal-view-btn" data-view="EXAMS" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: var(--admin-radius-sm); font-weight: 600; background: #f1f5f9; color: var(--admin-text); border: none; cursor: pointer;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+              <span>Exam Timetable</span>
+            </button>
+          </div>
+
+          <!-- Month / Week Navigator -->
+          <div id="calendarNavControls" style="display: flex; align-items: center; gap: 10px;">
+            <button type="button" id="prevPeriodBtn" class="btn btn-sm btn-secondary" style="padding: 6px 12px;" aria-label="Previous Period">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </button>
+            <button type="button" id="todayPeriodBtn" class="btn btn-sm btn-secondary" style="padding: 6px 12px; font-weight: 600;">Today</button>
+            <button type="button" id="nextPeriodBtn" class="btn btn-sm btn-secondary" style="padding: 6px 12px;" aria-label="Next Period">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
+            <span id="currentPeriodTitle" style="font-size: 16px; font-weight: 700; color: var(--admin-text); min-width: 150px; text-align: center;">September 2026</span>
+          </div>
+        </div>
+
+        <!-- Filter Controls Row -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; align-items: center;">
+          <div>
+            <input type="text" id="filterSearch" class="form-control" placeholder="Search event, exam, room..." style="width: 100%;">
+          </div>
+          <div>
+            <select id="filterEventType" class="form-control" style="width: 100%;">
+              <option value="">All Event Types</option>
+              <option value="EXAM">Exams</option>
+              <option value="HOLIDAY">Holidays</option>
+              <option value="COLLEGE_EVENT">College Events</option>
+              <option value="SEMINAR">Seminars & Workshops</option>
+              <option value="MEETING">Faculty Meetings</option>
+              <option value="ASSIGNMENT">Assignments</option>
+              <option value="RESULT">Results Announcement</option>
+              <option value="OTHER">Other</option>
+            </select>
+          </div>
+          <div>
+            <select id="filterDepartment" class="form-control" style="width: 100%;">
+              <option value="">All Departments</option>
+            </select>
+          </div>
+          <div>
+            <select id="filterAudience" class="form-control" style="width: 100%;">
+              <option value="">All Audiences</option>
+              <option value="ALL">Entire Campus (ALL)</option>
+              <option value="STUDENTS">Students Only</option>
+              <option value="TEACHERS">Teachers Only</option>
+              <option value="DEPARTMENT">Specific Department</option>
+              <option value="CLASS">Specific Class / Division</option>
+              <option value="COURSE">Course Specific</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- View Containers -->
+      <!-- A. Month View Container -->
+      <div id="monthViewContainer" class="card" style="padding: 16px; margin-bottom: 24px;">
+        <div class="calendar-grid">
+          <div class="calendar-day-header">Sun</div>
+          <div class="calendar-day-header">Mon</div>
+          <div class="calendar-day-header">Tue</div>
+          <div class="calendar-day-header">Wed</div>
+          <div class="calendar-day-header">Thu</div>
+          <div class="calendar-day-header">Fri</div>
+          <div class="calendar-day-header">Sat</div>
+        </div>
+        <div id="calendarGridBody" class="calendar-grid" style="border-top: none;">
+          <!-- 35 or 42 calendar day cells injected by admin-calendar.js -->
+        </div>
+      </div>
+
+      <!-- B. Week View Container -->
+      <div id="weekViewContainer" class="hidden" style="margin-bottom: 24px;">
+        <div class="week-view-grid" id="weekViewGrid">
+          <!-- 7 day columns injected by admin-calendar.js -->
+        </div>
+      </div>
+
+      <!-- C. List / Agenda View Container -->
+      <div id="listViewContainer" class="card hidden" style="padding: 20px; margin-bottom: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <h2 style="font-size: 16px; font-weight: 700; color: var(--admin-text); margin: 0;">Institutional Agenda List</h2>
+          <span id="listTotalCount" style="font-size: 13px; color: var(--admin-muted);">Showing 0 events</span>
+        </div>
+        <div class="table-responsive">
+          <table class="table" id="agendaTable" style="width: 100%;">
+            <thead>
+              <tr>
+                <th>Event Date & Time</th>
+                <th>Title & Type</th>
+                <th>Audience / Scope</th>
+                <th>Department / Course</th>
+                <th>Venue / Room</th>
+                <th style="text-align: right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="agendaTableBody">
+              <!-- Rows injected by admin-calendar.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- D. Exam Timetable View Container -->
+      <div id="examsViewContainer" class="card hidden" style="padding: 20px; margin-bottom: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <div>
+            <h2 style="font-size: 16px; font-weight: 700; color: var(--admin-text); margin: 0;">Examination Timetable & Seating</h2>
+            <p style="font-size: 13px; color: var(--admin-muted); margin: 2px 0 0 0;">Course-wise internal, practical, and university examination schedules</p>
+          </div>
+          <button type="button" class="btn btn-sm btn-primary" onclick="window.adminCalendar.openExamModal()">+ Schedule New Exam</button>
+        </div>
+        <div class="table-responsive">
+          <table class="table" id="examsTable" style="width: 100%;">
+            <thead>
+              <tr>
+                <th>Date & Time</th>
+                <th>Course / Subject</th>
+                <th>Exam Category</th>
+                <th>Class & Div</th>
+                <th>Venue / Hall</th>
+                <th>Instructions</th>
+                <th style="text-align: right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="examsTableBody">
+              <!-- Exam rows injected by admin-calendar.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ========================================================================
+       3. MODALS
+       ======================================================================== -->
+  <!-- ADD / EDIT EVENT MODAL -->
+  <div id="eventModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="eventModalTitle">
+    <div class="modal-dialog event-modal-dialog">
+      <div class="modal-header">
+        <h3 id="eventModalTitle" class="modal-title">Add Academic Event</h3>
+        <button type="button" class="modal-close-btn" id="closeEventModalBtn" aria-label="Close modal">&times;</button>
+      </div>
+      <form id="eventForm">
+        <input type="hidden" id="modalEventId">
+        <div class="modal-body">
+          
+          <div class="form-group">
+            <label for="modalTitle" class="form-label">Event Title <span style="color: var(--admin-danger);">*</span></label>
+            <input type="text" id="modalTitle" class="form-control" placeholder="e.g. End-Semester Practical Exam or Gandhi Jayanti" required maxlength="200">
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label for="modalEventType" class="form-label">Event Type <span style="color: var(--admin-danger);">*</span></label>
+              <select id="modalEventType" class="form-control" required>
+                <option value="EXAM">Examination</option>
+                <option value="HOLIDAY">Holiday</option>
+                <option value="COLLEGE_EVENT">College / Campus Event</option>
+                <option value="SEMINAR">Seminar / Workshop</option>
+                <option value="MEETING">Faculty Meeting</option>
+                <option value="ASSIGNMENT">Assignment Deadline</option>
+                <option value="RESULT">Results Announcement</option>
+                <option value="OTHER">Other</option>
+              </select>
+            </div>
+            <div class="form-group" id="examTypeGroup">
+              <label for="modalExamType" class="form-label">Exam Classification</label>
+              <select id="modalExamType" class="form-control">
+                <option value="Internal Test">Internal Test</option>
+                <option value="Practical Exam">Practical Exam</option>
+                <option value="External Exam">External / University Exam</option>
+                <option value="Viva">Viva / Oral</option>
+                <option value="Unit Test">Unit Test</option>
+                <option value="Other">Other Evaluation</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label for="modalStartDate" class="form-label">Start Date <span style="color: var(--admin-danger);">*</span></label>
+              <input type="date" id="modalStartDate" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label for="modalEndDate" class="form-label">End Date <span style="color: var(--admin-danger);">*</span></label>
+              <input type="date" id="modalEndDate" class="form-control" required>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label for="modalStartTime" class="form-label">Start Time</label>
+              <input type="time" id="modalStartTime" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="modalEndTime" class="form-label">End Time</label>
+              <input type="time" id="modalEndTime" class="form-control">
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label for="modalLocation" class="form-label">Location / Campus</label>
+              <input type="text" id="modalLocation" class="form-control" placeholder="e.g. Main Auditorium or Campus Ground">
+            </div>
+            <div class="form-group">
+              <label for="modalRoom" class="form-label">Room / Hall No.</label>
+              <input type="text" id="modalRoom" class="form-control" placeholder="e.g. Lab 301 or Hall B">
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label for="modalTargetAudience" class="form-label">Target Audience</label>
+              <select id="modalTargetAudience" class="form-control">
+                <option value="ALL">Entire Campus (All Users)</option>
+                <option value="STUDENTS">Students Only</option>
+                <option value="TEACHERS">Teachers Only</option>
+                <option value="DEPARTMENT">Department Specific</option>
+                <option value="CLASS">Class / Division Specific</option>
+                <option value="COURSE">Course Specific</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="modalDepartment" class="form-label">Department</label>
+              <select id="modalDepartment" class="form-control">
+                <option value="">All / Not Department Restricted</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label for="modalCourse" class="form-label">Associated Course</label>
+              <select id="modalCourse" class="form-control">
+                <option value="">None / General</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="modalClassName" class="form-label">Target Class (e.g. TY-IT)</label>
+              <input type="text" id="modalClassName" class="form-control" placeholder="e.g. TY-IT, SY-CS">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="modalInstructions" class="form-label">Student / Teacher Instructions</label>
+            <textarea id="modalInstructions" class="form-control" rows="3" placeholder="e.g. Bring ID card, admit card, calculator. Reach venue 15 minutes before time."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="modalDescription" class="form-label">Description / Remarks</label>
+            <textarea id="modalDescription" class="form-control" rows="3" placeholder="Detailed syllabus scope, agenda, or background"></textarea>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="cancelEventBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="saveEventBtn">Save Event</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- EVENT DETAILS MODAL -->
+  <div id="detailsModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="detailsModalTitle">
+    <div class="modal-dialog details-modal-dialog">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <span id="detailsTypeBadge" class="event-pill pill-exam" style="font-size: 11px;">EXAM</span>
+          <h3 id="detailsModalTitle" class="modal-title">Event Details</h3>
+        </div>
+        <button type="button" class="modal-close-btn" id="closeDetailsModalBtn" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body" id="detailsModalContent">
+        <!-- Injected dynamically -->
+      </div>
+      <div class="modal-footer details-modal-footer">
+        <div>
+          <button type="button" class="btn btn-danger btn-sm" id="deleteEventBtn" style="display: inline-flex; align-items: center; gap: 4px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            <span>Delete</span>
+          </button>
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <button type="button" class="btn btn-secondary" id="closeDetailsBtn">Close</button>
+          <button type="button" class="btn btn-primary" id="editEventBtn">Edit Event</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Core Portal Scripts -->
+  <script src="/js/api.js"></script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/admin-calendar.js"></script>
+  <script src="/js/admin-shell.js"></script>
+  <script src="/js/user-menu.js"></script>
+</body>
+</html>

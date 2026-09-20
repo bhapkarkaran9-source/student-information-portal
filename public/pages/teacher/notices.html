@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Department Notices - Faculty Portal</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/teacher-dashboard.css">
+</head>
+<body class="teacher-layout">
+
+  <!-- Mobile Sidebar Backdrop -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop hidden"></div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- FIXED LEFT SIDEBAR -->
+  <aside id="teacherSidebar" class="teacher-sidebar" aria-label="Faculty Navigation"></aside>
+
+  <!-- MAIN WRAPPER -->
+  <div class="teacher-main-wrapper" style="margin-left: 260px; min-height: 100vh; display: flex; flex-direction: column;">
+    <!-- STICKY TOP HEADER -->
+    <header class="teacher-header" id="teacherHeader">
+      <div class="header-left">
+        <button type="button" id="toggleSidebarBtn" class="sidebar-toggle-btn" aria-label="Open menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <div class="header-heading-group">
+          <h1 class="header-title">Department Notices</h1>
+          <p class="header-subtitle">Publish announcements, examination circulars, and departmental memos</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <button type="button" id="headerNotificationBtn" class="header-notify-btn" title="View notifications" aria-label="Notifications">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          <span id="headerNotificationDot" class="header-notify-badge hidden"></span>
+        </button>
+        <div class="profile-dropdown-wrapper" id="profileDropdownWrapper">
+          <button type="button" id="profileDropdownBtn" class="header-profile-btn" aria-haspopup="true" aria-expanded="false" aria-label="User profile menu">
+            <div class="header-avatar" id="headerUserAvatar" style="background: linear-gradient(135deg, #0d9488, #059669);">T</div>
+            <div class="header-profile-meta">
+              <span class="header-profile-name" id="navUserName">Faculty Member</span>
+              <span class="header-profile-badge" id="userRoleBadge" style="background: #ccfbf1; color: #0f766e;">TEACHER</span>
+            </div>
+            <svg class="dropdown-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="dashboard-main" style="padding: 24px; flex: 1;">
+      <!-- KPI Stats Row -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px;">
+        <div class="card" style="padding: 16px 20px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px;">
+          <div style="font-size: 13px; color: #64748b; font-weight: 500;">Total Active Notices</div>
+          <div id="statTotalNotices" style="font-size: 24px; font-weight: 700; color: #0f172a; margin-top: 4px;">0</div>
+        </div>
+        <div class="card" style="padding: 16px 20px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px;">
+          <div style="font-size: 13px; color: #64748b; font-weight: 500;">Urgent / High Priority</div>
+          <div id="statHighPriorityNotices" style="font-size: 24px; font-weight: 700; color: #dc2626; margin-top: 4px;">0</div>
+        </div>
+        <div class="card" style="padding: 16px 20px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px;">
+          <div style="font-size: 13px; color: #64748b; font-weight: 500;">Faculty Circulars</div>
+          <div id="statFacultyNotices" style="font-size: 24px; font-weight: 700; color: #0d9488; margin-top: 4px;">0</div>
+        </div>
+      </div>
+
+      <!-- Toolbar Card -->
+      <div class="card mb-4" style="padding: 16px 20px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+          <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+            <button type="button" class="btn btn-sm notice-filter-btn active" data-filter="all" style="padding: 6px 12px; border-radius: 6px; font-size: 12.5px; font-weight: 600; border: none; cursor: pointer;">All Circulars</button>
+            <button type="button" class="btn btn-sm notice-filter-btn" data-filter="high" style="padding: 6px 12px; border-radius: 6px; font-size: 12.5px; font-weight: 600; border: none; cursor: pointer;">Urgent Only</button>
+            <button type="button" class="btn btn-sm notice-filter-btn" data-filter="faculty" style="padding: 6px 12px; border-radius: 6px; font-size: 12.5px; font-weight: 600; border: none; cursor: pointer;">Faculty Memos</button>
+            <button type="button" class="btn btn-sm notice-filter-btn" data-filter="student" style="padding: 6px 12px; border-radius: 6px; font-size: 12.5px; font-weight: 600; border: none; cursor: pointer;">Student Announcements</button>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <input type="text" id="noticeSearchInput" placeholder="Search notice title or keywords..." style="padding: 8px 14px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; width: 260px;">
+          </div>
+        </div>
+      </div>
+
+      <!-- Notices Container -->
+      <div id="noticesContainer">
+        <div class="card" style="padding: 48px 24px; text-align: center; background: #ffffff; border: 1px dashed #cbd5e1; border-radius: 8px;">
+          <div style="width: 56px; height: 56px; margin: 0 auto 16px; border-radius: 50%; background: #ccfbf1; display: flex; align-items: center; justify-content: center; color: #0d9488;">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+          </div>
+          <h3 style="font-size: 18px; font-weight: 700; margin: 0 0 8px 0; color: #0f172a;">No Active Notices</h3>
+          <p style="color: #64748b; max-width: 480px; margin: 0 auto; font-size: 14px;">There are no active faculty circulars or bulletins posted at this time.</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- CORE SCRIPTS -->
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/teacher-shell.js"></script>
+  <script src="/js/user-menu.js"></script>
+  <script src="/js/teacher-notices.js"></script>
+</body>
+</html>

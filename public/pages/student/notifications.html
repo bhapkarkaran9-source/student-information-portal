@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notifications - Student Information Portal</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/student-dashboard.css">
+</head>
+<body class="student-portal-body">
+
+  <div id="sidebarBackdrop" class="sidebar-backdrop hidden"></div>
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- FIXED LEFT SIDEBAR -->
+  <aside id="studentSidebar" class="student-sidebar" aria-label="Student Navigation">
+    <div class="sidebar-header">
+      <a href="/pages/student/dashboard.html" class="sidebar-brand">
+        <div class="sidebar-logo" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/>
+          </svg>
+        </div>
+        <div class="sidebar-title">
+          <span class="brand-main">Student Portal</span>
+          <span class="brand-sub">STUDENT</span>
+        </div>
+      </a>
+      <button type="button" id="closeSidebarBtn" class="sidebar-close-btn" aria-label="Close menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-group-title">ACADEMIC MODULES</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/student/dashboard.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/profile.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <span>My Profile</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/courses.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            <span>My Courses / Enrollment</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/attendance.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+            <span>My Attendance</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/grades.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+            <span>My Results / Grades</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/timetable.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            <span>Timetable</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/assignments.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+            <span>Assignments</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/study-material.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+            <span>Study Material</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="nav-group-title">CAMPUS & SERVICES</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/student/notices.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+            <span>Notices</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/notifications.html" class="nav-link active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+            <span>Notifications</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/queries.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            <span>Queries</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/reports.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            <span>Reports</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sidebarAvatar">S</div>
+        <div class="sidebar-user-info">
+          <span class="sidebar-user-name" id="sidebarUserName">Student</span>
+          <span class="sidebar-user-role">STUDENT</span>
+        </div>
+      </div>
+      <button type="button" id="sidebarLogoutBtn" class="btn-sidebar-logout" title="Sign Out" aria-label="Sign Out">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN WRAPPER -->
+  <div class="student-main-wrapper">
+    <header class="student-header" id="studentHeader">
+      <div class="header-left">
+        <button type="button" id="toggleSidebarBtn" class="sidebar-toggle-btn" aria-label="Open menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <div class="header-heading-group">
+          <h1 class="header-title">Notifications &amp; Alerts</h1>
+          <p class="header-subtitle">Real-time alerts, assignment deadlines, grade postings, and query replies</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <button type="button" id="headerNotificationBtn" class="header-notify-btn" title="View notifications" aria-label="Notifications">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+          <span id="headerNotificationDot" class="header-notify-badge" style="display: none;"></span>
+        </button>
+        <div class="profile-dropdown-wrapper" id="profileDropdownWrapper">
+          <button type="button" id="profileDropdownBtn" class="header-profile-btn" aria-haspopup="true" aria-expanded="false">
+            <div class="header-avatar" id="headerUserAvatar">S</div>
+            <div class="header-profile-meta">
+              <span class="header-profile-name" id="navUserName">Student</span>
+              <span class="header-profile-badge" id="userRoleBadge">STUDENT</span>
+            </div>
+            <svg class="dropdown-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="dashboard-main">
+
+      <!-- KPI Summary -->
+      <section class="stats-grid mb-4">
+        <div class="stat-card card-border-blue">
+          <div class="stat-icon-wrap stat-icon-blue">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+          </div>
+          <div class="stat-meta">
+            <span class="stat-label">Unread Notifications</span>
+            <div class="stat-value card-val-blue" id="kpiUnreadCount">0 New</div>
+            <span class="stat-trend neutral" id="kpiUnreadTrend">All caught up</span>
+          </div>
+        </div>
+
+        <div class="stat-card card-border-green">
+          <div class="stat-icon-wrap stat-icon-emerald">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+          </div>
+          <div class="stat-meta">
+            <span class="stat-label">Total Notifications</span>
+            <div class="stat-value card-val-green" id="kpiTotalNotifications">0 Delivered</div>
+            <span class="stat-trend neutral" id="kpiTotalTrend">Activity Stream</span>
+          </div>
+        </div>
+
+        <div class="stat-card card-border-orange">
+          <div class="stat-icon-wrap stat-icon-amber">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+          </div>
+          <div class="stat-meta">
+            <span class="stat-label">Action Pending</span>
+            <div class="stat-value card-val-orange" id="kpiActionPending">0 Due</div>
+            <span class="stat-trend neutral" id="kpiActionTrend">Important updates</span>
+          </div>
+        </div>
+
+        <div class="stat-card card-border-indigo">
+          <div class="stat-icon-wrap stat-icon-purple">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+          </div>
+          <div class="stat-meta">
+            <span class="stat-label">Email Digest</span>
+            <div class="stat-value card-val-indigo">Enabled</div>
+            <span class="stat-trend positive">Real-time alerts</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Action Toolbar -->
+      <div class="card mb-4" style="padding: 12px 16px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+          <div style="display: flex; gap: 8px;">
+            <button type="button" class="btn btn-primary btn-sm notif-filter-btn active" id="btnNotifAll" data-filter="all">All Notifications (0)</button>
+            <button type="button" class="btn btn-secondary btn-sm notif-filter-btn" id="btnNotifUnread" data-filter="unread">Unread Only (0)</button>
+          </div>
+          <div>
+            <button type="button" class="btn btn-secondary btn-sm" id="btnMarkAllRead">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+              Mark All as Read
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notifications List -->
+      <div style="display: flex; flex-direction: column; gap: 12px;" id="notificationsList">
+        <div class="card" style="padding: 48px 24px; text-align: center; background: #ffffff; border: 1px dashed #e2e8f0; border-radius: 8px;">
+          <div style="width: 56px; height: 56px; margin: 0 auto 16px; border-radius: 50%; background: #eff6ff; display: flex; align-items: center; justify-content: center; color: var(--stu-primary);">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+          </div>
+          <h3 style="font-size: 18px; font-weight: 700; margin: 0 0 8px 0; color: var(--stu-text);">Loading Notifications...</h3>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/student-shell.js"></script>
+  <script src="/js/user-menu.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const user = await requireAuth('STUDENT');
+      if (!user) return;
+
+      let allNotifications = [];
+      let currentFilter = 'all';
+
+      function escapeHtml(str) {
+        if (str === null || str === undefined) return '';
+        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+      }
+
+      function renderNotifications() {
+        const container = document.getElementById('notificationsList');
+        if (!container) return;
+
+        let filtered = allNotifications;
+        if (currentFilter === 'unread') {
+          filtered = allNotifications.filter(n => !n.is_read);
+        }
+
+        if (filtered.length === 0) {
+          container.innerHTML = `
+            <div class="card" style="padding: 48px 24px; text-align: center; background: #ffffff; border: 1px dashed #e2e8f0; border-radius: 8px;">
+              <div style="width: 56px; height: 56px; margin: 0 auto 16px; border-radius: 50%; background: #eff6ff; display: flex; align-items: center; justify-content: center; color: var(--stu-primary);">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+              </div>
+              <h3 style="font-size: 18px; font-weight: 700; margin: 0 0 8px 0; color: var(--stu-text);">No Notifications</h3>
+              <p style="color: var(--stu-text-muted); max-width: 480px; margin: 0 auto; font-size: 14px;">You have no new alerts or messages for this filter view.</p>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = filtered.map(n => {
+          const isUnread = !n.is_read;
+          const timeAgo = n.created_at ? new Date(n.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
+          const type = n.notification_type || 'System';
+
+          let typeBg = '#e0e7ff';
+          let typeColor = '#4338ca';
+          if (type === 'Query') {
+            typeBg = '#ccfbf1';
+            typeColor = '#0f766e';
+          } else if (type === 'Assignment' || type === 'Exam') {
+            typeBg = '#fef3c7';
+            typeColor = '#b45309';
+          }
+
+          const cardBg = '#ffffff';
+          const borderLeft = isUnread ? '4px solid #2563eb' : '4px solid #e2e8f0';
+          const borderClass = isUnread ? 'card-border-blue' : '';
+
+          return `
+            <div class="card notification-item ${borderClass}" style="padding: 16px 20px; background: ${cardBg}; border: 1px solid #e2e8f0; border-left: ${borderLeft}; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03); display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;">
+              <div style="flex: 1; min-width: 0;">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
+                  <span class="badge" style="background: ${typeBg}; color: ${typeColor}; font-weight: 600; font-size: 11px; padding: 2px 8px; border-radius: 6px;">${escapeHtml(type)}</span>
+                  <span style="font-weight: 700; font-size: 14px; color: #0f172a;">${escapeHtml(n.title)}</span>
+                  ${isUnread ? '<span style="width: 8px; height: 8px; background: #2563eb; border-radius: 50%; display: inline-block;"></span>' : ''}
+                </div>
+                <div style="font-size: 13px; color: #475569; line-height: 1.5; margin-bottom: 6px;">${escapeHtml(n.message)}</div>
+                <div style="font-size: 11px; color: #94a3b8;">${timeAgo}</div>
+              </div>
+              <div style="flex-shrink: 0;">
+                ${isUnread ? `
+                  <button type="button" class="btn btn-secondary btn-sm btn-mark-one-read" data-id="${n.notification_id}" style="font-size: 11px; padding: 4px 8px;">
+                    Mark Read
+                  </button>
+                ` : `
+                  <span class="badge" style="background: #f1f5f9; color: #64748b; font-size: 11px;">Read</span>
+                `}
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        // Wire single mark read buttons
+        document.querySelectorAll('.btn-mark-one-read').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const notifId = btn.getAttribute('data-id');
+            try {
+              const res = await apiRequest(`/notifications/${notifId}/read`, { method: 'PATCH' });
+              if (res.ok) {
+                const item = allNotifications.find(x => String(x.notification_id) === String(notifId));
+                if (item) item.is_read = true;
+                updateStatsAndRender();
+                showToast('Notification marked as read.', 'info');
+              }
+            } catch (err) {
+              console.error('Failed to mark read:', err);
+            }
+          });
+        });
+      }
+
+      function updateStatsAndRender() {
+        const unreadCount = allNotifications.filter(n => !n.is_read).length;
+
+        const kpiUnread = document.getElementById('kpiUnreadCount');
+        if (kpiUnread) kpiUnread.textContent = `${unreadCount} New`;
+        const kpiUnreadTrend = document.getElementById('kpiUnreadTrend');
+        if (kpiUnreadTrend) kpiUnreadTrend.textContent = unreadCount > 0 ? 'Unread alerts pending' : 'All caught up';
+
+        const kpiTotal = document.getElementById('kpiTotalNotifications');
+        if (kpiTotal) kpiTotal.textContent = `${allNotifications.length} Delivered`;
+
+        const kpiAction = document.getElementById('kpiActionPending');
+        if (kpiAction) kpiAction.textContent = `${unreadCount} Due`;
+
+        const bAll = document.getElementById('btnNotifAll');
+        if (bAll) bAll.textContent = `All Notifications (${allNotifications.length})`;
+
+        const bUnread = document.getElementById('btnNotifUnread');
+        if (bUnread) bUnread.textContent = `Unread Only (${unreadCount})`;
+
+        const headerDot = document.getElementById('headerNotificationDot');
+        if (headerDot) headerDot.style.display = unreadCount > 0 ? 'block' : 'none';
+
+        renderNotifications();
+      }
+
+      async function loadNotifications() {
+        try {
+          const res = await apiRequest('/notifications');
+          if (res.ok && res.data) {
+            allNotifications = res.data.notifications || [];
+            updateStatsAndRender();
+          } else {
+            showErrorState();
+          }
+        } catch (err) {
+          console.error('Failed to load notifications:', err);
+          showErrorState();
+        }
+      }
+
+      function showErrorState() {
+        const container = document.getElementById('notificationsList');
+        if (container) {
+          container.innerHTML = `
+            <div class="card" style="padding: 48px 24px; text-align: center; background: #ffffff; border: 1px solid #fee2e2; border-radius: var(--stu-radius-lg);">
+              <div style="width: 56px; height: 56px; margin: 0 auto 16px; border-radius: 50%; background: #fee2e2; display: flex; align-items: center; justify-content: center; color: #b91c1c;">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+              </div>
+              <h3 style="font-size: 18px; font-weight: 700; margin: 0 0 8px 0; color: #b91c1c;">Unable to Load Notifications</h3>
+              <p style="color: #64748b; margin: 0 auto 16px auto; font-size: 14px;">An error occurred while fetching notifications from the server.</p>
+              <button type="button" class="btn btn-primary btn-sm" id="btnRetryNotifs">Retry</button>
+            </div>
+          `;
+          document.getElementById('btnRetryNotifs')?.addEventListener('click', loadNotifications);
+        }
+      }
+
+      // Mark all read button
+      document.getElementById('btnMarkAllRead')?.addEventListener('click', async () => {
+        try {
+          const res = await apiRequest('/notifications/read-all', { method: 'PATCH' });
+          if (res.ok) {
+            allNotifications.forEach(n => n.is_read = true);
+            updateStatsAndRender();
+            showToast('All notifications marked as read.', 'success');
+          }
+        } catch (err) {
+          console.error('Failed to mark all read:', err);
+        }
+      });
+
+      // Filter tabs
+      document.querySelectorAll('.notif-filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.notif-filter-btn').forEach(b => {
+            b.classList.remove('active', 'btn-primary');
+            b.classList.add('btn-secondary');
+          });
+          btn.classList.remove('btn-secondary');
+          btn.classList.add('active', 'btn-primary');
+
+          currentFilter = btn.getAttribute('data-filter');
+          renderNotifications();
+        });
+      });
+
+      loadNotifications();
+    });
+  </script>
+</body>
+</html>

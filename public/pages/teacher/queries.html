@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student–Teacher Queries - Faculty Portal</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/teacher-dashboard.css">
+</head>
+<body class="teacher-layout">
+
+  <!-- Mobile Sidebar Backdrop -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop hidden"></div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- FIXED LEFT SIDEBAR (Standardized by teacher-shell.js) -->
+  <aside id="teacherSidebar" class="teacher-sidebar" aria-label="Faculty Navigation"></aside>
+
+  <!-- MAIN VIEWPORT WRAPPER -->
+  <div class="teacher-main-wrapper" style="margin-left: 260px; min-height: 100vh; display: flex; flex-direction: column;">
+    
+    <!-- STICKY TOP HEADER -->
+    <header class="teacher-header" id="teacherHeader">
+      <div class="header-left">
+        <button type="button" id="toggleSidebarBtn" class="sidebar-toggle-btn" aria-label="Open menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <div class="header-heading-group">
+          <h1 class="header-title">Student–Teacher Queries</h1>
+          <p class="header-subtitle">Review student academic doubts, send detailed explanations, and manage resolution statuses</p>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <!-- Notification Bell Icon (Clickable) -->
+        <button type="button" id="headerNotificationBtn" class="header-notify-btn" title="View notifications" aria-label="Notifications" onclick="window.location.href='/pages/teacher/notifications.html'">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          <span id="headerNotificationDot" class="header-notify-badge hidden">0</span>
+        </button>
+
+        <!-- Right-side User Profile Menu Trigger -->
+        <div class="profile-dropdown-wrapper" id="profileDropdownWrapper">
+          <button type="button" id="profileDropdownBtn" class="header-profile-btn" aria-haspopup="true" aria-expanded="false" aria-label="User profile menu">
+            <div class="header-avatar" id="headerUserAvatar" style="background: linear-gradient(135deg, #0d9488, #059669);">T</div>
+            <div class="header-profile-meta">
+              <span class="header-profile-name" id="navUserName">Faculty Member</span>
+              <span class="header-profile-badge" id="userRoleBadge" style="background: #ccfbf1; color: #0f766e;">TEACHER</span>
+            </div>
+            <svg class="dropdown-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="dashboard-main" style="padding: 24px; flex: 1;">
+
+      <!-- Page Actions Row -->
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
+        <div>
+          <h2 style="font-size: 20px; font-weight: 700; color: #0f172a; margin: 0 0 4px 0;">Academic Inquiry Workspace</h2>
+          <p style="font-size: 13.5px; color: #64748b; margin: 0;">Direct communication and doubt resolution desk for your enrolled students</p>
+        </div>
+        <button type="button" id="btnRefresh" class="btn btn-secondary" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; font-weight: 600;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <polyline points="1 20 1 14 7 14"></polyline>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+          </svg>
+          <span>Refresh</span>
+        </button>
+      </div>
+
+      <!-- KPI METRIC CARDS (Bounded 4-Column Grid) -->
+      <div class="teacher-kpi-grid">
+        <!-- 1. Total Queries -->
+        <div class="teacher-kpi-card">
+          <div class="teacher-kpi-top">
+            <span class="teacher-kpi-title">Total Queries</span>
+            <div class="teacher-kpi-icon kpi-icon-blue">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="teacher-kpi-value" id="kpiTotalQueries">0</div>
+          <div class="teacher-kpi-subtext">All inquiries assigned to you</div>
+        </div>
+
+        <!-- 2. Open Queries -->
+        <div class="teacher-kpi-card">
+          <div class="teacher-kpi-top">
+            <span class="teacher-kpi-title">Open</span>
+            <div class="teacher-kpi-icon kpi-icon-amber">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 14 14"></polyline>
+              </svg>
+            </div>
+          </div>
+          <div class="teacher-kpi-value" id="kpiOpenQueries" style="color: #d97706;">0</div>
+          <div class="teacher-kpi-subtext">Awaiting initial faculty response</div>
+        </div>
+
+        <!-- 3. In Progress -->
+        <div class="teacher-kpi-card">
+          <div class="teacher-kpi-top">
+            <span class="teacher-kpi-title">In Progress</span>
+            <div class="teacher-kpi-icon kpi-icon-purple">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="teacher-kpi-value" id="kpiInProgressQueries" style="color: #7c3aed;">0</div>
+          <div class="teacher-kpi-subtext">Active ongoing discussions</div>
+        </div>
+
+        <!-- 4. Resolved -->
+        <div class="teacher-kpi-card">
+          <div class="teacher-kpi-top">
+            <span class="teacher-kpi-title">Resolved</span>
+            <div class="teacher-kpi-icon kpi-icon-teal">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+            </div>
+          </div>
+          <div class="teacher-kpi-value" id="kpiResolvedQueries" style="color: #0d9488;">0</div>
+          <div class="teacher-kpi-subtext">Successfully answered doubts</div>
+        </div>
+      </div>
+
+      <!-- FILTER PANEL -->
+      <div class="teacher-filter-card">
+        <div class="teacher-filter-bar">
+          <div class="teacher-filter-inputs">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search student name, PRN, or subject..." style="min-width: 260px; flex: 1.5;">
+            <select id="statusFilter" class="form-control" style="min-width: 140px; flex: 1;">
+              <option value="">All Statuses</option>
+              <option value="Open">Open</option>
+              <option value="Pending">Pending</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Resolved">Resolved</option>
+              <option value="Closed">Closed</option>
+            </select>
+            <select id="priorityFilter" class="form-control" style="min-width: 130px; flex: 1;">
+              <option value="">All Priorities</option>
+              <option value="High">High Priority</option>
+              <option value="Medium">Medium Priority</option>
+              <option value="Low">Low Priority</option>
+            </select>
+            <select id="courseFilter" class="form-control" style="min-width: 170px; flex: 1.2;">
+              <option value="">All Courses</option>
+            </select>
+          </div>
+          <button type="button" id="btnResetFilters" class="btn btn-secondary btn-sm" style="padding: 8px 14px; font-weight: 600; white-space: nowrap;">
+            Reset Filters
+          </button>
+        </div>
+      </div>
+
+      <!-- QUERIES TABLE CARD -->
+      <div class="card p-0 overflow-hidden" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
+        <div class="table-responsive">
+          <table class="data-table" id="teacherQueriesTable" style="width: 100%; margin: 0;">
+            <thead>
+              <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                <th style="width: 85px;">Query ID</th>
+                <th>Subject</th>
+                <th>Course</th>
+                <th>Asked By</th>
+                <th>Assigned To</th>
+                <th style="width: 100px;">Priority</th>
+                <th style="width: 110px;">Status</th>
+                <th style="width: 130px;">Last Updated</th>
+                <th style="width: 120px; text-align: right;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="teacherQueriesTableBody">
+              <tr>
+                <td colspan="9" class="text-center py-5 text-muted" style="text-align: center; padding: 48px 20px;">
+                  <div style="font-size: 14px; color: #64748b;">Loading assigned queries...</div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ========================================================================
+       MODAL: DISCUSSION THREAD, REPLY & RESOLUTION
+       ======================================================================== -->
+  <div id="teacherThreadModal" class="custom-modal-backdrop hidden" role="dialog" aria-modal="true">
+    <div class="custom-modal-dialog" style="max-width: 760px;">
+      <div class="custom-modal-header">
+        <div>
+          <h2 class="custom-modal-title" id="tModalTitle">Query Discussion</h2>
+          <span class="text-muted" style="font-size: 12.5px;" id="tModalMeta"></span>
+        </div>
+        <button type="button" class="custom-modal-close" data-dismiss="modal" aria-label="Close dialog">&times;</button>
+      </div>
+      <div class="custom-modal-body" style="max-height: 75vh; overflow-y: auto;">
+        
+        <!-- Query Header Details -->
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px; margin-bottom: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 6px;">
+            <div style="display: flex; gap: 6px; align-items: center;">
+              <span id="tPriorityBadge" class="badge"></span>
+              <span id="tStatusBadge" class="badge"></span>
+              <span id="tCourseBadge" class="badge badge-secondary"></span>
+            </div>
+            <span id="tCreatedTime" style="font-size: 12px; color: #64748b;"></span>
+          </div>
+          <h3 id="tSubjectText" style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 4px 0 6px 0;"></h3>
+          <div style="font-size: 13px; color: #475569; margin-bottom: 10px;">
+            <strong>Student:</strong> <span id="tStudentInfo"></span>
+          </div>
+          <div style="background: #ffffff; border-left: 3px solid #0d9488; padding: 12px; border-radius: 4px; font-size: 13.5px; color: #1e293b; line-height: 1.5; white-space: pre-wrap;" id="tQuestionText"></div>
+        </div>
+
+        <!-- Thread Messages -->
+        <h4 style="font-size: 13.5px; font-weight: 700; color: #334155; margin: 0 0 12px 0;">Discussion History</h4>
+        <div id="tRepliesContainer" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;">
+          <!-- Dynamically loaded -->
+        </div>
+
+        <!-- Faculty Reply Box -->
+        <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 14px 16px;">
+          <label for="tReplyInput" style="font-weight: 700; font-size: 13px; color: #1e293b; display: block; margin-bottom: 6px;">Post Response</label>
+          <textarea id="tReplyInput" class="form-control" rows="3" placeholder="Type your explanation or instructions here..." style="width: 100%; box-sizing: border-box; margin-bottom: 12px; font-size: 13.5px; padding: 8px 10px;"></textarea>
+          
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <label for="tStatusSelect" style="font-size: 13px; font-weight: 600; color: #475569; margin: 0;">Update Status:</label>
+              <select id="tStatusSelect" class="form-control" style="width: 130px; height: 34px; font-size: 13px; padding: 4px 8px;">
+                <option value="In Progress">In Progress</option>
+                <option value="Resolved">Resolved</option>
+                <option value="Closed">Closed</option>
+              </select>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button type="button" id="btnQuickResolve" class="btn btn-secondary btn-sm" style="font-weight: 600; color: #0f766e; border-color: #99f6e4; background: #f0fdfa;">
+                Mark Resolved
+              </button>
+              <button type="button" id="btnTeacherSendReply" class="btn btn-primary btn-sm" style="font-weight: 600; padding: 6px 16px;">
+                Send Reply
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="custom-modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close Window</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/js/teacher-shell.js"></script>
+  <script src="/js/user-menu.js"></script>
+  <script src="/js/teacher-queries.js"></script>
+</body>
+</html>

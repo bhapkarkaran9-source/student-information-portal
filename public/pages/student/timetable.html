@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timetable - Student Information Portal</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/student-dashboard.css">
+</head>
+<body class="student-portal-body">
+
+  <div id="sidebarBackdrop" class="sidebar-backdrop hidden"></div>
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- FIXED LEFT SIDEBAR -->
+  <aside id="studentSidebar" class="student-sidebar" aria-label="Student Navigation">
+    <div class="sidebar-header">
+      <a href="/pages/student/dashboard.html" class="sidebar-brand">
+        <div class="sidebar-logo" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/>
+          </svg>
+        </div>
+        <div class="sidebar-title">
+          <span class="brand-main">Student Portal</span>
+          <span class="brand-sub">STUDENT</span>
+        </div>
+      </a>
+      <button type="button" id="closeSidebarBtn" class="sidebar-close-btn" aria-label="Close menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-group-title">ACADEMIC MODULES</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/student/dashboard.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/profile.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <span>My Profile</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/courses.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            <span>My Courses / Enrollment</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/attendance.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+            <span>My Attendance</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/grades.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+            <span>My Results / Grades</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/timetable.html" class="nav-link active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            <span>Timetable</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/assignments.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+            <span>Assignments</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/study-material.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+            <span>Study Material</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="nav-group-title">CAMPUS & SERVICES</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/student/notices.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+            <span>Notices</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/notifications.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+            <span>Notifications</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/queries.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            <span>Queries</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/reports.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            <span>Reports</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sidebarAvatar">S</div>
+        <div class="sidebar-user-info">
+          <span class="sidebar-user-name" id="sidebarUserName">Student</span>
+          <span class="sidebar-user-role">STUDENT</span>
+        </div>
+      </div>
+      <button type="button" id="sidebarLogoutBtn" class="btn-sidebar-logout" title="Sign Out" aria-label="Sign Out">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN WRAPPER -->
+  <div class="student-main-wrapper">
+    <header class="student-header" id="studentHeader">
+      <div class="header-left">
+        <button type="button" id="toggleSidebarBtn" class="sidebar-toggle-btn" aria-label="Open menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <div class="header-heading-group">
+          <h1 class="header-title">Timetable Schedule</h1>
+          <p class="header-subtitle">Weekly academic lecture times, laboratories, and hall venues</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <button type="button" id="headerNotificationBtn" class="header-notify-btn" title="View notifications" aria-label="Notifications">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+          <span id="headerNotificationDot" class="header-notify-badge"></span>
+        </button>
+        <div class="profile-dropdown-wrapper" id="profileDropdownWrapper">
+          <button type="button" id="profileDropdownBtn" class="header-profile-btn" aria-haspopup="true" aria-expanded="false">
+            <div class="header-avatar" id="headerUserAvatar">S</div>
+            <div class="header-profile-meta">
+              <span class="header-profile-name" id="navUserName">Student</span>
+              <span class="header-profile-badge" id="userRoleBadge">STUDENT</span>
+            </div>
+            <svg class="dropdown-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="dashboard-main">
+
+      <!-- KPI Summary -->
+      <section class="stats-grid mb-4">
+        <div class="stat-card card-border-blue">
+          <div class="stat-icon-wrap stat-icon-blue">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+          </div>
+          <div class="stat-meta">
+            <span class="stat-label">Weekly Hours</span>
+            <div class="stat-value card-val-blue" id="kpiWeeklyHours">--</div>
+            <span class="stat-trend neutral" id="kpiHoursTrend">Scheduled Sessions</span>
+          </div>
+        </div>
+
+        <div class="stat-card card-border-green">
+          <div class="stat-icon-wrap stat-icon-emerald">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+          </div>
+          <div class="stat-meta">
+            <span class="stat-label">Daily Timing</span>
+            <div class="stat-value card-val-green" id="kpiDailyTiming">--</div>
+            <span class="stat-trend neutral" id="kpiTimingTrend">College Hours</span>
+          </div>
+        </div>
+
+        <div class="stat-card card-border-indigo">
+          <div class="stat-icon-wrap stat-icon-indigo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path></svg>
+          </div>
+          <div class="stat-meta">
+            <span class="stat-label">Total Subjects</span>
+            <div class="stat-value card-val-indigo" id="kpiTotalSubjects">--</div>
+            <span class="stat-trend neutral" id="kpiSubjectsTrend">Active Curriculum</span>
+          </div>
+        </div>
+
+        <div class="stat-card card-border-blue">
+          <div class="stat-icon-wrap stat-icon-purple">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+          </div>
+          <div class="stat-meta">
+            <span class="stat-label">Primary Hall</span>
+            <div class="stat-value card-val-blue" id="kpiPrimaryHall">--</div>
+            <span class="stat-trend neutral" id="kpiHallTrend">Classroom Assigned</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- View Switcher Tabs (TODAY, UPCOMING, WEEK) -->
+      <div class="card mb-4" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;" id="viewTabsContainer">
+          <button type="button" class="btn btn-primary btn-sm view-tab active" data-view="TODAY" id="tabBtnToday" style="display: inline-flex; align-items: center; gap: 6px; font-weight: 600;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            <span>Today's Schedule</span>
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm view-tab" data-view="UPCOMING" id="tabBtnUpcoming" style="display: inline-flex; align-items: center; gap: 6px; font-weight: 600;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            <span>Upcoming Lectures</span>
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm view-tab" data-view="WEEK" id="tabBtnWeek" style="display: inline-flex; align-items: center; gap: 6px; font-weight: 600;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            <span>Full Week Timetable</span>
+          </button>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span id="timetableLiveIndicator" style="font-size: 12px; color: #16a34a; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+            <span style="width: 8px; height: 8px; border-radius: 50%; background: #22c55e; display: inline-block;"></span>
+            <span>Live Auto-Sync</span>
+          </span>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="window.print()" style="font-size: 12px; padding: 4px 10px;">Print</button>
+        </div>
+      </div>
+
+      <!-- VIEW 1: TODAY'S SCHEDULE (Timeline & Card View with Highlights) -->
+      <div id="sectionViewToday" class="timetable-view-section">
+        <!-- Next Lecture Prominent Card -->
+        <section class="student-next-lecture-card" id="todayNextLectureSection" style="margin-bottom: 20px;">
+          <div style="background: #ffffff; color: #0f172a; border: 1px solid #e2e8f0; border-left: 4px solid #2563eb; border-radius: 8px; padding: 20px 24px; position: relative; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; margin-bottom: 12px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; background: #eff6ff; padding: 3px 10px; border-radius: 9999px; color: #2563eb;">
+                  Next Lecture
+                </span>
+                <span id="pageNextLectureBadge" class="badge" style="font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 9999px; display: none;"></span>
+              </div>
+              <div id="pageNextLectureCountdownWrap" style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #4f46e5;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                <span id="pageNextLectureCountdown">Loading schedule...</span>
+              </div>
+            </div>
+
+            <div id="pageNextLectureContent" style="display: none;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px;">
+                <div>
+                  <h3 id="pageNextLectureCourse" style="font-size: 20px; font-weight: 700; margin: 0; color: #0f172a;">-</h3>
+                  <p id="pageNextLectureMeta" style="font-size: 13.5px; color: #64748b; margin: 4px 0 0 0;">-</p>
+                </div>
+                <div style="display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; color: #475569;">
+                  <div style="display: flex; align-items: center; gap: 6px;">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                    <span id="pageNextLectureTime">-</span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 6px;">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    <span id="pageNextLectureRoom">-</span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 6px;">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <span id="pageNextLectureTeacher">-</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Empty State (No more lectures today) -->
+            <div id="pageNextLectureEmptyState" style="padding: 10px 0;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                <div>
+                  <div style="font-weight: 700; font-size: 15px; color: #0f172a;">No more lectures today</div>
+                  <div style="font-size: 12.5px; color: #64748b; margin-top: 2px;">All scheduled classes for today have concluded or no sessions are scheduled.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Today's Schedule Timeline & Highlights Card -->
+        <section class="card mb-4">
+          <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <h3 class="card-title" id="todayScheduleHeading" style="margin: 0;">Today's Classes</h3>
+              <p style="font-size: 12.5px; color: #64748b; margin: 3px 0 0 0;">Timeline view with dynamic countdown, live lecture indicators, and attendance logs</p>
+            </div>
+            <span id="todayLectureCountBadge" class="badge" style="background: #e0e7ff; color: #4338ca; font-weight: 700; font-size: 12px; padding: 4px 10px; border-radius: 9999px;">0 Lectures</span>
+          </div>
+          <div id="todayTimelineList" style="padding: 16px; display: flex; flex-direction: column; gap: 12px;">
+            <div style="text-align: center; padding: 36px 16px; color: #64748b;">Loading today's schedule...</div>
+          </div>
+        </section>
+      </div>
+
+      <!-- VIEW 2: UPCOMING LECTURES -->
+      <div id="sectionViewUpcoming" class="timetable-view-section" style="display: none;">
+        <section class="card mb-4">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title" style="margin: 0;">Upcoming Lectures</h3>
+              <p style="font-size: 12.5px; color: #64748b; margin: 3px 0 0 0;">Chronological list of all forthcoming classes across your academic schedule</p>
+            </div>
+          </div>
+          <div id="upcomingLecturesList" style="padding: 16px; display: flex; flex-direction: column; gap: 12px;">
+            <div style="text-align: center; padding: 36px 16px; color: #64748b;">Loading upcoming lectures...</div>
+          </div>
+        </section>
+      </div>
+
+      <!-- VIEW 3: FULL WEEK TIMETABLE -->
+      <div id="sectionViewWeek" class="timetable-view-section" style="display: none;">
+        <!-- Day Tabs -->
+        <div class="card mb-4" style="padding: 12px 16px;">
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;" id="dayTabsContainer">
+            <button type="button" class="btn btn-primary day-tab active" data-day="Monday">Monday</button>
+            <button type="button" class="btn btn-secondary day-tab" data-day="Tuesday">Tuesday</button>
+            <button type="button" class="btn btn-secondary day-tab" data-day="Wednesday">Wednesday</button>
+            <button type="button" class="btn btn-secondary day-tab" data-day="Thursday">Thursday</button>
+            <button type="button" class="btn btn-secondary day-tab" data-day="Friday">Friday</button>
+            <button type="button" class="btn btn-secondary day-tab" data-day="Saturday">Saturday</button>
+          </div>
+        </div>
+
+        <!-- Schedule Table -->
+        <section class="card mb-4">
+          <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 class="card-title" id="dayTitleHeading">Monday Lecture Schedule</h3>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="window.print()">Print Timetable</button>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th style="width: 180px;">Time Slot</th>
+                  <th>Course Name</th>
+                  <th>Course Code</th>
+                  <th>Instructor</th>
+                  <th>Room / Venue</th>
+                  <th>Type</th>
+                </tr>
+              </thead>
+              <tbody id="scheduleTbody">
+                <tr>
+                  <td colspan="6" style="text-align: center; padding: 48px 16px; color: var(--stu-text-muted);">
+                    Loading schedule...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/student-shell.js"></script>
+  <script src="/js/user-menu.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const user = await requireAuth('STUDENT');
+      if (!user) return;
+
+      let allTimetable = [];
+      let todayLectures = [];
+      let nextLectureData = null;
+      let currentSelectedDay = 'Monday';
+      let currentActiveView = 'TODAY';
+
+      function escapeHtml(str) {
+        if (str === null || str === undefined) return '';
+        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+      }
+
+      function formatTimeTo12Hour(timeStr) {
+        if (!timeStr) return '';
+        const parts = String(timeStr).split(':');
+        if (parts.length < 2) return timeStr;
+        let hours = parseInt(parts[0], 10);
+        const minutes = parts[1];
+        if (isNaN(hours)) return timeStr;
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12;
+        const strHours = hours < 10 ? '0' + hours : String(hours);
+        return `${strHours}:${minutes} ${ampm}`;
+      }
+
+      function getDayName(date) {
+        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        return days[date.getDay()];
+      }
+
+      // 1. Setup View Switcher Tabs (TODAY, UPCOMING, WEEK)
+      const viewTabs = document.querySelectorAll('.view-tab');
+      viewTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          const view = tab.getAttribute('data-view');
+          currentActiveView = view;
+          switchView(view);
+        });
+      });
+
+      function timeStringToMinutes(timeStr) {
+        if (!timeStr) return null;
+        const parts = String(timeStr).trim().split(':');
+        if (parts.length < 2) return null;
+        const h = parseInt(parts[0], 10);
+        const m = parseInt(parts[1], 10);
+        if (isNaN(h) || isNaN(m)) return null;
+        return h * 60 + m;
+      }
+
+      function computeDailyTimingForDay(dayName, slots) {
+        if (!dayName || !slots || slots.length === 0) {
+          return 'No scheduled hours';
+        }
+
+        const daySlots = slots.filter(s => (s.day_of_week || '').toLowerCase() === dayName.toLowerCase());
+        if (daySlots.length === 0) {
+          return 'No scheduled hours';
+        }
+
+        let earliestSlot = null;
+        let minStartMins = Infinity;
+        let latestSlot = null;
+        let maxEndMins = -Infinity;
+
+        daySlots.forEach(slot => {
+          const sMins = timeStringToMinutes(slot.start_time);
+          const eMins = timeStringToMinutes(slot.end_time);
+          if (sMins !== null && sMins < minStartMins) {
+            minStartMins = sMins;
+            earliestSlot = slot;
+          }
+          if (eMins !== null && eMins > maxEndMins) {
+            maxEndMins = eMins;
+            latestSlot = slot;
+          }
+        });
+
+        if (!earliestSlot || !latestSlot) {
+          return 'No scheduled hours';
+        }
+
+        const start12 = formatTimeTo12Hour(earliestSlot.start_time);
+        const end12 = formatTimeTo12Hour(latestSlot.end_time);
+
+        if (!start12 || !end12) {
+          return 'No scheduled hours';
+        }
+
+        return `${start12} - ${end12}`;
+      }
+
+      function computeWeeklyHours(slots) {
+        if (!slots || slots.length === 0) return 0;
+        let totalMinutes = 0;
+        slots.forEach(slot => {
+          const sMins = timeStringToMinutes(slot.start_time);
+          const eMins = timeStringToMinutes(slot.end_time);
+          if (sMins !== null && eMins !== null) {
+            let dur = eMins - sMins;
+            if (dur < 0) dur += 24 * 60;
+            totalMinutes += dur;
+          }
+        });
+        return totalMinutes / 60;
+      }
+
+      function updateDailyTimingKPI(dayName) {
+        const kpiDaily = document.getElementById('kpiDailyTiming');
+        const kpiTimingTrend = document.getElementById('kpiTimingTrend');
+        if (!kpiDaily) return;
+
+        const effectiveDay = dayName || currentSelectedDay || 'Monday';
+        const timingStr = computeDailyTimingForDay(effectiveDay, allTimetable);
+        kpiDaily.textContent = timingStr;
+
+        if (kpiTimingTrend) {
+          if (timingStr === 'No scheduled hours') {
+            kpiTimingTrend.textContent = `${effectiveDay} (No Classes)`;
+          } else {
+            kpiTimingTrend.textContent = `${effectiveDay} College Hours`;
+          }
+        }
+      }
+
+      function switchView(view) {
+        viewTabs.forEach(t => {
+          if (t.getAttribute('data-view') === view) {
+            t.classList.remove('btn-secondary');
+            t.classList.add('btn-primary', 'active');
+          } else {
+            t.classList.remove('btn-primary', 'active');
+            t.classList.add('btn-secondary');
+          }
+        });
+
+        document.getElementById('sectionViewToday').style.display = (view === 'TODAY') ? 'block' : 'none';
+        document.getElementById('sectionViewUpcoming').style.display = (view === 'UPCOMING') ? 'block' : 'none';
+        document.getElementById('sectionViewWeek').style.display = (view === 'WEEK') ? 'block' : 'none';
+
+        if (view === 'TODAY') {
+          const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+          const today = days[new Date().getDay()];
+          const activeToday = (today !== 'Sunday') ? today : 'Monday';
+          updateDailyTimingKPI(activeToday);
+        } else if (view === 'WEEK') {
+          updateDailyTimingKPI(currentSelectedDay);
+        }
+      }
+
+      // 2. Fetch and Render Smart Today's Timetable
+      async function loadSmartTodayTimetable() {
+        try {
+          const res = await apiFetch('/api/timetable/today');
+          // Trigger reminder check in background
+          apiFetch('/api/timetable/reminders/check', { method: 'POST' }).catch(() => {});
+
+          if (res && res.success && res.data) {
+            todayLectures = Array.isArray(res.data.lectures) ? res.data.lectures : [];
+            nextLectureData = res.data.next_lecture || null;
+            const todayDay = res.data.today_day || getDayName(new Date());
+
+            const heading = document.getElementById('todayScheduleHeading');
+            if (heading) heading.textContent = `Today's Classes (${todayDay})`;
+
+            const countBadge = document.getElementById('todayLectureCountBadge');
+            if (countBadge) countBadge.textContent = `${todayLectures.length} Lecture${todayLectures.length === 1 ? '' : 's'}`;
+
+            // Render Next Lecture Card
+            renderNextLectureCard(nextLectureData);
+
+            // Render Timeline List with visual highlights
+            renderTodayTimeline(todayLectures, nextLectureData);
+
+            // Render Upcoming View
+            renderUpcomingView();
+          }
+        } catch (err) {
+          console.error('Failed to load smart today timetable:', err);
+        }
+      }
+
+      function renderNextLectureCard(nextLec) {
+        const nextContent = document.getElementById('pageNextLectureContent');
+        const nextEmpty = document.getElementById('pageNextLectureEmptyState');
+        const nextCourse = document.getElementById('pageNextLectureCourse');
+        const nextMeta = document.getElementById('pageNextLectureMeta');
+        const nextTime = document.getElementById('pageNextLectureTime');
+        const nextRoom = document.getElementById('pageNextLectureRoom');
+        const nextTeacher = document.getElementById('pageNextLectureTeacher');
+        const nextBadge = document.getElementById('pageNextLectureBadge');
+        const nextCountdown = document.getElementById('pageNextLectureCountdown');
+
+        if (nextLec) {
+          if (nextContent) nextContent.style.display = 'block';
+          if (nextEmpty) nextEmpty.style.display = 'none';
+
+          if (nextCourse) nextCourse.textContent = `${nextLec.course_name || 'Class Session'} (${nextLec.course_code || ''})`;
+          if (nextMeta) nextMeta.textContent = `${nextLec.course_type || 'Theory'} • Class: ${nextLec.class_name || '-'} Div ${nextLec.division || '-'} • Sem ${nextLec.semester || '-'}`;
+          if (nextTime) nextTime.textContent = nextLec.time_range || `${nextLec.start_time_12} - ${nextLec.end_time_12}`;
+          if (nextRoom) nextRoom.textContent = `Room: ${nextLec.room_no || 'TBA'}`;
+          if (nextTeacher) nextTeacher.textContent = `Prof. ${nextLec.teacher_name || 'Faculty'}`;
+
+          if (nextBadge) {
+            nextBadge.style.display = 'inline-flex';
+            nextBadge.textContent = nextLec.status;
+            if (nextLec.status === 'NOW') {
+              nextBadge.style.background = '#dcfce7';
+              nextBadge.style.color = '#15803d';
+            } else if (nextLec.status === 'STARTING SOON') {
+              nextBadge.style.background = '#fef3c7';
+              nextBadge.style.color = '#b45309';
+            } else if (nextLec.status === 'COMPLETED') {
+              nextBadge.style.background = '#f1f5f9';
+              nextBadge.style.color = '#64748b';
+            } else {
+              nextBadge.style.background = '#e0e7ff';
+              nextBadge.style.color = '#4338ca';
+            }
+          }
+
+          if (nextCountdown) {
+            nextCountdown.textContent = nextLec.countdown_text || nextLec.status;
+          }
+        } else {
+          if (nextContent) nextContent.style.display = 'none';
+          if (nextEmpty) nextEmpty.style.display = 'block';
+          if (nextBadge) nextBadge.style.display = 'none';
+          if (nextCountdown) nextCountdown.textContent = 'No more lectures today';
+        }
+      }
+
+      function renderTodayTimeline(lectures, nextLec) {
+        const container = document.getElementById('todayTimelineList');
+        if (!container) return;
+
+        if (!lectures || lectures.length === 0) {
+          container.innerHTML = `
+            <div style="text-align: center; padding: 48px 16px; color: #64748b;">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" style="margin-bottom: 8px;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+              <div style="font-weight: 700; font-size: 15px; color: #1e293b;">No lectures scheduled for today</div>
+              <div style="font-size: 13px; color: #64748b; margin-top: 4px;">You have no scheduled class periods today. Use this time for study or assignment submissions.</div>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = lectures.map(slot => {
+          const isCurrent = (slot.status === 'NOW');
+          const isNext = (nextLec && nextLec.timetable_id === slot.timetable_id && slot.status !== 'NOW' && slot.status !== 'COMPLETED');
+          const isCompleted = (slot.status === 'COMPLETED');
+
+          // Determine card styling based on status & highlight rules
+          let cardBorder = 'border: 1px solid #e2e8f0;';
+          let cardBg = 'background: #ffffff;';
+          let cardShadow = 'box-shadow: 0 1px 3px rgba(0,0,0,0.05);';
+          let opacity = 'opacity: 1;';
+
+          if (isCurrent) {
+            cardBorder = 'border: 2px solid #22c55e;';
+            cardBg = 'background: #f0fdf4;';
+            cardShadow = 'box-shadow: 0 4px 14px rgba(34, 197, 94, 0.15);';
+          } else if (isNext) {
+            cardBorder = 'border: 2px solid #6366f1;';
+            cardBg = 'background: #eef2ff;';
+            cardShadow = 'box-shadow: 0 4px 14px rgba(99, 102, 241, 0.15);';
+          } else if (isCompleted) {
+            cardBorder = 'border: 1px solid #e2e8f0;';
+            cardBg = 'background: #f8fafc;';
+            opacity = 'opacity: 0.78;';
+          }
+
+          let statusBadgeBg = '#e0e7ff';
+          let statusBadgeColor = '#4338ca';
+          if (slot.status === 'NOW') {
+            statusBadgeBg = '#dcfce7';
+            statusBadgeColor = '#15803d';
+          } else if (slot.status === 'STARTING SOON') {
+            statusBadgeBg = '#fef3c7';
+            statusBadgeColor = '#b45309';
+          } else if (slot.status === 'COMPLETED') {
+            statusBadgeBg = '#f1f5f9';
+            statusBadgeColor = '#64748b';
+          }
+
+          let attendanceBadgeHtml = '';
+          if (slot.is_attendance_recorded) {
+            const attStatus = slot.student_attendance_status ? ` (${slot.student_attendance_status})` : '';
+            attendanceBadgeHtml = `
+              <span class="badge" style="background: #ecfdf5; color: #047857; font-size: 11px; padding: 3px 8px; border: 1px solid #a7f3d0; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                Attendance Recorded${attStatus}
+              </span>
+            `;
+          }
+
+          let highlightPill = '';
+          if (isCurrent) {
+            highlightPill = `<span class="badge" style="background: #22c55e; color: #ffffff; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 9999px;">CURRENT CLASS</span>`;
+          } else if (isNext) {
+            highlightPill = `<span class="badge" style="background: #6366f1; color: #ffffff; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 9999px;">NEXT CLASS</span>`;
+          }
+
+          return `
+            <div style="${cardBorder} ${cardBg} ${cardShadow} ${opacity} border-radius: 10px; padding: 16px 20px; transition: all 0.2s ease;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; margin-bottom: 8px;">
+                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                  <span style="font-weight: 700; font-size: 14px; color: #0f172a; background: #ffffff; border: 1px solid #e2e8f0; padding: 4px 10px; border-radius: 6px;">
+                    ${escapeHtml(slot.time_range)}
+                  </span>
+                  <span class="badge" style="background: ${statusBadgeBg}; color: ${statusBadgeColor}; font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 9999px;">
+                    ${escapeHtml(slot.status)}
+                  </span>
+                  ${highlightPill}
+                  ${attendanceBadgeHtml}
+                </div>
+                <div style="font-size: 12px; font-weight: 600; color: #475569;">
+                  ${escapeHtml(slot.countdown_text || '')}
+                </div>
+              </div>
+
+              <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 12px;">
+                <div>
+                  <h4 style="margin: 0; font-size: 16px; font-weight: 700; color: #0f172a;">
+                    ${escapeHtml(slot.course_name)} <span style="font-size: 13px; font-weight: 600; color: #64748b;">(${escapeHtml(slot.course_code)})</span>
+                  </h4>
+                  <div style="font-size: 12.5px; color: #64748b; margin-top: 4px; display: flex; gap: 16px; flex-wrap: wrap;">
+                    <span>Faculty: <strong style="color: #334155;">Prof. ${escapeHtml(slot.teacher_name || 'Staff')}</strong></span>
+                    <span>Venue: <strong style="color: #334155;">${escapeHtml(slot.room_no || 'TBA')}</strong></span>
+                    <span>Class: <strong style="color: #334155;">${escapeHtml(slot.class_name || '-')} Div ${escapeHtml(slot.division || '-')} (Sem ${escapeHtml(slot.semester || '-')})</strong></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      function renderUpcomingView() {
+        const container = document.getElementById('upcomingLecturesList');
+        if (!container) return;
+
+        // Collect upcoming today + future days
+        const activeToday = todayLectures.filter(l => l.status !== 'COMPLETED');
+        const dayOrder = { 'Monday': 1, 'Tuesday': 2, 'Wednesday': 3, 'Thursday': 4, 'Friday': 5, 'Saturday': 6, 'Sunday': 7 };
+        const todayDay = getDayName(new Date());
+        const todayIndex = dayOrder[todayDay] || 1;
+
+        // Future day slots from allTimetable
+        const futureDaySlots = allTimetable.filter(t => {
+          const tIdx = dayOrder[t.day_of_week] || 0;
+          return tIdx > todayIndex;
+        }).sort((a, b) => {
+          const dDiff = (dayOrder[a.day_of_week] || 0) - (dayOrder[b.day_of_week] || 0);
+          if (dDiff !== 0) return dDiff;
+          return String(a.start_time || '').localeCompare(String(b.start_time || ''));
+        });
+
+        if (activeToday.length === 0 && futureDaySlots.length === 0) {
+          container.innerHTML = `
+            <div style="text-align: center; padding: 48px 16px; color: #64748b;">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" style="margin-bottom: 8px;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              <div style="font-weight: 700; font-size: 15px; color: #1e293b;">No upcoming lectures</div>
+              <div style="font-size: 13px; color: #64748b; margin-top: 4px;">You have completed all scheduled lectures for the week or no further sessions are scheduled.</div>
+            </div>
+          `;
+          return;
+        }
+
+        let html = '';
+
+        if (activeToday.length > 0) {
+          html += `<div style="font-size: 13px; font-weight: 700; color: #4338ca; text-transform: uppercase; letter-spacing: 0.5px; margin: 4px 0 2px 0;">Remaining Today (${escapeHtml(todayDay)})</div>`;
+          activeToday.forEach(slot => {
+            html += `
+              <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                <div>
+                  <div style="font-weight: 700; font-size: 14.5px; color: #0f172a;">${escapeHtml(slot.course_name)} <span style="font-weight: 500; color: #64748b;">(${escapeHtml(slot.course_code)})</span></div>
+                  <div style="font-size: 12px; color: #64748b; margin-top: 3px;">Prof. ${escapeHtml(slot.teacher_name || 'Staff')} &bull; Room: ${escapeHtml(slot.room_no || 'TBA')}</div>
+                </div>
+                <div style="text-align: right;">
+                  <span style="font-weight: 700; font-size: 13px; color: #0f172a; background: #f1f5f9; padding: 3px 8px; border-radius: 6px;">${escapeHtml(slot.time_range)}</span>
+                  <div style="font-size: 11.5px; font-weight: 600; color: #4338ca; margin-top: 4px;">${escapeHtml(slot.countdown_text || slot.status)}</div>
+                </div>
+              </div>
+            `;
+          });
+        }
+
+        if (futureDaySlots.length > 0) {
+          let currentDayGroup = '';
+          futureDaySlots.forEach(slot => {
+            if (slot.day_of_week !== currentDayGroup) {
+              currentDayGroup = slot.day_of_week;
+              html += `<div style="font-size: 13px; font-weight: 700; color: #334155; text-transform: uppercase; letter-spacing: 0.5px; margin: 16px 0 2px 0;">${escapeHtml(currentDayGroup)}</div>`;
+            }
+
+            const s12 = formatTimeTo12Hour(slot.start_time);
+            const e12 = formatTimeTo12Hour(slot.end_time);
+            const timeRange = (s12 && e12) ? `${s12} - ${e12}` : (slot.start_time || '--');
+
+            html += `
+              <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                <div>
+                  <div style="font-weight: 700; font-size: 14.5px; color: #0f172a;">${escapeHtml(slot.course_name)} <span style="font-weight: 500; color: #64748b;">(${escapeHtml(slot.course_code)})</span></div>
+                  <div style="font-size: 12px; color: #64748b; margin-top: 3px;">Prof. ${escapeHtml(slot.teacher_name || 'Staff')} &bull; Room: ${escapeHtml(slot.room_no || 'TBA')}</div>
+                </div>
+                <div style="text-align: right;">
+                  <span style="font-weight: 700; font-size: 13px; color: #0f172a; background: #f8fafc; padding: 3px 8px; border-radius: 6px; border: 1px solid #e2e8f0;">${escapeHtml(timeRange)}</span>
+                  <div style="font-size: 11.5px; color: #64748b; margin-top: 4px;">${escapeHtml(slot.course_type || 'Theory')}</div>
+                </div>
+              </div>
+            `;
+          });
+        }
+
+        container.innerHTML = html;
+      }
+
+      // 3. Render Schedule for Full Week View
+      function renderScheduleForDay(dayName) {
+        const tbody = document.getElementById('scheduleTbody');
+        const heading = document.getElementById('dayTitleHeading');
+        if (heading) heading.textContent = `${dayName} Lecture Schedule`;
+        if (!tbody) return;
+
+        const daySlots = allTimetable.filter(t => (t.day_of_week || '').toLowerCase() === dayName.toLowerCase());
+
+        if (daySlots.length === 0) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="6" style="text-align: center; padding: 48px 16px; color: #64748b;">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" style="margin-bottom: 8px;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                <div style="font-weight: 600; font-size: 14px; color: #334155;">No lectures scheduled for ${escapeHtml(dayName)}</div>
+                <div style="font-size: 12px; color: #64748b; margin-top: 4px;">Self-study or lab work session</div>
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        daySlots.sort((a, b) => (a.start_time || '').localeCompare(b.start_time || ''));
+
+        tbody.innerHTML = daySlots.map(slot => {
+          const s12 = formatTimeTo12Hour(slot.start_time);
+          const e12 = formatTimeTo12Hour(slot.end_time);
+          const timeRange = (s12 && e12) ? `${s12} - ${e12}` : (slot.start_time || '--');
+          const type = slot.course_type || 'Theory';
+
+          return `
+            <tr>
+              <td style="font-weight: 700; color: #4338ca; white-space: nowrap;">
+                <span style="background: #e0e7ff; padding: 4px 10px; border-radius: 6px;">${escapeHtml(timeRange)}</span>
+              </td>
+              <td style="font-weight: 600; color: #0f172a;">${escapeHtml(slot.course_name || 'Class Session')}</td>
+              <td><span class="badge" style="background: #f1f5f9; color: #334155; font-weight: 600;">${escapeHtml(slot.course_code || '-')}</span></td>
+              <td style="color: #475569;">${escapeHtml(slot.teacher_name || 'Faculty Staff')}</td>
+              <td><span class="badge" style="background: #f8fafc; border: 1px solid #e2e8f0; color: #0f172a; font-weight: 600;">${escapeHtml(slot.room_no || 'TBA')}</span></td>
+              <td>
+                <span class="badge" style="background: #dcfce7; color: #15803d; font-weight: 600;">
+                  ${escapeHtml(type)}
+                </span>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      async function loadTimetable() {
+        try {
+          const res = await apiRequest('/timetable?all=true');
+          if (res.ok && res.data) {
+            allTimetable = res.data.timetable || [];
+
+            // Compute KPIs: Weekly Hours (sum of actual durations) & Scheduled Sessions count
+            const kpiHours = document.getElementById('kpiWeeklyHours');
+            const kpiHoursTrend = document.getElementById('kpiHoursTrend');
+            const weeklyHoursVal = computeWeeklyHours(allTimetable);
+            if (kpiHours) {
+              if (weeklyHoursVal === 0) {
+                kpiHours.textContent = '0 Hrs';
+              } else if (weeklyHoursVal % 1 === 0) {
+                kpiHours.textContent = `${weeklyHoursVal} Hrs`;
+              } else {
+                kpiHours.textContent = `${weeklyHoursVal.toFixed(1)} Hrs`;
+              }
+            }
+            if (kpiHoursTrend) {
+              kpiHoursTrend.textContent = `${allTimetable.length} Scheduled Session${allTimetable.length === 1 ? '' : 's'}`;
+            }
+
+            // Total unique subjects across weekly timetable
+            const uniqueCourses = [...new Set(allTimetable.map(t => t.course_code || t.course_name))].filter(Boolean);
+            const kpiSub = document.getElementById('kpiTotalSubjects');
+            if (kpiSub) kpiSub.textContent = `${uniqueCourses.length} Course${uniqueCourses.length === 1 ? '' : 's'}`;
+
+            // Primary Hall: Most frequently scheduled room across timetable
+            const rooms = allTimetable.map(t => t.room_no ? String(t.room_no).trim() : '').filter(Boolean);
+            const kpiHall = document.getElementById('kpiPrimaryHall');
+            const kpiHallTrend = document.getElementById('kpiHallTrend');
+            if (kpiHall) {
+              if (rooms.length > 0) {
+                const freq = {};
+                rooms.forEach(r => freq[r] = (freq[r] || 0) + 1);
+                let primaryRoom = rooms[0];
+                let maxCount = 0;
+                for (const [r, count] of Object.entries(freq)) {
+                  if (count > maxCount) {
+                    maxCount = count;
+                    primaryRoom = r;
+                  }
+                }
+                kpiHall.textContent = primaryRoom;
+              } else {
+                kpiHall.textContent = 'Not Assigned';
+              }
+            }
+            if (kpiHallTrend) {
+              kpiHallTrend.textContent = rooms.length > 0 ? 'Classroom Assigned' : 'No Room Assigned';
+            }
+
+            // Determine active day tab (if today is Monday-Saturday, select today)
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const today = days[new Date().getDay()];
+            const activeDay = (today !== 'Sunday') ? today : 'Monday';
+            currentSelectedDay = activeDay;
+
+            // Highlight corresponding day tab
+            document.querySelectorAll('.day-tab').forEach(tab => {
+              if (tab.getAttribute('data-day') === activeDay) {
+                tab.classList.remove('btn-secondary');
+                tab.classList.add('active', 'btn-primary');
+              } else {
+                tab.classList.remove('active', 'btn-primary');
+                tab.classList.add('btn-secondary');
+              }
+            });
+
+            // Update Day-Specific Daily Timing KPI for the active day
+            updateDailyTimingKPI(currentSelectedDay);
+
+            renderScheduleForDay(currentSelectedDay);
+          } else {
+            showErrorState();
+          }
+        } catch (err) {
+          console.error('Failed to load timetable:', err);
+          showErrorState();
+        }
+      }
+
+      function showErrorState() {
+        const kpiDaily = document.getElementById('kpiDailyTiming');
+        const kpiTimingTrend = document.getElementById('kpiTimingTrend');
+        const kpiHours = document.getElementById('kpiWeeklyHours');
+        const kpiHoursTrend = document.getElementById('kpiHoursTrend');
+        const kpiSub = document.getElementById('kpiTotalSubjects');
+        const kpiHall = document.getElementById('kpiPrimaryHall');
+        const kpiHallTrend = document.getElementById('kpiHallTrend');
+
+        if (kpiDaily) kpiDaily.textContent = 'No scheduled hours';
+        if (kpiTimingTrend) kpiTimingTrend.textContent = 'No Sessions Scheduled';
+        if (kpiHours) kpiHours.textContent = '0 Hrs';
+        if (kpiHoursTrend) kpiHoursTrend.textContent = '0 Scheduled Sessions';
+        if (kpiSub) kpiSub.textContent = '0 Courses';
+        if (kpiHall) kpiHall.textContent = 'Not Assigned';
+        if (kpiHallTrend) kpiHallTrend.textContent = 'No Room Assigned';
+
+        const tbody = document.getElementById('scheduleTbody');
+        if (tbody) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="6" style="text-align: center; padding: 48px 16px;">
+                <div style="color: #b91c1c; font-weight: 700; margin-bottom: 8px;">Unable to load timetable schedule</div>
+                <p style="color: #64748b; font-size: 13px; margin: 0 0 14px 0;">Please verify your connection and try again.</p>
+                <button type="button" class="btn btn-primary btn-sm" id="btnRetryTimetable">Retry</button>
+              </td>
+            </tr>
+          `;
+          document.getElementById('btnRetryTimetable')?.addEventListener('click', loadTimetable);
+        }
+      }
+
+      // Wire day tabs in Full Week View
+      document.querySelectorAll('.day-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.day-tab').forEach(t => {
+            t.classList.remove('active', 'btn-primary');
+            t.classList.add('btn-secondary');
+          });
+          tab.classList.remove('btn-secondary');
+          tab.classList.add('active', 'btn-primary');
+
+          const day = tab.getAttribute('data-day');
+          currentSelectedDay = day;
+          renderScheduleForDay(day);
+          updateDailyTimingKPI(day);
+        });
+      });
+
+      // Initial loads
+      await loadTimetable();
+      await loadSmartTodayTimetable();
+
+      // Auto-refresh smart timetable every 30 seconds without full page reload
+      setInterval(loadSmartTodayTimetable, 30000);
+    });
+  </script>
+</body>
+</html>

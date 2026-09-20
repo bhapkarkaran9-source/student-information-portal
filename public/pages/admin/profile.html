@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Profile - Student Information Portal</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/admin-theme.css">
+</head>
+<body class="admin-layout">
+
+  <!-- Mobile Sidebar Backdrop -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop hidden"></div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- FIXED LEFT SIDEBAR -->
+  <aside id="adminSidebar" class="admin-sidebar" aria-label="Portal Navigation"></aside>
+
+  <!-- MAIN WRAPPER -->
+  <div class="admin-main-wrapper">
+    <!-- STICKY TOP HEADER -->
+    <header class="admin-header" id="adminHeader">
+      <div class="header-left">
+        <button type="button" id="sidebarToggleBtn" class="sidebar-toggle-btn" aria-label="Open menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <div class="header-heading-group">
+          <h1 class="header-title">Admin Profile</h1>
+          <p class="header-subtitle">System administrator credentials, contact information, and role details</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <button type="button" id="headerNotificationBtn" class="header-notify-btn" title="View notifications" aria-label="Notifications">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          <span id="headerNotificationDot" class="header-notify-badge hidden"></span>
+        </button>
+        <div class="profile-dropdown-wrapper" id="profileDropdownWrapper">
+          <button type="button" id="profileDropdownBtn" class="header-profile-btn" aria-haspopup="true" aria-expanded="false" aria-label="User profile menu">
+            <div class="header-avatar" id="headerUserAvatar">A</div>
+            <div class="header-profile-meta">
+              <span class="header-profile-name" id="navUserName">System Admin</span>
+              <span class="header-profile-badge" id="userRoleBadge">ADMIN</span>
+            </div>
+            <svg class="dropdown-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="dashboard-main" style="padding: 24px;">
+
+      <!-- Profile Header Hero Card -->
+      <section class="card mb-4" style="background: linear-gradient(135deg, #1e293b, #0f172a); color: #ffffff; border: none; padding: 28px; border-radius: 10px; margin-bottom: 24px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
+          <div style="display: flex; align-items: center; gap: 20px;">
+            <div style="position: relative; width: 80px; height: 80px; flex-shrink: 0;">
+              <div class="header-avatar" id="profileLargeAvatar" style="width: 80px; height: 80px; font-size: 30px; font-weight: 700; background: linear-gradient(135deg, #7c3aed, #6d28d9); border: 2.5px solid rgba(255,255,255,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; overflow: hidden;">A</div>
+              <button type="button" id="btnAvatarEdit" class="btn-avatar-camera" aria-label="Change profile photo" title="Change profile photo" style="position: absolute; bottom: 0; right: 0; width: 28px; height: 28px; border-radius: 50%; background: #7c3aed; color: #ffffff; border: 2px solid #ffffff; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.25);">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                  <circle cx="12" cy="13" r="4"/>
+                </svg>
+              </button>
+            </div>
+            <div>
+              <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+                <h2 style="font-size: 24px; font-weight: 700; margin: 0; color: #ffffff;" id="profFullName">System Admin</h2>
+                <span class="badge" style="font-size: 12px; padding: 4px 10px; background: #dcfce7; color: #166534; font-weight: 700; border-radius: 4px;" id="profileStatusBadge">Active</span>
+              </div>
+              <p style="margin: 0; color: #94a3b8; font-size: 14px;">
+                <span id="profRole">ADMIN</span> &bull; <span id="profDepartment">System Administration</span>
+              </p>
+            </div>
+          </div>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button type="button" class="btn btn-secondary" id="btnChangePhoto" style="display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 6px; font-size: 13.5px; font-weight: 600; cursor: pointer; background: rgba(255,255,255,0.15); color: #ffffff; border: 1px solid rgba(255,255,255,0.25);">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                <circle cx="12" cy="13" r="4"/>
+              </svg>
+              Change Photo
+            </button>
+            <button type="button" class="btn btn-primary" id="btnAdminEditProfile" style="display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 6px; font-size: 13.5px; font-weight: 600; cursor: pointer; background: #7c3aed; color: #fff; border: none;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
+              Edit Profile
+            </button>
+            <button type="button" class="btn btn-secondary" id="btnAdminChangePassword" style="display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 6px; font-size: 13.5px; font-weight: 600; cursor: pointer; background: rgba(255,255,255,0.1); color: #ffffff; border: 1px solid rgba(255,255,255,0.2);">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              Change Password
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Details 2-Column Grid -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 24px;">
+
+        <!-- Card 1: Account Credentials -->
+        <section class="card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px;">
+          <div class="card-header" style="border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 16px;">
+            <h3 class="card-title" style="margin: 0; font-size: 16px; font-weight: 700; color: #0f172a;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px; vertical-align: text-bottom; color: #7c3aed;">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              Account Credentials
+            </h3>
+          </div>
+          <div class="card-body">
+            <table class="data-table" style="width: 100%; border-collapse: collapse; font-size: 13.5px;">
+              <tbody>
+                <tr style="border-bottom: 1px solid #f1f5f9;">
+                  <td style="font-weight: 600; color: #64748b; padding: 10px 0; width: 35%;">Username</td>
+                  <td id="detUsername" style="color: #0f172a; padding: 10px 0;">admin</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #f1f5f9;">
+                  <td style="font-weight: 600; color: #64748b; padding: 10px 0;">Full Name</td>
+                  <td id="detFullName" style="color: #0f172a; padding: 10px 0;">System Admin</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #f1f5f9;">
+                  <td style="font-weight: 600; color: #64748b; padding: 10px 0;">System Role</td>
+                  <td id="detRole" style="color: #0f172a; padding: 10px 0;"><span class="badge" style="background: #e0e7ff; color: #3730a3; padding: 2px 8px; border-radius: 4px; font-weight: 700; font-size: 12px;">ADMIN</span></td>
+                </tr>
+                <tr style="border-bottom: 1px solid #f1f5f9;">
+                  <td style="font-weight: 600; color: #64748b; padding: 10px 0;">Department</td>
+                  <td id="detDept" style="color: #0f172a; padding: 10px 0;">System Administration</td>
+                </tr>
+                <tr>
+                  <td style="font-weight: 600; color: #64748b; padding: 10px 0;">Account Status</td>
+                  <td id="detStatus" style="color: #166534; font-weight: 600; padding: 10px 0;">Active</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Card 2: Contact & Security -->
+        <section class="card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px;">
+          <div class="card-header" style="border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 16px;">
+            <h3 class="card-title" style="margin: 0; font-size: 16px; font-weight: 700; color: #0f172a;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px; vertical-align: text-bottom; color: #7c3aed;">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+              </svg>
+              Contact & System Registration
+            </h3>
+          </div>
+          <div class="card-body">
+            <table class="data-table" style="width: 100%; border-collapse: collapse; font-size: 13.5px;">
+              <tbody>
+                <tr style="border-bottom: 1px solid #f1f5f9;">
+                  <td style="font-weight: 600; color: #64748b; padding: 10px 0; width: 35%;">Email Address</td>
+                  <td id="detEmail" style="color: #0f172a; padding: 10px 0;">admin@studentportal.local</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #f1f5f9;">
+                  <td style="font-weight: 600; color: #64748b; padding: 10px 0;">Contact Phone</td>
+                  <td id="detPhone" style="color: #0f172a; padding: 10px 0;">Not Provided</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #f1f5f9;">
+                  <td style="font-weight: 600; color: #64748b; padding: 10px 0;">Account Created</td>
+                  <td id="detCreatedAt" style="color: #0f172a; padding: 10px 0;">-</td>
+                </tr>
+                <tr>
+                  <td style="font-weight: 600; color: #64748b; padding: 10px 0;">Access Privileges</td>
+                  <td style="color: #0f172a; padding: 10px 0;">Super Administrator (Full System Access)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Card 3: Face Authentication & Biometrics -->
+        <section class="card" id="faceAuthCard" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; display: flex; flex-direction: column;">
+          <div class="card-header" style="border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between;">
+            <h3 class="card-title" style="margin: 0; font-size: 16px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #7c3aed;">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+                <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                <line x1="15" y1="9" x2="15.01" y2="9"></line>
+              </svg>
+              Face Authentication
+            </h3>
+            <span id="faceAuthStatusBadge" class="badge" style="font-size: 12px; padding: 4px 10px; background: #f1f5f9; color: #475569; font-weight: 700; border-radius: 4px;">Loading...</span>
+          </div>
+          <div class="card-body" style="display: flex; flex-direction: column; justify-content: space-between; flex: 1;">
+            <div>
+              <p style="margin: 0 0 14px 0; font-size: 13.5px; color: #64748b; line-height: 1.5;">
+                Biometric face authentication allows instant and passwordless verification using your camera and anti-spoofing liveness detection.
+              </p>
+              
+              <div id="faceAuthInfoRow" class="hidden" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px 14px; margin-bottom: 14px; font-size: 13px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span style="color: #64748b; font-weight: 600;">Registered On:</span>
+                  <span id="faceAuthRegisteredDate" style="color: #0f172a; font-weight: 700;">-</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px;">
+                  <span style="color: #64748b; font-weight: 600;">Liveness Protection:</span>
+                  <span id="faceAuthLivenessMethod" style="color: #166534; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    Active EAR Eye Blink
+                  </span>
+                </div>
+              </div>
+
+              <div style="background: #faf5ff; border: 1px solid #f3e8ff; border-radius: 6px; padding: 10px 12px; margin-bottom: 16px; font-size: 12px; color: #6b21a8; line-height: 1.4;">
+                <strong>🔒 Privacy Notice:</strong> Your camera video is processed locally. Raw photos and video are not stored or uploaded. Only the encrypted face representation is used for authentication.
+              </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 8px;">
+              <button type="button" id="btnRegisterFace" class="btn btn-primary hidden" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 9px 14px; font-size: 13.5px; font-weight: 600; border-radius: 6px; background: #7c3aed; color: #fff; border: none; cursor: pointer;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                Register Face
+              </button>
+              <button type="button" id="btnTestFace" class="btn btn-secondary hidden" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 9px 14px; font-size: 13.5px; font-weight: 600; border-radius: 6px; background: #f1f5f9; color: #1e293b; border: 1px solid #cbd5e1; cursor: pointer;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                Test Face Recognition
+              </button>
+              <button type="button" id="btnRemoveFace" class="btn btn-danger hidden" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 9px 14px; font-size: 13.5px; font-weight: 600; border-radius: 6px; background: #fff1f2; color: #be123c; border: 1px solid #fecdd3; cursor: pointer;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                Remove Face Credential
+              </button>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Reusable Profile Photo Modal -->
+  <div id="photoUploadModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="photoModalTitle">
+    <div class="modal-card" style="max-width: 480px; width: 92%; margin: 20px auto; background: #ffffff; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); overflow: hidden;">
+      <div class="modal-header" style="padding: 16px 20px; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between;">
+        <h3 id="photoModalTitle" class="modal-title" style="margin: 0; font-size: 17px; font-weight: 700; color: #0f172a;">Update Profile Photo</h3>
+        <button type="button" class="modal-close-btn" data-close-modal="photoUploadModal" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body" style="padding: 20px;">
+        <div id="photoModalError" class="alert alert-danger hidden" style="background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; font-size: 13px; padding: 10px 14px; border-radius: 6px; margin-bottom: 16px;"></div>
+
+        <!-- Dropzone -->
+        <div id="photoDropzone" style="border: 2px dashed #cbd5e1; border-radius: 8px; padding: 24px 16px; text-align: center; background: #f8fafc; cursor: pointer; transition: all 0.2s ease;">
+          <input type="file" id="photoFileInput" accept="image/jpeg,image/png,image/webp" style="display: none;">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="margin: 0 auto 10px; display: block;">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+          <p style="margin: 0 0 6px 0; font-size: 14px; font-weight: 600; color: #1e293b;">
+            Drag &amp; drop an image here, or <span style="color: #7c3aed; text-decoration: underline;">browse</span>
+          </p>
+          <p style="margin: 0; font-size: 12px; color: #64748b;">
+            JPG, PNG or WEBP &bull; Maximum 5 MB
+          </p>
+        </div>
+
+        <!-- Circular Preview Container -->
+        <div id="photoPreviewContainer" class="hidden" style="text-align: center; padding: 10px 0;">
+          <div style="width: 120px; height: 120px; border-radius: 50%; overflow: hidden; margin: 0 auto 12px; border: 3px solid #7c3aed; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+            <img id="photoPreviewImg" src="" alt="Selected profile preview" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+          </div>
+          <p id="photoFileMeta" style="margin: 0 0 8px 0; font-size: 13px; font-weight: 600; color: #334155; word-break: break-all;"></p>
+          <button type="button" class="btn btn-sm btn-secondary" onclick="document.getElementById('photoFileInput').click();" style="font-size: 12px; padding: 4px 10px; background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; border-radius: 4px; cursor: pointer;">
+            Choose Different Image
+          </button>
+        </div>
+      </div>
+      <div class="modal-footer" style="padding: 14px 20px; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;">
+        <button type="button" id="btnRemovePhoto" class="btn btn-danger hidden" style="background: #fff1f2; color: #be123c; border: 1px solid #fecdd3; font-size: 13px; padding: 8px 14px; border-radius: 6px; cursor: pointer;">
+          Remove Current Photo
+        </button>
+        <div style="display: flex; gap: 10px; margin-left: auto;">
+          <button type="button" id="btnCancelPhotoUpload" class="btn btn-secondary" style="background: #ffffff; color: #475569; border: 1px solid #cbd5e1; font-size: 13px; padding: 8px 14px; border-radius: 6px; cursor: pointer;">
+            Cancel
+          </button>
+          <button type="button" id="btnConfirmPhotoUpload" class="btn btn-primary" disabled style="background: #7c3aed; color: #ffffff; border: none; font-size: 13px; font-weight: 600; padding: 8px 16px; border-radius: 6px; cursor: pointer;">
+            Upload Photo
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CORE SCRIPTS -->
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/admin-shell.js"></script>
+  <script src="/js/user-menu.js"></script>
+  <script src="/js/profile-photo.js"></script>
+  <!-- BIOMETRIC FACE AUTH SCRIPTS -->
+  <script src="/vendor/face-api/face-api.min.js"></script>
+  <script src="/js/face-auth-modal.js"></script>
+  <script src="/js/face-auth-profile.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const editBtn = document.getElementById('btnAdminEditProfile');
+      if (editBtn) {
+        editBtn.onclick = () => {
+          if (window.UserMenu) window.UserMenu.openEditProfile();
+        };
+      }
+      const passBtn = document.getElementById('btnAdminChangePassword');
+      if (passBtn) {
+        passBtn.onclick = () => {
+          if (window.UserMenu) window.UserMenu.openChangePassword();
+        };
+      }
+    });
+  </script>
+</body>
+</html>

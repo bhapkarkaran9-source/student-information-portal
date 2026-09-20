@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Preferences - Student Portal</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/student-dashboard.css">
+  <link rel="stylesheet" href="/css/student-email-preferences.css">
+</head>
+<body class="student-portal-body">
+
+  <!-- Mobile Backdrop & Toast Container -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop hidden"></div>
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- FIXED LEFT SIDEBAR (Standardized by student-shell.js) -->
+  <aside id="studentSidebar" class="student-sidebar" aria-label="Student Navigation"></aside>
+
+  <!-- MAIN WRAPPER -->
+  <div class="student-main-wrapper">
+    
+    <!-- STICKY TOP HEADER (Exactly 1 Bell & Shared Profile Dropdown) -->
+    <header class="student-header" id="studentHeader">
+      <div class="header-left">
+        <button type="button" id="sidebarToggleBtn" class="sidebar-toggle-btn" aria-label="Open menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <div class="header-heading-group">
+          <h1 class="header-title">Email Preferences</h1>
+          <p class="header-subtitle">Control which portal notifications are also sent to your registered email.</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <!-- Exactly 1 Bell Icon -->
+        <button type="button" id="headerNotificationBtn" class="header-notify-btn" title="View notifications" aria-label="Notifications">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          <span id="headerNotificationDot" class="header-notify-badge hidden"></span>
+        </button>
+        <div class="profile-dropdown-wrapper" id="profileDropdownWrapper">
+          <button type="button" id="profileDropdownBtn" class="header-profile-btn" aria-haspopup="true" aria-expanded="false" aria-label="User profile menu">
+            <div class="header-avatar" id="headerUserAvatar" style="background: linear-gradient(135deg, #2563eb, #1d4ed8);">S</div>
+            <div class="header-profile-meta">
+              <span class="header-profile-name" id="navUserName">Enrolled Student</span>
+              <span class="header-profile-badge" id="userRoleBadge" style="background: #dbeafe; color: #1e40af;">STUDENT</span>
+            </div>
+            <svg class="dropdown-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="student-main-content" id="mainContent">
+      <div class="preferences-container">
+
+        <!-- Status / Alert Message Banner -->
+        <div id="statusBanner" class="status-banner hidden" role="status"></div>
+
+        <!-- Master Switch Card -->
+        <section class="pref-master-card" aria-labelledby="masterCardTitle">
+          <div class="pref-master-info">
+            <div class="pref-icon-wrapper master-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+            </div>
+            <div>
+              <h2 class="pref-card-title" id="masterCardTitle">Email Notifications</h2>
+              <p class="pref-card-desc">Master switch for all notification emails. Turning this off suspends all email notifications, but in-app portal notifications will continue normally.</p>
+            </div>
+          </div>
+          <div class="pref-master-toggle">
+            <label class="switch-label" for="email_enabled">
+              <span class="visually-hidden">Toggle Master Email Notifications</span>
+              <input type="checkbox" id="email_enabled" class="pref-toggle-input" checked>
+              <span class="slider round"></span>
+            </label>
+            <span class="toggle-status-text" id="masterToggleStatus">Enabled</span>
+          </div>
+        </section>
+
+        <!-- Categories Section -->
+        <section class="pref-categories-section" aria-labelledby="categoriesSectionTitle">
+          <div class="section-header">
+            <h2 id="categoriesSectionTitle" class="section-title">Notification Categories</h2>
+            <p class="section-desc">Customize which specific academic and campus alerts should trigger an email to you.</p>
+          </div>
+
+          <div class="pref-cards-grid" id="prefCardsGrid">
+
+            <!-- 1. Assignments -->
+            <div class="pref-item-card" data-category="assignment">
+              <div class="pref-item-main">
+                <div class="pref-icon-wrapper item-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                  </svg>
+                </div>
+                <div class="pref-item-content">
+                  <h3 class="pref-item-title">Assignment Emails</h3>
+                  <p class="pref-item-desc">Notifications for new assignments, approaching deadlines, overdue warnings, and grading evaluations with faculty feedback.</p>
+                </div>
+              </div>
+              <div class="pref-item-toggle">
+                <label class="switch-label" for="assignment_emails">
+                  <span class="visually-hidden">Toggle Assignment Emails</span>
+                  <input type="checkbox" id="assignment_emails" class="pref-toggle-input cat-input" checked>
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
+
+            <!-- 2. Exams & Results -->
+            <div class="pref-item-card" data-category="exam">
+              <div class="pref-item-main">
+                <div class="pref-icon-wrapper item-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="20" x2="18" y2="10"></line>
+                    <line x1="12" y1="20" x2="12" y2="4"></line>
+                    <line x1="6" y1="20" x2="6" y2="14"></line>
+                  </svg>
+                </div>
+                <div class="pref-item-content">
+                  <h3 class="pref-item-title">Exam & Result Emails</h3>
+                  <p class="pref-item-desc">Upcoming examination schedules, date/time venue reminders, and published academic grades.</p>
+                </div>
+              </div>
+              <div class="pref-item-toggle">
+                <label class="switch-label" for="exam_emails">
+                  <span class="visually-hidden">Toggle Exam Emails</span>
+                  <input type="checkbox" id="exam_emails" class="pref-toggle-input cat-input" checked>
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
+
+            <!-- 3. Attendance -->
+            <div class="pref-item-card" data-category="attendance">
+              <div class="pref-item-main">
+                <div class="pref-icon-wrapper item-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 11l3 3L22 4"></path>
+                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                  </svg>
+                </div>
+                <div class="pref-item-content">
+                  <h3 class="pref-item-title">Attendance Warning Emails</h3>
+                  <p class="pref-item-desc">Advisory alerts when course attendance drops below the 75% examination eligibility threshold.</p>
+                </div>
+              </div>
+              <div class="pref-item-toggle">
+                <label class="switch-label" for="attendance_emails">
+                  <span class="visually-hidden">Toggle Attendance Emails</span>
+                  <input type="checkbox" id="attendance_emails" class="pref-toggle-input cat-input" checked>
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
+
+            <!-- 4. Timetable -->
+            <div class="pref-item-card" data-category="timetable">
+              <div class="pref-item-main">
+                <div class="pref-icon-wrapper item-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                  </svg>
+                </div>
+                <div class="pref-item-content">
+                  <h3 class="pref-item-title">Timetable Emails</h3>
+                  <p class="pref-item-desc">Daily scheduled lecture reminders and classroom allocation updates.</p>
+                </div>
+              </div>
+              <div class="pref-item-toggle">
+                <label class="switch-label" for="timetable_emails">
+                  <span class="visually-hidden">Toggle Timetable Emails</span>
+                  <input type="checkbox" id="timetable_emails" class="pref-toggle-input cat-input" checked>
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
+
+            <!-- 5. Notices -->
+            <div class="pref-item-card" data-category="notice">
+              <div class="pref-item-main">
+                <div class="pref-icon-wrapper item-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                  </svg>
+                </div>
+                <div class="pref-item-content">
+                  <h3 class="pref-item-title">Notice Emails</h3>
+                  <p class="pref-item-desc">Important announcements, administrative circulars, and departmental notices.</p>
+                </div>
+              </div>
+              <div class="pref-item-toggle">
+                <label class="switch-label" for="notice_emails">
+                  <span class="visually-hidden">Toggle Notice Emails</span>
+                  <input type="checkbox" id="notice_emails" class="pref-toggle-input cat-input" checked>
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
+
+            <!-- 6. Feedback -->
+            <div class="pref-item-card" data-category="feedback">
+              <div class="pref-item-main">
+                <div class="pref-icon-wrapper item-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                  </svg>
+                </div>
+                <div class="pref-item-content">
+                  <h3 class="pref-item-title">Feedback Form Emails</h3>
+                  <p class="pref-item-desc">Notices when confidential student evaluation and institutional feedback forms are released.</p>
+                </div>
+              </div>
+              <div class="pref-item-toggle">
+                <label class="switch-label" for="feedback_emails">
+                  <span class="visually-hidden">Toggle Feedback Emails</span>
+                  <input type="checkbox" id="feedback_emails" class="pref-toggle-input cat-input" checked>
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
+
+            <!-- 7. Academic Events -->
+            <div class="pref-item-card" data-category="academic_event">
+              <div class="pref-item-main">
+                <div class="pref-icon-wrapper item-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                    <circle cx="8" cy="15" r="1"></circle>
+                    <circle cx="12" cy="15" r="1"></circle>
+                    <circle cx="16" cy="15" r="1"></circle>
+                  </svg>
+                </div>
+                <div class="pref-item-content">
+                  <h3 class="pref-item-title">Academic Event Emails</h3>
+                  <p class="pref-item-desc">Reminders for institutional workshops, guest lectures, symposiums, and holidays.</p>
+                </div>
+              </div>
+              <div class="pref-item-toggle">
+                <label class="switch-label" for="academic_event_emails">
+                  <span class="visually-hidden">Toggle Academic Event Emails</span>
+                  <input type="checkbox" id="academic_event_emails" class="pref-toggle-input cat-input" checked>
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- Save Button Action Bar -->
+        <div class="pref-action-bar">
+          <button type="button" id="savePreferencesBtn" class="btn-save-preferences">
+            <span id="saveBtnSpinner" class="spinner hidden" aria-hidden="true"></span>
+            <span id="saveBtnText">Save Preferences</span>
+          </button>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="student-footer">
+      <p>&copy; 2026 Student Information Portal. All rights reserved.</p>
+    </footer>
+
+  </div>
+
+  <script src="/js/student-shell.js"></script>
+  <script src="/js/student-email-preferences.js"></script>
+</body>
+</html>

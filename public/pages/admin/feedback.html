@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Feedback Management - Student Information Portal</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/admin-theme.css">
+  <link rel="stylesheet" href="/css/admin-feedback.css">
+</head>
+<body class="admin-dashboard-body">
+
+  <!-- Mobile Backdrop Overlay -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop hidden" aria-hidden="true"></div>
+
+  <!-- ========================================================================
+       1. FIXED ADMIN SIDEBAR
+       ======================================================================== -->
+  <aside id="adminSidebar" class="admin-sidebar" aria-label="Portal Navigation">
+    <div class="sidebar-header">
+      <a href="/pages/admin/dashboard.html" class="sidebar-brand">
+        <div class="sidebar-logo" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/>
+          </svg>
+        </div>
+        <div class="sidebar-title">
+          <span class="brand-main">Student Portal</span>
+          <span class="brand-sub">ADMINISTRATION</span>
+        </div>
+      </a>
+      <button type="button" id="sidebarCloseBtn" class="sidebar-close-btn" aria-label="Close menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Nav populated dynamically by admin-shell.js -->
+    <nav class="sidebar-nav" id="sidebarNavContainer"></nav>
+
+    <!-- Sidebar Footer -->
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sidebarAdminAvatar">S</div>
+        <div class="sidebar-user-info">
+          <span class="sidebar-user-name" id="sidebarAdminName">System Admin</span>
+          <span class="sidebar-user-role" id="sidebarAdminEmail">admin@portal.local</span>
+        </div>
+      </div>
+      <button type="button" class="btn-sidebar-logout" id="sidebarLogoutBtn" title="Sign Out">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16 17 21 12 16 7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ========================================================================
+       2. MAIN CONTENT AREA & TOP HEADER
+       ======================================================================== -->
+  <div class="admin-layout-main">
+
+    <!-- Top Header (Exactly 1 Bell Icon + Profile Dropdown) -->
+    <header class="admin-header">
+      <div class="header-left">
+        <button type="button" id="sidebarToggleBtn" class="sidebar-toggle-btn" aria-label="Toggle navigation menu">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <div class="header-breadcrumbs">
+          <a href="/pages/admin/dashboard.html" class="breadcrumb-item">Dashboard</a>
+          <span class="breadcrumb-separator">/</span>
+          <span class="breadcrumb-current">Feedback</span>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <!-- Exactly 1 Bell Icon -->
+        <button type="button" id="headerNotificationBtn" class="header-notify-btn" aria-label="Notifications" title="Notifications">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          <span id="headerNotificationDot" class="header-notify-badge hidden"></span>
+        </button>
+
+        <!-- Profile Dropdown Trigger -->
+        <div class="profile-dropdown-wrapper">
+          <button type="button" class="header-profile-btn" id="profileDropdownTrigger" aria-haspopup="true" aria-expanded="false" aria-label="Administrator Menu">
+            <div class="header-avatar" id="headerAdminAvatar">S</div>
+            <div class="header-admin-info">
+              <span class="header-admin-name" id="headerAdminName">System Admin</span>
+              <span class="header-admin-badge">ADMIN</span>
+            </div>
+            <svg class="dropdown-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+
+          <!-- Standardized 7-Item Dropdown Menu (managed by user-menu.js & admin-shell.js) -->
+          <div class="profile-dropdown-menu" id="profileDropdownMenu" role="menu">
+            <div class="dropdown-header">
+              <div id="dropdownAdminName" class="dropdown-user-name">System Admin</div>
+              <div id="dropdownAdminEmail" class="dropdown-email">admin@portal.local</div>
+            </div>
+            
+            <button type="button" id="dropdownMyProfile" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <span>My Profile</span>
+            </button>
+
+            <button type="button" id="dropdownEditProfile" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
+              <span>Edit Profile</span>
+            </button>
+
+            <button type="button" id="dropdownChangePassword" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              <span>Change Password</span>
+            </button>
+
+            <button type="button" id="dropdownAccountSettings" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+              </svg>
+              <span>Account Settings</span>
+            </button>
+
+            <button type="button" id="dropdownActivityLogs" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+              </svg>
+              <span>Activity Logs</span>
+            </button>
+
+            <button type="button" id="dropdownHelpSupport" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+              </svg>
+              <span>Help & Support</span>
+            </button>
+
+            <div class="dropdown-divider"></div>
+
+            <button type="button" id="dropdownLogout" class="dropdown-item text-danger" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
+              <span>Sign Out</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="dashboard-content" id="adminMainContent" style="padding: 24px; max-width: 1400px; margin: 0 auto; box-sizing: border-box; width: 100%;">
+
+      <!-- Page Header -->
+      <div class="admin-page-header">
+        <div class="admin-page-header-title">
+          <h1>Student Feedback Management</h1>
+          <p>Configure feedback surveys, manage dynamic questionnaires, inspect student evaluations, and review analytics.</p>
+        </div>
+        <div class="admin-page-actions">
+          <button type="button" class="btn-admin-primary" id="btnOpenCreateModal">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>+ Create Feedback Form</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- KPI Summary Cards Grid -->
+      <div class="admin-kpi-grid">
+        <div class="admin-kpi-card">
+          <div class="admin-kpi-icon kpi-icon-purple">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+          </div>
+          <div class="admin-kpi-content">
+            <div class="admin-kpi-value" id="kpiTotalForms">0</div>
+            <div class="admin-kpi-label">Total Forms</div>
+            <div class="admin-kpi-sub">Configured surveys</div>
+          </div>
+        </div>
+
+        <div class="admin-kpi-card">
+          <div class="admin-kpi-icon kpi-icon-green">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+          </div>
+          <div class="admin-kpi-content">
+            <div class="admin-kpi-value" id="kpiActiveForms">0</div>
+            <div class="admin-kpi-label">Active Forms</div>
+            <div class="admin-kpi-sub">Accepting submissions</div>
+          </div>
+        </div>
+
+        <div class="admin-kpi-card">
+          <div class="admin-kpi-icon kpi-icon-plum">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+          </div>
+          <div class="admin-kpi-content">
+            <div class="admin-kpi-value" id="kpiTotalResponses">0</div>
+            <div class="admin-kpi-label">Total Responses</div>
+            <div class="admin-kpi-sub">Student submissions</div>
+          </div>
+        </div>
+
+        <div class="admin-kpi-card">
+          <div class="admin-kpi-icon kpi-icon-amber">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+          </div>
+          <div class="admin-kpi-content">
+            <div class="admin-kpi-value" id="kpiAvgRating">—</div>
+            <div class="admin-kpi-label">Average Rating</div>
+            <div class="admin-kpi-sub">Available in Analytics</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters & Search Toolbar -->
+      <div class="admin-filter-card">
+        <div class="admin-filter-row">
+          <div class="filter-search-group">
+            <svg class="filter-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="filterSearch" class="filter-search-input" placeholder="Search forms by title or description...">
+          </div>
+
+          <div class="filter-select-group">
+            <select id="filterTargetType" class="filter-select">
+              <option value="">Target: All Types</option>
+              <option value="COURSE">COURSE</option>
+              <option value="TEACHER">TEACHER</option>
+              <option value="GENERAL">GENERAL</option>
+              <option value="EVENT">EVENT</option>
+            </select>
+          </div>
+
+          <div class="filter-select-group">
+            <select id="filterStatus" class="filter-select">
+              <option value="">Status: All</option>
+              <option value="1">ACTIVE</option>
+              <option value="0">INACTIVE</option>
+            </select>
+          </div>
+
+          <div class="filter-select-group">
+            <input type="text" id="filterAcademicYear" class="filter-search-input" placeholder="Year (e.g. 2025-2026)" style="padding-left: 12px;">
+          </div>
+
+          <div class="filter-select-group">
+            <select id="filterSemester" class="filter-select">
+              <option value="">Semester: All</option>
+              <option value="1">Semester 1</option>
+              <option value="2">Semester 2</option>
+              <option value="3">Semester 3</option>
+              <option value="4">Semester 4</option>
+              <option value="5">Semester 5</option>
+              <option value="6">Semester 6</option>
+              <option value="7">Semester 7</option>
+              <option value="8">Semester 8</option>
+            </select>
+          </div>
+
+          <button type="button" id="btnResetFilters" class="btn-filter-reset" title="Reset all filters">
+            Reset Filters
+          </button>
+        </div>
+      </div>
+
+      <!-- Feedback Forms Table & Container -->
+      <div class="admin-table-container">
+
+        <!-- Loading State -->
+        <div id="tableLoadingState" class="admin-loading-spinner hidden">
+          <div class="spinner-icon"></div>
+          <span>Loading feedback forms...</span>
+        </div>
+
+        <!-- Empty State -->
+        <div id="tableEmptyState" class="admin-empty-state hidden">
+          <div class="empty-state-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+            </svg>
+          </div>
+          <h3>No Feedback Forms Found</h3>
+          <p>No feedback forms match your current search criteria. Click "+ Create Feedback Form" to launch a new survey.</p>
+          <button type="button" class="btn-admin-primary btn-admin-sm" id="btnEmptyCreate">
+            + Create Feedback Form
+          </button>
+        </div>
+
+        <!-- Error State -->
+        <div id="tableErrorState" class="admin-empty-state hidden">
+          <div class="empty-state-icon" style="background-color: #fee2e2; color: #dc2626;">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+          </div>
+          <h3>Failed to Load Feedback Forms</h3>
+          <p id="tableErrorMessage">An error occurred while fetching feedback forms. Please verify your connection.</p>
+          <button type="button" class="btn-admin-secondary btn-admin-sm" id="btnRetryLoad">
+            Retry
+          </button>
+        </div>
+
+        <!-- Forms Table -->
+        <div class="admin-table-responsive" id="tableWrapper">
+          <table class="admin-feedback-table" id="adminFeedbackTable">
+            <thead>
+              <tr>
+                <th style="width: 26%;">Form Details</th>
+                <th style="width: 14%;">Target</th>
+                <th style="width: 14%;">Period / Scope</th>
+                <th style="width: 14%;">Timeline</th>
+                <th style="width: 10%;">Status</th>
+                <th style="width: 8%; text-align: center;">Questions</th>
+                <th style="width: 8%; text-align: center;">Responses</th>
+                <th style="width: 16%; text-align: right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="formsTableBody">
+              <!-- Dynamically populated by admin-feedback.js -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="admin-pagination" id="paginationContainer">
+          <div id="paginationInfo">Showing 0 to 0 of 0 forms</div>
+          <div class="pagination-controls">
+            <button type="button" class="btn-page" id="btnPrevPage" disabled>&larr; Previous</button>
+            <span id="pageIndicator" style="font-weight: 600; padding: 0 6px;">Page 1 of 1</span>
+            <button type="button" class="btn-page" id="btnNextPage" disabled>Next &rarr;</button>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- ========================================================================
+       3. MODALS
+       ======================================================================== -->
+
+  <!-- A) CREATE / EDIT FEEDBACK FORM MODAL -->
+  <div id="formModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="formModalTitle">
+    <div class="modal-dialog modal-dialog-lg">
+      <div class="modal-header">
+        <h3 id="formModalTitle" class="modal-title">Create Feedback Form</h3>
+        <button type="button" class="modal-close-btn" id="btnCloseFormModal" aria-label="Close modal">&times;</button>
+      </div>
+      <form id="feedbackFormElement">
+        <div class="modal-body">
+          
+          <div id="formModalAlert" class="form-error-alert hidden">
+            <span>Validation error message</span>
+          </div>
+
+          <div class="form-group">
+            <label for="formTitleInput" class="form-label">Form Title <span class="req">*</span></label>
+            <input type="text" id="formTitleInput" class="form-control" placeholder="e.g. Mid-Term Faculty & Course Feedback" required>
+          </div>
+
+          <div class="form-group">
+            <label for="formDescInput" class="form-label">Description / Instructions</label>
+            <textarea id="formDescInput" class="form-control" rows="2" placeholder="Brief explanation of the survey scope, goals, and guidance for students"></textarea>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label for="formTargetTypeSelect" class="form-label">Target Type <span class="req">*</span></label>
+              <select id="formTargetTypeSelect" class="form-control" required>
+                <option value="COURSE">COURSE</option>
+                <option value="TEACHER">TEACHER</option>
+                <option value="GENERAL" selected>GENERAL</option>
+                <option value="EVENT">EVENT</option>
+              </select>
+            </div>
+
+            <div class="form-group" id="targetIdWrapper">
+              <label for="formTargetIdInput" class="form-label" id="targetIdLabel">Target Entity ID (Optional)</label>
+              <input type="number" id="formTargetIdInput" class="form-control" placeholder="e.g. Course ID or Teacher ID" min="1">
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label for="formAcademicYearInput" class="form-label">Academic Year</label>
+              <input type="text" id="formAcademicYearInput" class="form-control" placeholder="e.g. 2025-2026">
+            </div>
+
+            <div class="form-group">
+              <label for="formSemesterSelect" class="form-label">Semester</label>
+              <select id="formSemesterSelect" class="form-control">
+                <option value="">All Semesters (General)</option>
+                <option value="1">Semester 1</option>
+                <option value="2">Semester 2</option>
+                <option value="3">Semester 3</option>
+                <option value="4">Semester 4</option>
+                <option value="5">Semester 5</option>
+                <option value="6">Semester 6</option>
+                <option value="7">Semester 7</option>
+                <option value="8">Semester 8</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label for="formStartDateInput" class="form-label">Start Date & Time <span class="req">*</span></label>
+              <input type="datetime-local" id="formStartDateInput" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+              <label for="formEndDateInput" class="form-label">End Date & Time <span class="req">*</span></label>
+              <input type="datetime-local" id="formEndDateInput" class="form-control" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-check-group">
+              <input type="checkbox" id="formIsActiveCheck" class="form-check-input" checked>
+              <label for="formIsActiveCheck" class="form-label" style="margin: 0; cursor: pointer;">
+                Active (Accessible to eligible students during the valid date window)
+              </label>
+            </div>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-admin-secondary" id="btnCancelForm">Cancel</button>
+          <button type="submit" class="btn-admin-primary" id="btnSaveForm">
+            <span id="btnSaveFormText">Save Feedback Form</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- B) DELETE FORM CONFIRMATION MODAL -->
+  <div id="deleteModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="deleteModalTitle" class="modal-title" style="color: var(--admin-danger, #dc2626);">Delete Feedback Form?</h3>
+        <button type="button" class="modal-close-btn" id="btnCloseDeleteModal" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="display: flex; gap: 16px; align-items: flex-start;">
+          <div style="width: 44px; height: 44px; border-radius: 50%; background-color: #fee2e2; color: #dc2626; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+              <line x1="12" y1="9" x2="12" y2="13"></line>
+              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+          </div>
+          <div>
+            <p style="margin: 0 0 10px 0; font-size: 14.5px; font-weight: 600; color: var(--admin-text, #191426);" id="deleteFormTitleText">
+              Are you sure you want to delete this feedback form?
+            </p>
+            <p style="margin: 0; font-size: 13px; color: var(--admin-muted, #665e75); line-height: 1.5;">
+              Warning: All associated questions, student responses, and analytics for this form will be permanently removed according to the database cascade behavior. This action cannot be undone.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-admin-secondary" id="btnCancelDelete">Cancel</button>
+        <button type="button" class="btn-admin-danger" id="btnConfirmDelete">
+          <span id="btnConfirmDeleteText">Yes, Delete Form</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- C) QUESTION MANAGEMENT MODAL -->
+  <div id="questionsModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="questionsModalTitle">
+    <div class="modal-dialog modal-dialog-lg">
+      <div class="modal-header">
+        <div>
+          <h3 id="questionsModalTitle" class="modal-title">Manage Form Questions</h3>
+          <p id="questionsFormSubtitle" style="font-size: 12.5px; color: var(--admin-muted, #665e75); margin: 2px 0 0 0;">
+            Form Questions
+          </p>
+        </div>
+        <button type="button" class="modal-close-btn" id="btnCloseQuestionsModal" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body">
+
+        <div class="question-mgr-header">
+          <span id="questionsCountBadge" class="status-pill status-pill-active" style="background-color: #f5f3ff; color: #7c3aed;">
+            0 Questions
+          </span>
+          <button type="button" class="btn-admin-primary btn-admin-sm" id="btnToggleAddQuestion">
+            + Add Question
+          </button>
+        </div>
+
+        <!-- Add / Edit Question Form Box (Collapsible) -->
+        <div id="questionFormBox" class="question-form-box hidden">
+          <h4 id="questionFormBoxTitle" class="question-form-box-title">Add New Question</h4>
+          
+          <div id="questionFormAlert" class="form-error-alert hidden">
+            <span>Validation error</span>
+          </div>
+
+          <div class="form-group">
+            <label for="questionTextInput" class="form-label">Question Text <span class="req">*</span></label>
+            <input type="text" id="questionTextInput" class="form-control" placeholder="e.g. How effective was the course instructor in explaining core concepts?" required>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label for="questionTypeSelect" class="form-label">Question Type <span class="req">*</span></label>
+              <select id="questionTypeSelect" class="form-control" required>
+                <option value="RATING">RATING (1 to 5 Stars)</option>
+                <option value="TEXT">TEXT (Open Feedback / Remarks)</option>
+                <option value="MULTIPLE_CHOICE">MULTIPLE_CHOICE</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="questionOrderInput" class="form-label">Display Order</label>
+              <input type="number" id="questionOrderInput" class="form-control" value="0" min="0">
+            </div>
+          </div>
+
+          <!-- Informational Notice for Multiple Choice limitation -->
+          <div id="questionMCNotice" class="info-banner hidden">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0; margin-top: 1px;">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            <div>
+              <strong>Multiple Choice Configuration Note:</strong> The current database schema stores questions with text, type, required, and display order. Specific custom option sets are rendered by students from standard standardized scales (e.g., Strongly Agree to Strongly Disagree) or text embedded within the question prompt.
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-check-group">
+              <input type="checkbox" id="questionRequiredCheck" class="form-check-input" checked>
+              <label for="questionRequiredCheck" class="form-label" style="margin: 0; cursor: pointer;">
+                Required (Students must answer this question to submit)
+              </label>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 14px;">
+            <button type="button" class="btn-admin-secondary btn-admin-sm" id="btnCancelQuestionForm">Cancel</button>
+            <button type="button" class="btn-admin-primary btn-admin-sm" id="btnSaveQuestion">Save Question</button>
+          </div>
+        </div>
+
+        <!-- Questions List Container -->
+        <div id="questionsLoadingState" class="admin-loading-spinner hidden">
+          <div class="spinner-icon"></div>
+          <span>Loading questions...</span>
+        </div>
+
+        <div id="questionsEmptyState" class="admin-empty-state hidden" style="padding: 24px;">
+          <p style="color: var(--admin-muted, #665e75); margin-bottom: 12px;">No questions configured for this form yet.</p>
+          <button type="button" class="btn-admin-primary btn-admin-sm" id="btnQuestionsEmptyAdd">
+            + Add First Question
+          </button>
+        </div>
+
+        <div id="questionsListContainer" class="question-list-container">
+          <!-- Populated dynamically -->
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-admin-secondary" id="btnCloseQuestionsFooter">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- D) RESPONSES VIEW MODAL -->
+  <div id="responsesModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="responsesModalTitle">
+    <div class="modal-dialog modal-dialog-xl">
+      <div class="modal-header">
+        <div>
+          <h3 id="responsesModalTitle" class="modal-title">Student Responses</h3>
+          <p id="responsesModalSubtitle" style="font-size: 12.5px; color: var(--admin-muted, #665e75); margin: 2px 0 0 0;">
+            Submissions
+          </p>
+        </div>
+        <button type="button" class="modal-close-btn" id="btnCloseResponsesModal" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body">
+
+        <!-- Loading State -->
+        <div id="responsesLoadingState" class="admin-loading-spinner hidden">
+          <div class="spinner-icon"></div>
+          <span>Loading student responses...</span>
+        </div>
+
+        <!-- Empty State -->
+        <div id="responsesEmptyState" class="admin-empty-state hidden">
+          <div class="empty-state-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+            </svg>
+          </div>
+          <h3>No Student Responses Yet</h3>
+          <p>No eligible students have submitted feedback for this form yet.</p>
+        </div>
+
+        <!-- Responses List Container -->
+        <div id="responsesListContainer" class="responses-list-container">
+          <!-- Populated dynamically with sanitized student metadata -->
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-admin-secondary" id="btnCloseResponsesFooter">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- E) ANALYTICS VIEW MODAL -->
+  <div id="analyticsModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="analyticsModalTitle">
+    <div class="modal-dialog modal-dialog-xl">
+      <div class="modal-header">
+        <div>
+          <h3 id="analyticsModalTitle" class="modal-title">Feedback Analytics</h3>
+          <p id="analyticsModalSubtitle" style="font-size: 12.5px; color: var(--admin-muted, #665e75); margin: 2px 0 0 0;">
+            Evaluation metrics and rating breakdowns
+          </p>
+        </div>
+        <button type="button" class="modal-close-btn" id="btnCloseAnalyticsModal" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body">
+
+        <!-- Loading State -->
+        <div id="analyticsLoadingState" class="admin-loading-spinner hidden">
+          <div class="spinner-icon"></div>
+          <span>Calculating feedback analytics...</span>
+        </div>
+
+        <!-- Empty State (Zero Responses) -->
+        <div id="analyticsEmptyState" class="admin-empty-state hidden">
+          <div class="empty-state-icon" style="background-color: #fffbeb; color: #d97706;">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+          </div>
+          <h3>No responses available yet.</h3>
+          <p>Analytics charts and rating breakdowns will automatically display once students submit feedback for this form.</p>
+        </div>
+
+        <!-- Analytics Content Container (Shown when responses exist) -->
+        <div id="analyticsContentContainer" class="hidden">
+          
+          <!-- Summary Metrics Cards -->
+          <div class="analytics-summary-grid">
+            <div class="analytics-stat-card">
+              <div class="analytics-stat-val" id="analyticsTotalResponses">0</div>
+              <div class="analytics-stat-lbl">Total Responses</div>
+            </div>
+
+            <div class="analytics-stat-card">
+              <div class="analytics-stat-val" id="analyticsOverallAvg" style="color: #ea580c;">—</div>
+              <div class="analytics-stat-lbl">Overall Average Rating</div>
+            </div>
+
+            <div class="analytics-stat-card">
+              <div class="analytics-stat-val" id="analyticsTotalQuestions" style="color: #c026d3;">0</div>
+              <div class="analytics-stat-lbl">Configured Questions</div>
+            </div>
+          </div>
+
+          <!-- Charts Grid -->
+          <div class="analytics-charts-grid">
+            
+            <!-- Chart 1: Rating Distribution -->
+            <div class="chart-card">
+              <div class="chart-card-title">
+                <span>Rating Distribution (1★ to 5★)</span>
+                <span style="font-size: 11px; font-weight: 600; color: var(--admin-primary, #7c3aed); background: #f5f3ff; padding: 2px 6px; border-radius: 4px;">AGGREGATE</span>
+              </div>
+              <div class="chart-canvas-container" id="ratingDistChartContainer">
+                <canvas id="ratingDistCanvas"></canvas>
+              </div>
+              <!-- Fallback Visual CSS Progress Bars -->
+              <div id="cssDistBars" class="css-dist-list" style="margin-top: 14px;">
+                <!-- Populated dynamically -->
+              </div>
+            </div>
+
+            <!-- Chart 2: Average Rating by Question -->
+            <div class="chart-card">
+              <div class="chart-card-title">
+                <span>Average Rating per Question</span>
+                <span style="font-size: 11px; font-weight: 600; color: var(--admin-secondary, #c026d3); background: #fdf4ff; padding: 2px 6px; border-radius: 4px;">SCORE (MAX 5.0)</span>
+              </div>
+              <div class="chart-canvas-container" id="questionAvgChartContainer">
+                <canvas id="questionAvgCanvas"></canvas>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Per-Question Table Breakdown -->
+          <div class="analytics-breakdown-card" id="questionMetricsTableCard">
+            <div class="card-header">Question-Level Performance Breakdown</div>
+            <div class="admin-table-responsive">
+              <table class="admin-feedback-table" style="font-size: 13px;">
+                <thead>
+                  <tr>
+                    <th>Question</th>
+                    <th style="width: 15%; text-align: center;">Responses</th>
+                    <th style="width: 20%; text-align: center;">Average Score</th>
+                    <th style="width: 30%;">Rating Breakdown</th>
+                  </tr>
+                </thead>
+                <tbody id="analyticsQuestionsTableBody">
+                  <!-- Injected dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Text Questions Summary -->
+          <div id="textSummaryCard" class="analytics-breakdown-card hidden" style="margin-top: 20px;">
+            <div class="card-header">Text / Qualitative Questions Summary</div>
+            <div style="padding: 16px 20px;" id="textQuestionsList">
+              <!-- Injected dynamically -->
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-admin-secondary" id="btnCloseAnalyticsFooter">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shared Toast Notifications -->
+  <div id="adminSharedToastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- Safe Chart.js CDN (falls back safely if offline) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+
+  <!-- Core Portal Scripts -->
+  <script src="/js/api.js"></script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/admin-feedback.js"></script>
+  <script src="/js/admin-shell.js"></script>
+  <script src="/js/user-menu.js"></script>
+</body>
+</html>

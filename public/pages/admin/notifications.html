@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notifications Management - Student Information Portal</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/admin-erp-modules.css">
+  <link rel="stylesheet" href="/css/admin-theme.css">
+</head>
+<body class="admin-dashboard-body">
+
+  <!-- Floating Toast Notifications -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- Mobile Backdrop Overlay -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop hidden" aria-hidden="true"></div>
+
+  <!-- ========================================================================
+       1. FIXED ADMIN SIDEBAR (CANONICAL)
+       ======================================================================== -->
+  <aside id="adminSidebar" class="admin-sidebar" aria-label="Portal Navigation">
+    <div class="sidebar-header">
+      <a href="/pages/admin/dashboard.html" class="sidebar-brand">
+        <div class="sidebar-logo" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/>
+          </svg>
+        </div>
+        <div class="sidebar-title">
+          <span class="brand-main">Student Portal</span>
+          <span class="brand-sub">ADMINISTRATION</span>
+        </div>
+      </a>
+      <button type="button" id="sidebarCloseBtn" class="sidebar-close-btn" aria-label="Close menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav" id="sidebarNavContainer">
+      <!-- OVERVIEW -->
+      <div class="nav-group-title">Overview</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/admin/dashboard.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+            <span>Dashboard</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- USER MANAGEMENT -->
+      <div class="nav-group-title">User Management</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/admin/users.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            <span>Users</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/students.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span>Students</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/teachers.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+            </svg>
+            <span>Teachers</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- ACADEMICS -->
+      <div class="nav-group-title">Academics</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/admin/departments.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+              <path d="M9 22v-4h6v4"></path>
+              <path d="M8 6h.01M16 6h.01M12 6h.01M8 10h.01M16 10h.01M12 10h.01M8 14h.01M16 14h.01M12 14h.01"></path>
+            </svg>
+            <span>Departments</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/courses.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            </svg>
+            <span>Courses</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/enrollments.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="8.5" cy="7" r="4"></circle>
+              <polyline points="17 11 19 13 23 9"></polyline>
+            </svg>
+            <span>Enrollment</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/timetable.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span>Timetable</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- ACADEMIC OPERATIONS -->
+      <div class="nav-group-title">Academic Operations</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/admin/attendance.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 11 12 14 22 4"></polyline>
+              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+            </svg>
+            <span>Attendance</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/grades.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="9" y1="15" x2="15" y2="15"></line>
+            </svg>
+            <span>Grades</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/performance.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+            <span>Performance</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- ACADEMIC RESOURCES -->
+      <div class="nav-group-title">Academic Resources</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/admin/assignments.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            <span>Assignments</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/study-material.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            <span>Study Material</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/notices.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span>Notice Board</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- COMMUNICATION & SYSTEM -->
+      <div class="nav-group-title">Communication & System</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/admin/notifications.html" class="nav-link active" aria-current="page">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span>Notifications</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/queries.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+            <span>Queries</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/reports.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            <span>Reports</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/audit-logs.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <span>Audit Logs</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/backups.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            <span>Backup & Restore</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Sidebar Footer -->
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sidebarAdminAvatar">S</div>
+        <div class="sidebar-user-info">
+          <span class="sidebar-user-name" id="sidebarAdminName">System Admin</span>
+          <span class="sidebar-user-role" id="sidebarAdminEmail">admin@portal.local</span>
+        </div>
+      </div>
+      <button type="button" class="btn-sidebar-logout" id="sidebarLogoutBtn" title="Sign Out">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16 17 21 12 16 7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ========================================================================
+       2. MAIN CONTENT AREA
+       ======================================================================== -->
+  <div class="admin-layout">
+    <!-- Top Header -->
+    <header class="admin-header">
+      <div class="header-left">
+        <button type="button" id="sidebarToggleBtn" class="sidebar-toggle-btn" aria-label="Toggle navigation menu">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <div class="header-breadcrumbs">
+          <a href="/pages/admin/dashboard.html" class="breadcrumb-item">Dashboard</a>
+          <span class="breadcrumb-separator">/</span>
+          <span class="breadcrumb-current">Notifications</span>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <!-- Profile Dropdown Trigger -->
+        <div class="profile-dropdown-wrapper">
+          <button type="button" class="header-profile-btn" id="profileDropdownTrigger" aria-haspopup="true" aria-expanded="false" aria-label="Administrator Menu">
+            <div class="header-avatar" id="headerAdminAvatar">S</div>
+            <div class="header-admin-info">
+              <span class="header-admin-name" id="headerAdminName">System Admin</span>
+              <span class="header-admin-badge">ADMIN</span>
+            </div>
+            <svg class="dropdown-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+
+          <!-- Standardized 7-Item Dropdown Menu -->
+          <div class="profile-dropdown-menu" id="profileDropdownMenu" role="menu">
+            <div class="dropdown-header">
+              <div id="dropdownAdminName" class="dropdown-user-name">System Admin</div>
+              <div id="dropdownAdminEmail" class="dropdown-email">admin@portal.local</div>
+            </div>
+            
+            <button type="button" id="dropdownMyProfile" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <span>My Profile</span>
+            </button>
+
+            <button type="button" id="dropdownEditProfile" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
+              <span>Edit Profile</span>
+            </button>
+
+            <button type="button" id="dropdownChangePassword" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              <span>Change Password</span>
+            </button>
+
+            <button type="button" id="dropdownAccountSettings" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0-.33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+              </svg>
+              <span>Account Settings</span>
+            </button>
+
+            <a href="/pages/admin/notifications.html" id="dropdownNotifications" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+              <span>Notifications</span>
+            </a>
+
+            <a href="/pages/admin/audit-logs.html" id="dropdownAuditActivity" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+              </svg>
+              <span>Audit Activity</span>
+            </a>
+
+            <div class="dropdown-divider"></div>
+
+            <button type="button" id="dropdownLogoutBtn" class="dropdown-item dropdown-item-danger" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
+              <span>Logout</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- PAGE BODY -->
+    <main class="admin-main">
+      
+      <!-- PAGE HEADER -->
+      <div class="erp-page-header-row">
+        <div>
+          <h1 class="erp-page-title">Notifications Management</h1>
+          <p class="erp-page-subtitle">Send targeted alerts, broadcast communications to user groups, and track system notifications.</p>
+        </div>
+        <div class="erp-header-actions">
+          <button type="button" id="btnRefresh" class="btn-erp btn-erp-secondary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="23 4 23 10 17 10"></polyline>
+              <polyline points="1 20 1 14 7 14"></polyline>
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+            </svg>
+            Refresh
+          </button>
+          <button type="button" id="btnOpenSendModal" class="btn-erp btn-erp-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+            Send Notification
+          </button>
+        </div>
+      </div>
+
+      <!-- KPI METRIC CARDS -->
+      <div class="erp-kpi-grid-4">
+        <div class="erp-kpi-card">
+          <div class="erp-kpi-top">
+            <span class="erp-kpi-label">Total Notifications</span>
+            <div class="erp-kpi-icon erp-kpi-icon-indigo">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+            </div>
+          </div>
+          <div id="kpiTotalNotifications" class="erp-kpi-value">0</div>
+          <div class="erp-kpi-meta">All alerts sent to users</div>
+        </div>
+
+        <div class="erp-kpi-card">
+          <div class="erp-kpi-top">
+            <span class="erp-kpi-label">Unread Alerts</span>
+            <div class="erp-kpi-icon erp-kpi-icon-rose">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+            </div>
+          </div>
+          <div id="kpiUnreadNotifications" class="erp-kpi-value">0</div>
+          <div class="erp-kpi-meta">Awaiting recipient review</div>
+        </div>
+
+        <div class="erp-kpi-card">
+          <div class="erp-kpi-top">
+            <span class="erp-kpi-label">Read Alerts</span>
+            <div class="erp-kpi-icon erp-kpi-icon-emerald">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+            </div>
+          </div>
+          <div id="kpiReadNotifications" class="erp-kpi-value">0</div>
+          <div class="erp-kpi-meta">Acknowledged by users</div>
+        </div>
+
+        <div class="erp-kpi-card">
+          <div class="erp-kpi-top">
+            <span class="erp-kpi-label">Student Deliveries</span>
+            <div class="erp-kpi-icon erp-kpi-icon-amber">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+            </div>
+          </div>
+          <div id="kpiStudentNotifications" class="erp-kpi-value">0</div>
+          <div class="erp-kpi-meta">Delivered to students</div>
+        </div>
+      </div>
+
+      <!-- FILTER & SEARCH PANEL -->
+      <div class="erp-filter-card">
+        <div class="erp-filter-header">
+          <div class="erp-filter-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+            </svg>
+            Filter Notifications
+          </div>
+        </div>
+
+        <div class="erp-filter-grid">
+          <div class="erp-form-group">
+            <label for="filterSearch" class="erp-form-label">Search</label>
+            <div class="erp-input-wrapper">
+              <div class="erp-input-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+              </div>
+              <input type="text" id="filterSearch" class="erp-form-control" placeholder="Search title, message, user...">
+            </div>
+          </div>
+
+          <div class="erp-form-group">
+            <label for="filterRole" class="erp-form-label">Recipient Role</label>
+            <select id="filterRole" class="erp-form-control">
+              <option value="">All Roles</option>
+              <option value="STUDENT">Student</option>
+              <option value="TEACHER">Teacher / Faculty</option>
+              <option value="ADMIN">Administrator</option>
+            </select>
+          </div>
+
+          <div class="erp-form-group">
+            <label for="filterType" class="erp-form-label">Notification Type</label>
+            <select id="filterType" class="erp-form-control">
+              <option value="">All Types</option>
+              <option value="General">General</option>
+              <option value="Academic">Academic</option>
+              <option value="Attendance">Attendance</option>
+              <option value="Exam">Exam</option>
+              <option value="Fee">Fee</option>
+              <option value="Alert">Alert</option>
+            </select>
+          </div>
+
+          <div class="erp-form-group">
+            <label for="filterIsRead" class="erp-form-label">Read Status</label>
+            <select id="filterIsRead" class="erp-form-control">
+              <option value="">All Statuses</option>
+              <option value="0">Unread</option>
+              <option value="1">Read</option>
+            </select>
+          </div>
+
+          <div class="erp-filter-actions">
+            <button type="button" id="btnResetFilters" class="btn-erp btn-erp-secondary">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+              Reset Filters
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- NOTIFICATIONS DATA TABLE -->
+      <div class="erp-table-card">
+        <div class="erp-table-toolbar">
+          <div class="erp-table-count">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span>Notification Feed</span>
+          </div>
+        </div>
+
+        <div class="erp-table-container">
+          <table class="erp-table" id="notificationsTable">
+            <thead>
+              <tr>
+                <th>Recipient User</th>
+                <th>Title & Message</th>
+                <th>Category</th>
+                <th>Status</th>
+                <th>Date Sent</th>
+                <th style="text-align: right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="notificationsBody">
+              <tr>
+                <td colspan="6" class="text-center py-4 text-muted">Loading notifications...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- PAGINATION CONTROLS -->
+        <div class="erp-pagination">
+          <div id="paginationInfo" class="erp-pagination-info">Showing 0 of 0 notifications</div>
+          <div class="erp-pagination-btns">
+            <button type="button" id="btnPrevPage" class="erp-page-btn" disabled>Previous</button>
+            <span id="paginationCurrentPage" class="erp-pagination-info" style="font-weight: 600; padding: 0 6px;">Page 1 of 1</span>
+            <button type="button" id="btnNextPage" class="erp-page-btn" disabled>Next</button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ========================================================================
+       MODAL: SEND NOTIFICATION / BROADCAST
+       ======================================================================== -->
+  <div id="sendNotificationModal" class="erp-modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modalSendTitle">
+    <div class="erp-modal-card">
+      <div class="erp-modal-header">
+        <h2 id="modalSendTitle" class="erp-modal-title">Send Notification</h2>
+        <button type="button" class="erp-modal-close" data-dismiss="modal" aria-label="Close modal">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <form id="notificationForm">
+        <input type="hidden" id="notificationId" name="notification_id">
+        <div class="erp-modal-body">
+
+          <!-- Delivery Mode Switch -->
+          <div id="deliveryModeContainer" class="erp-form-group" style="margin-bottom: 14px;">
+            <label class="erp-form-label">Delivery Mode</label>
+            <div style="display: flex; gap: 20px; align-items: center; margin-top: 4px;">
+              <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px; font-weight: 500; color: #1e293b;">
+                <input type="radio" name="delivery_mode" value="single" checked style="width: 16px; height: 16px;">
+                <span>Specific Individual User</span>
+              </label>
+              <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px; font-weight: 500; color: #1e293b;">
+                <input type="radio" name="delivery_mode" value="broadcast" style="width: 16px; height: 16px;">
+                <span>Role-based Broadcast</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Single Recipient Dropdown -->
+          <div id="singleRecipientGroup" class="erp-form-group">
+            <label for="modalRecipientUserId" class="erp-form-label">Select Recipient User *</label>
+            <select id="modalRecipientUserId" name="recipient_user_id" class="erp-form-control" required>
+              <option value="">-- Choose User --</option>
+            </select>
+            <small style="color: #64748b; font-size: 11px; margin-top: 3px;">Active portal users only.</small>
+          </div>
+
+          <!-- Broadcast Target Role Dropdown -->
+          <div id="broadcastRoleGroup" class="erp-form-group hidden">
+            <label for="modalBroadcastRole" class="erp-form-label">Target User Role *</label>
+            <select id="modalBroadcastRole" name="target_role" class="erp-form-control">
+              <option value="ALL">All Portal Users (STUDENT, TEACHER, ADMIN)</option>
+              <option value="STUDENT">All Active Students</option>
+              <option value="TEACHER">All Active Faculty / Teachers</option>
+              <option value="ADMIN">All Active Administrators</option>
+            </select>
+            <small style="color: #64748b; font-size: 11px; margin-top: 3px;">A notification record will be generated for each matching active user.</small>
+          </div>
+
+          <div class="erp-form-grid-2" style="margin-top: 14px;">
+            <div class="erp-form-group">
+              <label for="modalTitle" class="erp-form-label">Notification Subject / Title *</label>
+              <input type="text" id="modalTitle" name="title" class="erp-form-control" placeholder="e.g. Schedule Update or Fee Reminder" maxlength="150" required>
+            </div>
+            <div class="erp-form-group">
+              <label for="modalType" class="erp-form-label">Category</label>
+              <select id="modalType" name="notification_type" class="erp-form-control">
+                <option value="General">General</option>
+                <option value="Academic">Academic</option>
+                <option value="Attendance">Attendance</option>
+                <option value="Exam">Exam</option>
+                <option value="Fee">Fee</option>
+                <option value="Alert">Alert</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="erp-form-group" style="margin-top: 14px;">
+            <label for="modalMessage" class="erp-form-label">Notification Message *</label>
+            <textarea id="modalMessage" name="message" class="erp-form-control" rows="4" placeholder="Enter message text..." required></textarea>
+          </div>
+        </div>
+        <div class="erp-modal-footer">
+          <button type="button" class="btn-erp btn-erp-secondary" data-dismiss="modal">Cancel</button>
+          <button type="submit" id="btnSubmitNotification" class="btn-erp btn-erp-primary">Send Notification</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL: VIEW NOTIFICATION DETAILS
+       ======================================================================== -->
+  <div id="viewNotificationModal" class="erp-modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="viewNotificationTitle">
+    <div class="erp-modal-card">
+      <div class="erp-modal-header">
+        <h2 id="viewNotificationTitle" class="erp-modal-title">Notification Details</h2>
+        <button type="button" class="erp-modal-close" data-dismiss="modal" aria-label="Close modal">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="erp-modal-body">
+        <div id="viewNotificationContent" class="erp-log-details-grid">
+          <!-- Populated via JavaScript -->
+        </div>
+      </div>
+      <div class="erp-modal-footer">
+        <button type="button" class="btn-erp btn-erp-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL: DELETE CONFIRMATION
+       ======================================================================== -->
+  <div id="deleteNotificationModal" class="erp-modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="erp-modal-card erp-modal-card-sm">
+      <div class="erp-modal-header">
+        <h2 class="erp-modal-title" style="color: #dc2626;">Delete Notification</h2>
+        <button type="button" class="erp-modal-close" data-dismiss="modal" aria-label="Close modal">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="erp-modal-body">
+        <p style="font-size: 14px; color: #1e293b; margin: 0 0 8px 0; font-weight: 500;">Are you sure you want to delete this notification record?</p>
+        <p style="font-size: 12.5px; color: #64748b; margin: 0 0 12px 0;">This will permanently remove it from the user's notification feed.</p>
+        <div id="deleteNotificationDetails" style="background-color: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 10px 12px; font-size: 13px; color: #991b1b;"></div>
+      </div>
+      <div class="erp-modal-footer">
+        <button type="button" class="btn-erp btn-erp-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" id="btnConfirmDeleteNotification" class="btn-erp btn-erp-danger">Confirm Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Client Script -->
+  <script src="/js/admin-notifications.js"></script>
+  <script src="/js/admin-shell.js"></script>
+  <script src="/js/user-menu.js"></script>
+</body>
+</html>

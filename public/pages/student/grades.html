@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Results & Grades - Student Information Portal</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/student-dashboard.css">
+  <style>
+    /* =========================================================================
+       Results & Grades Custom Theme & Responsive System
+       ========================================================================= */
+    .student-content {
+      padding: 24px 32px;
+      width: 100%;
+      max-width: 1400px;
+      box-sizing: border-box;
+    }
+
+    /* Welcome / Header Card */
+    .student-welcome-card {
+      background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 60%, #3b82f6 100%);
+      border-radius: 16px;
+      padding: 28px 32px;
+      color: #ffffff;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 20px -2px rgba(37, 99, 235, 0.25);
+      position: relative;
+      overflow: hidden;
+    }
+    .student-welcome-card::after {
+      content: "";
+      position: absolute;
+      right: -30px;
+      bottom: -30px;
+      width: 180px;
+      height: 180px;
+      background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .welcome-inner {
+      margin-bottom: 18px;
+    }
+    .welcome-title {
+      font-size: 24px;
+      font-weight: 800;
+      margin: 0 0 6px 0;
+      letter-spacing: -0.02em;
+    }
+    .welcome-subtitle {
+      font-size: 14px;
+      color: #bfdbfe;
+      margin: 0;
+      max-width: 650px;
+      line-height: 1.5;
+    }
+    .welcome-chips-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+    }
+    .welcome-chip {
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: #ffffff;
+    }
+    .welcome-chip svg {
+      width: 16px;
+      height: 16px;
+      stroke: #93c5fd;
+      flex-shrink: 0;
+    }
+
+    /* KPI Grid & Cards */
+    .student-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    .student-kpi-card {
+      background-color: #ffffff;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      padding: 20px 22px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-width: 0;
+      word-break: break-word;
+    }
+    .student-kpi-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.08);
+      border-color: #cbd5e1;
+    }
+    .student-kpi-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .kpi-title {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .kpi-icon-badge {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .kpi-icon-badge svg {
+      width: 20px;
+      height: 20px;
+    }
+    .kpi-badge-blue { background-color: #eff6ff; color: #2563eb; }
+    .kpi-badge-indigo { background-color: #e0e7ff; color: #4f46e5; }
+    .kpi-badge-emerald { background-color: #ecfdf5; color: #059669; }
+    .kpi-badge-amber { background-color: #fffbeb; color: #d97706; }
+
+    .kpi-main-val {
+      font-size: 28px;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.15;
+      margin-bottom: 6px;
+    }
+    .kpi-support-text {
+      font-size: 12.5px;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Semester Controls Card */
+    .grades-control-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-left: 4px solid #2563eb;
+      border-radius: 8px;
+      padding: 16px 20px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+      margin-bottom: 24px;
+    }
+    .grades-control-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+    .grades-control-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .grades-control-label {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #334155;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin: 0;
+    }
+    .grades-sem-select {
+      height: 38px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 13.5px;
+      color: #0f172a;
+      background-color: #ffffff;
+      min-width: 200px;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .grades-sem-select:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+    .btn-print-grades {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      font-size: 13.5px;
+      font-weight: 600;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      background: #ffffff;
+      color: #1e293b;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn-print-grades:hover {
+      background: #f8fafc;
+      border-color: #2563eb;
+      color: #2563eb;
+    }
+
+    /* Statement of Marks Card */
+    .grades-statement-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-left: 4px solid #2563eb;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+    .grades-card-header-gradient {
+      background: #ffffff;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 18px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      color: #0f172a;
+    }
+    .grades-card-header-title-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .grades-header-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      background: #eff6ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #2563eb;
+      flex-shrink: 0;
+    }
+    .grades-card-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin: 0;
+      color: #0f172a;
+      letter-spacing: -0.01em;
+    }
+    .grades-card-subtitle {
+      font-size: 12.5px;
+      color: #64748b;
+      margin: 2px 0 0 0;
+    }
+    .official-transcript-pill {
+      background: #eff6ff;
+      color: #2563eb;
+      border: 1px solid #bfdbfe;
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.8px;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* Desktop Table System */
+    .table-responsive.grades-table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      background: #ffffff;
+    }
+    .grades-data-table {
+      width: 100%;
+      min-width: 760px;
+      border-collapse: separate;
+      border-spacing: 0;
+      text-align: left;
+      font-size: 13.5px;
+      color: #1e293b;
+      margin: 0;
+    }
+    .grades-data-table thead th {
+      background-color: #f8fafc;
+      color: #475569;
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      padding: 14px 16px;
+      border-bottom: 2px solid #e2e8f0;
+      white-space: nowrap;
+      vertical-align: middle;
+    }
+    .grades-data-table thead th.text-center,
+    .grades-data-table tbody td.text-center {
+      text-align: center;
+    }
+    .grades-data-table tbody tr {
+      transition: background-color 0.15s ease;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .grades-data-table tbody tr:hover {
+      background-color: #f8fafc;
+    }
+    .grades-data-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+    .grades-data-table tbody td {
+      padding: 14px 16px;
+      border-bottom: 1px solid #f1f5f9;
+      vertical-align: middle;
+      line-height: 1.5;
+      font-size: 13px;
+      color: #334155;
+    }
+
+    /* Dynamic Semester Summary Card */
+    .semester-summary-card {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 12px;
+      padding: 16px 22px;
+      margin: 18px 20px 20px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .summary-left-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .summary-title-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .summary-main-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #1e3a8a;
+    }
+    .summary-credit-pill {
+      background: #dbeafe;
+      color: #1d4ed8;
+      font-weight: 700;
+      font-size: 12px;
+      padding: 2px 10px;
+      border-radius: 9999px;
+      border: 1px solid #bfdbfe;
+    }
+    .summary-marks-meta {
+      font-size: 13px;
+      color: #475569;
+    }
+    .summary-right-group {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .summary-sgpa-box {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+    .summary-sgpa-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .summary-sgpa-val {
+      font-size: 24px;
+      font-weight: 800;
+      color: #1e3a8a;
+    }
+    .summary-status-badge {
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      border-radius: 9999px;
+    }
+
+    /* Mobile Result Cards System */
+    .grades-mobile-cards {
+      display: none;
+    }
+    .grade-result-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-left: 4px solid #2563eb;
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-sizing: border-box;
+      min-width: 0;
+      word-break: break-word;
+    }
+    .grade-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      border-bottom: 1px solid #f1f5f9;
+      padding-bottom: 10px;
+    }
+    .grade-card-code {
+      font-size: 14.5px;
+      font-weight: 800;
+      color: #1d4ed8;
+      letter-spacing: 0.3px;
+    }
+    .grade-card-course-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 2px 0 0 0;
+      line-height: 1.35;
+    }
+    .grade-card-metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      background: #f8fafc;
+      border-radius: 8px;
+      padding: 10px 12px;
+      border: 1px solid #f1f5f9;
+    }
+    .grade-metric-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      text-align: center;
+    }
+    .grade-metric-label {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .grade-metric-val {
+      font-size: 13px;
+      font-weight: 600;
+      color: #1e293b;
+    }
+    .grade-card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #f1f5f9;
+      padding-top: 10px;
+      font-size: 12.5px;
+    }
+    .grade-footer-stat {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .grade-footer-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .grade-footer-val {
+      font-weight: 800;
+      color: #0f172a;
+      font-size: 14px;
+    }
+
+    /* Responsive Breakpoints */
+    @media (max-width: 1200px) {
+      .student-kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 767px) {
+      .student-content {
+        padding: 18px 14px;
+      }
+      .student-welcome-card {
+        padding: 22px 18px;
+      }
+      .welcome-title {
+        font-size: 20px;
+      }
+      .student-kpi-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      .grades-table-wrap {
+        display: none !important;
+      }
+      .grades-mobile-cards {
+        display: flex !important;
+        flex-direction: column;
+        gap: 12px;
+        padding: 14px;
+      }
+      .grades-control-inner {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .grades-control-left {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .grades-sem-select {
+        width: 100%;
+        min-width: 0;
+      }
+      .btn-print-grades {
+        width: 100%;
+        justify-content: center;
+        min-height: 38px;
+      }
+      .semester-summary-card {
+        flex-direction: column;
+        align-items: stretch;
+        margin: 0 14px 14px 14px;
+        gap: 14px;
+      }
+      .summary-right-group {
+        justify-content: space-between;
+        width: 100%;
+      }
+    }
+    @media (max-width: 420px) {
+      .grade-card-metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px 12px;
+      }
+    }
+
+    /* Print Styles */
+    @media print {
+      body.student-portal-body {
+        background: #ffffff !important;
+      }
+      .student-sidebar,
+      .sidebar-backdrop,
+      .student-header,
+      .student-welcome-card,
+      .grades-control-card,
+      .btn-print-grades,
+      .grades-mobile-cards {
+        display: none !important;
+      }
+      .student-main-wrapper {
+        margin-left: 0 !important;
+        width: 100% !important;
+        padding: 0 !important;
+      }
+      .student-content {
+        padding: 0 !important;
+        max-width: 100% !important;
+      }
+      .grades-statement-card {
+        border: none !important;
+        box-shadow: none !important;
+      }
+      .grades-table-wrap {
+        display: block !important;
+        overflow: visible !important;
+      }
+      .grades-data-table {
+        min-width: 100% !important;
+        border: 1px solid #000 !important;
+      }
+      .grades-data-table th,
+      .grades-data-table td {
+        border: 1px solid #ccc !important;
+        color: #000 !important;
+      }
+      .grades-card-header-gradient {
+        background: #2563eb !important;
+        color: #ffffff !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+    }
+  </style>
+</head>
+<body class="student-portal-body">
+
+  <div id="sidebarBackdrop" class="sidebar-backdrop hidden"></div>
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- FIXED LEFT SIDEBAR -->
+  <aside id="studentSidebar" class="student-sidebar" aria-label="Student Navigation">
+    <div class="sidebar-header">
+      <a href="/pages/student/dashboard.html" class="sidebar-brand">
+        <div class="sidebar-logo" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/>
+          </svg>
+        </div>
+        <div class="sidebar-title">
+          <span class="brand-main">Student Portal</span>
+          <span class="brand-sub">STUDENT</span>
+        </div>
+      </a>
+      <button type="button" id="closeSidebarBtn" class="sidebar-close-btn" aria-label="Close menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="6"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-group-title">ACADEMIC MODULES</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/student/dashboard.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/profile.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <span>My Profile</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/courses.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            <span>My Courses / Enrollment</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/attendance.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+            <span>My Attendance</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/grades.html" class="nav-link active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+            <span>My Results / Grades</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/timetable.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            <span>Timetable</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/assignments.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+            <span>Assignments</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/study-material.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+            <span>Study Material</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="nav-group-title">CAMPUS & SERVICES</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/student/notices.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+            <span>Notices</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/notifications.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+            <span>Notifications</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/queries.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            <span>Queries</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/reports.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            <span>Reports</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sidebarAvatar">S</div>
+        <div class="sidebar-user-info">
+          <span class="sidebar-user-name" id="sidebarUserName">Student</span>
+          <span class="sidebar-user-role">STUDENT</span>
+        </div>
+      </div>
+      <button type="button" id="sidebarLogoutBtn" class="btn-sidebar-logout" title="Sign Out" aria-label="Sign Out">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN WRAPPER -->
+  <div class="student-main-wrapper">
+    <header class="student-header" id="studentHeader">
+      <div class="header-left">
+        <button type="button" id="toggleSidebarBtn" class="sidebar-toggle-btn" aria-label="Open menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <div class="header-heading-group">
+          <h1 class="header-title">My Results & Grades</h1>
+          <p class="header-subtitle">Track your academic performance and grades</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <button type="button" id="headerNotificationBtn" class="header-notify-btn" title="View notifications" aria-label="Notifications">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+          <span id="headerNotificationDot" class="header-notify-badge"></span>
+        </button>
+        <div class="profile-dropdown-wrapper" id="profileDropdownWrapper">
+          <button type="button" id="profileDropdownBtn" class="header-profile-btn" aria-haspopup="true" aria-expanded="false">
+            <div class="header-avatar" id="headerUserAvatar">S</div>
+            <div class="header-profile-meta">
+              <span class="header-profile-name" id="navUserName">Student</span>
+              <span class="header-profile-badge" id="userRoleBadge">STUDENT</span>
+            </div>
+            <svg class="dropdown-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main id="studentMainContent" class="student-content">
+
+      <!-- TOP PAGE WELCOME CARD -->
+      <section class="student-welcome-card">
+        <div class="welcome-inner">
+          <h2 class="welcome-title">My Results & Grades 🎓</h2>
+          <p class="welcome-subtitle">Track your academic performance, semester transcripts, and examination grades.</p>
+        </div>
+        <!-- Academic Info Chips -->
+        <div class="welcome-chips-grid">
+          <div class="welcome-chip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            <span id="headerAcademicYear">Academic Year: 2026–2027</span>
+          </div>
+          <div class="welcome-chip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            <span id="headerSemester">Semester: Term V</span>
+          </div>
+          <div class="welcome-chip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></svg>
+            <span id="headerDepartment">Dept: Information Technology</span>
+          </div>
+          <div class="welcome-chip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            <span id="headerPrn">PRN: B24IT1005</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4 TOP KPI METRIC CARDS -->
+      <section class="student-kpi-grid">
+        <!-- 1. Cumulative GPA (CGPA) -->
+        <div class="student-kpi-card card-border-indigo">
+          <div class="student-kpi-header">
+            <span class="kpi-title">Cumulative GPA (CGPA)</span>
+            <div class="kpi-icon-badge kpi-badge-indigo">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+            </div>
+          </div>
+          <div class="kpi-main-val card-val-indigo" id="kpiCgpa">-- <span style="font-size: 15px; font-weight: 500; color: #64748b;">/ 10.0</span></div>
+          <div class="kpi-support-text">
+            <span class="badge" style="background:#dcfce7; color:#15803d; font-weight: 600;" id="kpiCgpaBadge">Good Standing</span>
+            <span id="kpiCgpaTrend" style="display:none;">Good Standing</span>
+          </div>
+        </div>
+
+        <!-- 2. Latest Semester (SGPA) -->
+        <div class="student-kpi-card card-border-indigo">
+          <div class="student-kpi-header">
+            <span class="kpi-title">Latest Semester (SGPA)</span>
+            <div class="kpi-icon-badge kpi-badge-indigo">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg>
+            </div>
+          </div>
+          <div class="kpi-main-val card-val-indigo" id="kpiSgpa">-- <span style="font-size: 15px; font-weight: 500; color: #64748b;">/ 10.0</span></div>
+          <div class="kpi-support-text">
+            <span class="badge" style="background:#eff6ff; color:#1d4ed8; font-weight: 600;" id="kpiSgpaBadge">Semester 5</span>
+            <span id="kpiSgpaTrend" style="display:none;">Semester 5 Exam</span>
+          </div>
+        </div>
+
+        <!-- 3. Credits Earned -->
+        <div class="student-kpi-card card-border-green">
+          <div class="student-kpi-header">
+            <span class="kpi-title">Credits Earned</span>
+            <div class="kpi-icon-badge kpi-badge-emerald">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            </div>
+          </div>
+          <div class="kpi-main-val card-val-green" id="kpiCredits">0 <span style="font-size: 15px; font-weight: 500; color: #64748b;">Credits</span></div>
+          <div class="kpi-support-text" id="kpiCreditsSupport">
+            <span style="color: #475569; font-weight: 500;">0 Course(s) Completed</span>
+            <span id="kpiCreditsTrend" style="display:none;">Degree Progress</span>
+          </div>
+        </div>
+
+        <!-- 4. Backlogs / Arrears -->
+        <div class="student-kpi-card card-border-green" id="kpiBacklogsCard">
+          <div class="student-kpi-header">
+            <span class="kpi-title">Backlogs / Arrears</span>
+            <div class="kpi-icon-badge kpi-badge-emerald" id="kpiBacklogsIconBadge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            </div>
+          </div>
+          <div class="kpi-main-val card-val-green" id="kpiBacklogs">0</div>
+          <div class="kpi-support-text">
+            <span class="badge" style="background:#dcfce7; color:#15803d; font-weight: 600;" id="kpiBacklogsBadge">No Backlogs</span>
+            <span id="kpiBacklogsTrend" style="display:none;">No arrears</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- SEMESTER SELECT & PRINT CONTROLS CARD -->
+      <section class="grades-control-card">
+        <div class="grades-control-inner">
+          <div class="grades-control-left">
+            <label for="selectSem" class="grades-control-label">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #2563eb;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+              <span>Select Semester:</span>
+            </label>
+            <select id="selectSem" class="grades-sem-select" aria-label="Select Semester">
+              <option value="all" selected>All Semesters</option>
+              <option value="1">Semester I</option>
+              <option value="2">Semester II</option>
+              <option value="3">Semester III</option>
+              <option value="4">Semester IV</option>
+              <option value="5">Semester V</option>
+              <option value="6">Semester VI</option>
+              <option value="7">Semester VII</option>
+              <option value="8">Semester VIII</option>
+            </select>
+          </div>
+          <div class="grades-control-right">
+            <button type="button" class="btn-print-grades" onclick="window.print()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                <rect x="6" y="14" width="12" height="8"></rect>
+              </svg>
+              <span>Print Grade Sheet</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ACADEMIC STATEMENT OF MARKS CARD -->
+      <section class="grades-statement-card">
+        <div class="grades-card-header-gradient">
+          <div class="grades-card-header-title-group">
+            <div class="grades-header-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
+            </div>
+            <div>
+              <h3 class="grades-card-title">Academic Statement of Marks</h3>
+              <p class="grades-card-subtitle">Official evaluated course results and grade point breakdown</p>
+            </div>
+          </div>
+          <div class="grades-header-badge-wrap">
+            <span class="official-transcript-pill" id="gradeSheetStatusBadge">
+              OFFICIAL EVALUATED TRANSCRIPT
+            </span>
+          </div>
+        </div>
+
+        <!-- Desktop Table View -->
+        <div class="table-responsive grades-table-wrap">
+          <table class="data-table grades-data-table">
+            <thead>
+              <tr>
+                <th style="width: 11%;">Code</th>
+                <th style="width: 25%;">Course Name</th>
+                <th style="width: 9%; text-align: center;">Credits</th>
+                <th style="width: 9%; text-align: center;">Internal</th>
+                <th style="width: 9%; text-align: center;">End Sem</th>
+                <th style="width: 9%; text-align: center;">Total</th>
+                <th style="width: 10%; text-align: center;">Grade Points</th>
+                <th style="width: 9%; text-align: center;">Grade</th>
+                <th style="width: 9%; text-align: center;">Status</th>
+              </tr>
+            </thead>
+            <tbody id="gradesTbody">
+              <tr>
+                <td colspan="9" style="text-align: center; padding: 48px 16px; color: var(--stu-text-muted, #64748b);">
+                  Loading academic grades...
+                </td>
+              </tr>
+            </tbody>
+            <tfoot id="gradesTfoot" style="display: none;">
+              <tr style="font-weight: 700; background-color: var(--stu-bg, #f8fafc);">
+                <td colspan="2">Semester Total</td>
+                <td style="text-align: center;" id="footerTotalCredits">0 Credits</td>
+                <td colspan="3" style="text-align: center;" id="footerTotalMarks">Total Marks: --</td>
+                <td colspan="2" style="text-align: center;" id="footerSgpa">SGPA: --</td>
+                <td><span class="badge badge-success" id="footerStatusBadge">Passed</span></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <!-- Mobile Responsive Result Cards View -->
+        <div id="gradesCardsMobile" class="grades-mobile-cards">
+          <!-- Populated dynamically via JS on mobile screens -->
+        </div>
+
+        <!-- Dynamic Semester Summary Card -->
+        <div id="semesterSummaryCard" class="semester-summary-card" style="display: none;">
+          <div class="summary-left-group">
+            <div class="summary-title-row">
+              <span class="summary-main-title">Semester Total</span>
+              <span class="summary-credit-pill" id="summaryTotalCredits">0 Credits</span>
+            </div>
+            <div class="summary-marks-meta" id="summaryTotalMarks">
+              Total Marks: <strong>-- / --</strong>
+            </div>
+          </div>
+          <div class="summary-right-group">
+            <div class="summary-sgpa-box">
+              <span class="summary-sgpa-label">SGPA</span>
+              <span class="summary-sgpa-val" id="summarySgpa">--</span>
+            </div>
+            <div class="summary-status-wrap">
+              <span class="badge badge-success summary-status-badge" id="summaryStatusBadge">SEMESTER CLEARED</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/student-shell.js"></script>
+  <script src="/js/user-menu.js"></script>
+  <script src="/js/student-grades.js"></script>
+</body>
+</html>

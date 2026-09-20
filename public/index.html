@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Information Portal</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script>
+    // Immediate client-side routing
+    (function() {
+      var token = localStorage.getItem('token');
+      var userStr = localStorage.getItem('user');
+      if (token && userStr) {
+        try {
+          var user = JSON.parse(userStr);
+          if (user && user.role === 'ADMIN') {
+            window.location.replace('/pages/admin/dashboard.html');
+            return;
+          } else if (user && user.role === 'TEACHER') {
+            window.location.replace('/pages/teacher/dashboard.html');
+            return;
+          } else if (user && user.role === 'STUDENT') {
+            window.location.replace('/pages/student/dashboard.html');
+            return;
+          }
+        } catch (e) {}
+      }
+      window.location.replace('/login.html');
+    })();
+  </script>
+</head>
+<body style="display: flex; align-items: center; justify-content: center; min-height: 100vh; background: #0f172a; color: #ffffff; font-family: sans-serif;">
+  <p>Redirecting to Student Information Portal...</p>
+</body>
+</html>

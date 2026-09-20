@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Course Assignments - Faculty Portal</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/teacher-dashboard.css">
+  <style>
+    /* ERP Theme Enhancements for Assignments & Submissions */
+    .asg-sub-modal-content {
+      max-width: 900px !important;
+      width: 95% !important;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .asg-sub-modal-body {
+      overflow-y: auto;
+      padding: 20px;
+      flex: 1;
+    }
+    .sub-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 992px) {
+      .sub-kpi-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    @media (max-width: 600px) {
+      .sub-kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    .sub-kpi-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 10px 12px;
+      text-align: center;
+    }
+    .sub-kpi-label {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .sub-kpi-val {
+      font-size: 20px;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+    .badge-sub {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 8px;
+      border-radius: 9999px;
+      font-size: 11.5px;
+      font-weight: 600;
+    }
+    .badge-submitted {
+      background: #dcfce7;
+      color: #15803d;
+      border: 1px solid #bbf7d0;
+    }
+    .badge-late {
+      background: #fef3c7;
+      color: #b45309;
+      border: 1px solid #fde68a;
+    }
+    .badge-pending {
+      background: #f1f5f9;
+      color: #64748b;
+      border: 1px solid #e2e8f0;
+    }
+    .btn-action-group {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .btn-asg-action {
+      padding: 5px 10px;
+      font-size: 12px;
+      border-radius: 5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+    .btn-view-sub {
+      background: #e0f2fe;
+      color: #0369a1;
+      border: 1px solid #bae6fd;
+    }
+    .btn-view-sub:hover {
+      background: #bae6fd;
+    }
+    .btn-edit-asg {
+      background: #f1f5f9;
+      color: #334155;
+      border: 1px solid #cbd5e1;
+    }
+    .btn-edit-asg:hover {
+      background: #e2e8f0;
+    }
+    .btn-del-asg {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+    .btn-del-asg:hover {
+      background: #fecaca;
+    }
+    .btn-doc-download {
+      background: #ccfbf1;
+      color: #0f766e;
+      border: 1px solid #99f6e4;
+    }
+    .btn-doc-download:hover {
+      background: #99f6e4;
+    }
+    .btn-doc-view {
+      background: #f8fafc;
+      color: #475569;
+      border: 1px solid #cbd5e1;
+    }
+    .btn-doc-view:hover {
+      background: #e2e8f0;
+    }
+    .btn-eval-asg {
+      background: #f0fdf4;
+      color: #15803d;
+      border: 1px solid #bbf7d0;
+    }
+    .btn-eval-asg:hover {
+      background: #dcfce7;
+    }
+    .btn-history-asg {
+      background: #f1f5f9;
+      color: #334155;
+      border: 1px solid #cbd5e1;
+    }
+    .btn-history-asg:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+    .badge-eval-ok {
+      background: #dcfce7;
+      color: #15803d;
+      border: 1px solid #bbf7d0;
+    }
+    .badge-eval-pending {
+      background: #fef3c7;
+      color: #b45309;
+      border: 1px solid #fde68a;
+    }
+  </style>
+</head>
+<body class="teacher-layout">
+
+  <!-- Mobile Sidebar Backdrop -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop hidden"></div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- FIXED LEFT SIDEBAR -->
+  <aside id="teacherSidebar" class="teacher-sidebar" aria-label="Faculty Navigation"></aside>
+
+  <!-- MAIN WRAPPER -->
+  <div class="teacher-main-wrapper" style="margin-left: 260px; min-height: 100vh; display: flex; flex-direction: column;">
+    <!-- STICKY TOP HEADER -->
+    <header class="teacher-header" id="teacherHeader">
+      <div class="header-left">
+        <button type="button" id="toggleSidebarBtn" class="sidebar-toggle-btn" aria-label="Open menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <div class="header-heading-group">
+          <h1 class="header-title">Course Assignments</h1>
+          <p class="header-subtitle">Create homework tasks, inspect student submissions, and download submitted documents</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <button type="button" id="headerNotificationBtn" class="header-notify-btn" title="View notifications" aria-label="Notifications">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          <span id="headerNotificationDot" class="header-notify-badge hidden"></span>
+        </button>
+        <div class="profile-dropdown-wrapper" id="profileDropdownWrapper">
+          <button type="button" id="profileDropdownBtn" class="header-profile-btn" aria-haspopup="true" aria-expanded="false" aria-label="User profile menu">
+            <div class="header-avatar" id="headerUserAvatar" style="background: linear-gradient(135deg, #0d9488, #059669);">T</div>
+            <div class="header-profile-meta">
+              <span class="header-profile-name" id="navUserName">Faculty Member</span>
+              <span class="header-profile-badge" id="userRoleBadge" style="background: #ccfbf1; color: #0f766e;">TEACHER</span>
+            </div>
+            <svg class="dropdown-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="dashboard-main" style="padding: 24px; flex: 1;">
+      <!-- KPI Stats Row -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px;">
+        <div class="card" style="padding: 16px 20px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px;">
+          <div style="font-size: 13px; color: #64748b; font-weight: 500;">My Created Assignments</div>
+          <div id="statTotalAssignments" style="font-size: 24px; font-weight: 700; color: #0f172a; margin-top: 4px;">0</div>
+        </div>
+        <div class="card" style="padding: 16px 20px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px;">
+          <div style="font-size: 13px; color: #64748b; font-weight: 500;">Active Tasks</div>
+          <div id="statActiveAssignments" style="font-size: 24px; font-weight: 700; color: #0d9488; margin-top: 4px;">0</div>
+        </div>
+        <div class="card" style="padding: 16px 20px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px;">
+          <div style="font-size: 13px; color: #64748b; font-weight: 500;">Due This Week</div>
+          <div id="statDueThisWeek" style="font-size: 24px; font-weight: 700; color: #2563eb; margin-top: 4px;">0</div>
+        </div>
+      </div>
+
+      <!-- Toolbar Card -->
+      <div class="card mb-4" style="padding: 16px 20px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+          <label for="assignmentCourseFilter" style="font-size: 13px; font-weight: 600; color: #475569;">Filter Course:</label>
+          <select id="assignmentCourseFilter" style="padding: 6px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; background: #ffffff;">
+            <option value="">All Assigned Courses</option>
+          </select>
+        </div>
+        <div>
+          <button type="button" class="btn btn-primary" id="btnOpenCreateAssignment" style="padding: 8px 18px; font-size: 13px; border: none; background: #0d9488; color: #ffffff; border-radius: 6px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Create Assignment
+          </button>
+        </div>
+      </div>
+
+      <!-- Assignments Container -->
+      <div id="assignmentsContainer">
+        <div class="card" style="padding: 48px 24px; text-align: center; background: #ffffff; border: 1px dashed #cbd5e1; border-radius: 8px;">
+          <div style="width: 56px; height: 56px; margin: 0 auto 16px; border-radius: 50%; background: #ccfbf1; display: flex; align-items: center; justify-content: center; color: #0d9488;">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+            </svg>
+          </div>
+          <h3 style="font-size: 18px; font-weight: 700; margin: 0 0 8px 0; color: #0f172a;">No Assignments Created</h3>
+          <p style="color: #64748b; max-width: 480px; margin: 0 auto; font-size: 14px;">You have not created any homework assignments or project deliverables yet.</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Create Assignment Modal -->
+  <div id="createAssignmentModal" class="modal-backdrop" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); z-index: 999; align-items: center; justify-content: center; padding: 20px;">
+    <div style="background: #ffffff; border-radius: 10px; width: 100%; max-width: 520px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); overflow: hidden;">
+      <div style="padding: 16px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; background: #f8fafc;">
+        <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: #0f172a;">Create New Assignment</h3>
+        <button type="button" id="btnCloseAssignmentModal" style="background: none; border: none; font-size: 20px; color: #64748b; cursor: pointer;">&times;</button>
+      </div>
+      <form id="createAssignmentForm" style="padding: 20px;">
+        <div style="margin-bottom: 14px;">
+          <label for="modalAssignCourse" style="display: block; font-size: 12.5px; font-weight: 600; color: #475569; margin-bottom: 4px;">Assigned Course *</label>
+          <select id="modalAssignCourse" required style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; background: #ffffff;">
+            <option value="">Loading assigned courses...</option>
+          </select>
+        </div>
+        <div style="margin-bottom: 14px;">
+          <label for="modalAssignTitle" style="display: block; font-size: 12.5px; font-weight: 600; color: #475569; margin-bottom: 4px;">Assignment Title *</label>
+          <input type="text" id="modalAssignTitle" required placeholder="e.g. Unit 3 Programming Exercise" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;">
+          <div>
+            <label for="modalAssignDueDate" style="display: block; font-size: 12.5px; font-weight: 600; color: #475569; margin-bottom: 4px;">Due Date &amp; Time *</label>
+            <input type="datetime-local" id="modalAssignDueDate" required style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
+          </div>
+          <div>
+            <label for="modalAssignMaxMarks" style="display: block; font-size: 12.5px; font-weight: 600; color: #475569; margin-bottom: 4px;">Max Marks</label>
+            <input type="number" id="modalAssignMaxMarks" value="100" min="1" max="1000" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
+          </div>
+        </div>
+        <div style="margin-bottom: 20px;">
+          <label for="modalAssignDesc" style="display: block; font-size: 12.5px; font-weight: 600; color: #475569; margin-bottom: 4px;">Instructions / Description</label>
+          <textarea id="modalAssignDesc" rows="3" placeholder="Submission guidelines, deliverables, format requirements..." style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-family: inherit; resize: vertical;"></textarea>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 10px;">
+          <button type="button" id="btnCancelAssignmentModal" style="padding: 8px 16px; border: 1px solid #cbd5e1; background: #ffffff; color: #334155; border-radius: 6px; font-size: 13px; cursor: pointer; font-weight: 600;">Cancel</button>
+          <button type="submit" style="padding: 8px 18px; border: none; background: #0d9488; color: #ffffff; border-radius: 6px; font-size: 13px; cursor: pointer; font-weight: 600;">Publish Assignment</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit Assignment Modal -->
+  <div id="editAssignmentModal" class="modal-backdrop" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); z-index: 999; align-items: center; justify-content: center; padding: 20px;">
+    <div style="background: #ffffff; border-radius: 10px; width: 100%; max-width: 520px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); overflow: hidden;">
+      <div style="padding: 16px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; background: #f8fafc;">
+        <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: #0f172a;">Edit Assignment</h3>
+        <button type="button" id="btnCloseEditModal" style="background: none; border: none; font-size: 20px; color: #64748b; cursor: pointer;">&times;</button>
+      </div>
+      <form id="editAssignmentForm" style="padding: 20px;">
+        <input type="hidden" id="editAssignId">
+        <div style="margin-bottom: 14px;">
+          <label for="editAssignCourse" style="display: block; font-size: 12.5px; font-weight: 600; color: #475569; margin-bottom: 4px;">Course</label>
+          <select id="editAssignCourse" required style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; background: #ffffff;">
+          </select>
+        </div>
+        <div style="margin-bottom: 14px;">
+          <label for="editAssignTitle" style="display: block; font-size: 12.5px; font-weight: 600; color: #475569; margin-bottom: 4px;">Assignment Title *</label>
+          <input type="text" id="editAssignTitle" required style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;">
+          <div>
+            <label for="editAssignDueDate" style="display: block; font-size: 12.5px; font-weight: 600; color: #475569; margin-bottom: 4px;">Due Date &amp; Time *</label>
+            <input type="datetime-local" id="editAssignDueDate" required style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
+          </div>
+          <div>
+            <label for="editAssignMaxMarks" style="display: block; font-size: 12.5px; font-weight: 600; color: #475569; margin-bottom: 4px;">Max Marks</label>
+            <input type="number" id="editAssignMaxMarks" min="1" max="1000" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
+          </div>
+        </div>
+        <div style="margin-bottom: 20px;">
+          <label for="editAssignDesc" style="display: block; font-size: 12.5px; font-weight: 600; color: #475569; margin-bottom: 4px;">Instructions / Description</label>
+          <textarea id="editAssignDesc" rows="3" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-family: inherit; resize: vertical;"></textarea>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 10px;">
+          <button type="button" id="btnCancelEditModal" style="padding: 8px 16px; border: 1px solid #cbd5e1; background: #ffffff; color: #334155; border-radius: 6px; font-size: 13px; cursor: pointer; font-weight: 600;">Cancel</button>
+          <button type="submit" style="padding: 8px 18px; border: none; background: #0d9488; color: #ffffff; border-radius: 6px; font-size: 13px; cursor: pointer; font-weight: 600;">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- View Submissions Modal -->
+  <div id="viewSubmissionsModal" class="modal-backdrop" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); z-index: 999; align-items: center; justify-content: center; padding: 20px;">
+    <div class="asg-sub-modal-content" style="background: #ffffff; border-radius: 10px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); overflow: hidden;">
+      <div style="padding: 16px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; background: #f8fafc;">
+        <div>
+          <h3 id="subModalTitle" style="margin: 0; font-size: 16px; font-weight: 700; color: #0f172a;">Student Submissions</h3>
+          <p id="subModalMeta" style="margin: 2px 0 0 0; font-size: 12.5px; color: #64748b;">Course: - | Deadline: -</p>
+        </div>
+        <button type="button" id="btnCloseSubmissionsModal" style="background: none; border: none; font-size: 22px; color: #64748b; cursor: pointer;">&times;</button>
+      </div>
+
+      <div class="asg-sub-modal-body">
+        <!-- KPI Summary Cards -->
+        <div class="sub-kpi-grid">
+          <div class="sub-kpi-card">
+            <div class="sub-kpi-label">Enrolled</div>
+            <div id="subKpiTotal" class="sub-kpi-val" style="color: #0f172a;">0</div>
+          </div>
+          <div class="sub-kpi-card">
+            <div class="sub-kpi-label">Submitted</div>
+            <div id="subKpiSubmitted" class="sub-kpi-val" style="color: #16a34a;">0</div>
+          </div>
+          <div class="sub-kpi-card">
+            <div class="sub-kpi-label">Not Submitted</div>
+            <div id="subKpiNotSubmitted" class="sub-kpi-val" style="color: #dc2626;">0</div>
+          </div>
+          <div class="sub-kpi-card">
+            <div class="sub-kpi-label">Late</div>
+            <div id="subKpiLate" class="sub-kpi-val" style="color: #d97706;">0</div>
+          </div>
+          <div class="sub-kpi-card">
+            <div class="sub-kpi-label">Evaluated</div>
+            <div id="subKpiEvaluated" class="sub-kpi-val" style="color: #15803d;">0</div>
+          </div>
+          <div class="sub-kpi-card">
+            <div class="sub-kpi-label">Pending Eval</div>
+            <div id="subKpiPendingEvaluation" class="sub-kpi-val" style="color: #b45309;">0</div>
+          </div>
+        </div>
+
+        <!-- Filter / Search Toolbar -->
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 16px;">
+          <input type="text" id="subSearchInput" placeholder="Search by student name or PRN..." style="padding: 7px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; max-width: 280px; flex: 1;">
+          <div style="display: flex; gap: 5px; flex-wrap: wrap;">
+            <button type="button" class="btn btn-sm sub-filter-btn active" data-sub-filter="all" style="padding: 5px 10px; font-size: 12px; border-radius: 5px; border: 1px solid #cbd5e1; background: #0d9488; color: #fff; cursor: pointer; font-weight: 600;">All</button>
+            <button type="button" class="btn btn-sm sub-filter-btn" data-sub-filter="submitted" style="padding: 5px 10px; font-size: 12px; border-radius: 5px; border: 1px solid #cbd5e1; background: #ffffff; color: #475569; cursor: pointer; font-weight: 600;">Submitted</button>
+            <button type="button" class="btn btn-sm sub-filter-btn" data-sub-filter="not_submitted" style="padding: 5px 10px; font-size: 12px; border-radius: 5px; border: 1px solid #cbd5e1; background: #ffffff; color: #475569; cursor: pointer; font-weight: 600;">Not Submitted</button>
+            <button type="button" class="btn btn-sm sub-filter-btn" data-sub-filter="late" style="padding: 5px 10px; font-size: 12px; border-radius: 5px; border: 1px solid #cbd5e1; background: #ffffff; color: #475569; cursor: pointer; font-weight: 600;">Late</button>
+            <button type="button" class="btn btn-sm sub-filter-btn" data-sub-filter="evaluated" style="padding: 5px 10px; font-size: 12px; border-radius: 5px; border: 1px solid #cbd5e1; background: #ffffff; color: #475569; cursor: pointer; font-weight: 600;">Evaluated</button>
+            <button type="button" class="btn btn-sm sub-filter-btn" data-sub-filter="pending_eval" style="padding: 5px 10px; font-size: 12px; border-radius: 5px; border: 1px solid #cbd5e1; background: #ffffff; color: #475569; cursor: pointer; font-weight: 600;">Pending Eval</button>
+          </div>
+        </div>
+
+        <!-- Students Table -->
+        <div style="overflow-x: auto; border: 1px solid #e2e8f0; border-radius: 6px;">
+          <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+            <thead>
+              <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0; text-align: left; color: #475569;">
+                <th style="padding: 10px 12px;">PRN</th>
+                <th style="padding: 10px 12px;">Student Name</th>
+                <th style="padding: 10px 12px;">Submission</th>
+                <th style="padding: 10px 12px; text-align: center;">Attempts</th>
+                <th style="padding: 10px 12px;">Submitted At</th>
+                <th style="padding: 10px 12px;">Original File</th>
+                <th style="padding: 10px 12px;">Marks</th>
+                <th style="padding: 10px 12px;">Evaluation</th>
+                <th style="padding: 10px 12px;">Feedback Preview</th>
+                <th style="padding: 10px 12px; text-align: right;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="subModalTableBody">
+              <tr>
+                <td colspan="10" style="padding: 24px; text-align: center; color: #64748b;">Loading student roster...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div style="padding: 12px 20px; border-top: 1px solid #e2e8f0; background: #f8fafc; display: flex; justify-content: flex-end;">
+        <button type="button" id="btnCloseSubmissionsFooter" style="padding: 7px 16px; border: 1px solid #cbd5e1; background: #ffffff; color: #334155; border-radius: 6px; font-size: 13px; cursor: pointer; font-weight: 600;">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Evaluate Submission Modal -->
+  <div id="evaluateSubmissionModal" class="modal-backdrop" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); z-index: 1000; align-items: center; justify-content: center; padding: 20px;">
+    <div style="background: #ffffff; border-radius: 10px; width: 100%; max-width: 540px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); overflow: hidden;">
+      <div style="padding: 16px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; background: #f8fafc;">
+        <div>
+          <h3 id="evalModalTitle" style="margin: 0; font-size: 16px; font-weight: 700; color: #0f172a;">Evaluate Submission</h3>
+          <p id="evalModalMeta" style="margin: 2px 0 0 0; font-size: 12.5px; color: #64748b;">Course: - | Assignment: -</p>
+        </div>
+        <button type="button" id="btnCloseEvalModal" style="background: none; border: none; font-size: 20px; color: #64748b; cursor: pointer;">&times;</button>
+      </div>
+      <form id="evaluateSubmissionForm" style="padding: 20px;">
+        <input type="hidden" id="evalSubmissionId">
+        <input type="hidden" id="evalAssignmentId">
+
+        <!-- Student & Submission Summary Card -->
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; margin-bottom: 16px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12.5px;">
+            <div><span style="color: #64748b;">Student:</span> <strong id="evalStudentName" style="color: #0f172a;">-</strong></div>
+            <div><span style="color: #64748b;">PRN:</span> <strong id="evalStudentPrn" style="color: #0d9488;">-</strong></div>
+            <div><span style="color: #64748b;">Submitted:</span> <span id="evalSubmittedAt" style="color: #334155;">-</span></div>
+            <div><span style="color: #64748b;">Status:</span> <span id="evalSubmissionStatus" style="font-weight: 600;">-</span></div>
+          </div>
+        </div>
+
+        <!-- Marks Input -->
+        <div style="margin-bottom: 16px;">
+          <label for="evalMarksObtained" style="display: block; font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 4px;">
+            Marks Obtained * <span id="evalMaxMarksHint" style="font-size: 12px; color: #64748b; font-weight: 500;">(Maximum: 100 marks)</span>
+          </label>
+          <input type="number" id="evalMarksObtained" required min="0" step="any" placeholder="e.g. 85" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; font-weight: 600; color: #0f172a;">
+          <div id="evalMarksError" style="color: #dc2626; font-size: 12px; margin-top: 4px; display: none;"></div>
+        </div>
+
+        <!-- Feedback Input -->
+        <div style="margin-bottom: 20px;">
+          <label for="evalFeedback" style="display: block; font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 4px;">
+            Teacher Feedback <span style="font-size: 12px; color: #94a3b8; font-weight: 400;">(Optional)</span>
+          </label>
+          <textarea id="evalFeedback" rows="4" placeholder="Enter constructive feedback, corrections, or improvement notes for the student..." style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-family: inherit; resize: vertical;"></textarea>
+        </div>
+
+        <!-- Actions -->
+        <div style="display: flex; justify-content: flex-end; gap: 10px;">
+          <button type="button" id="btnCancelEvalModal" style="padding: 8px 16px; border: 1px solid #cbd5e1; background: #ffffff; color: #334155; border-radius: 6px; font-size: 13px; cursor: pointer; font-weight: 600;">Cancel</button>
+          <button type="submit" id="btnSaveEvaluation" style="padding: 8px 20px; border: none; background: #0d9488; color: #ffffff; border-radius: 6px; font-size: 13px; cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+            <span id="btnSaveEvalText">Save Evaluation</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Submission History Modal -->
+  <div id="submissionHistoryModal" class="modal-backdrop" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); z-index: 1000; align-items: center; justify-content: center; padding: 20px;">
+    <div style="background: #ffffff; border-radius: 10px; width: 100%; max-width: 680px; max-height: 85vh; display: flex; flex-direction: column; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); overflow: hidden;">
+      <div style="padding: 16px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; background: #f8fafc;">
+        <div>
+          <h3 id="historyModalTitle" style="margin: 0; font-size: 16px; font-weight: 700; color: #0f172a;">Submission &amp; Attempt History</h3>
+          <p id="historyModalMeta" style="margin: 2px 0 0 0; font-size: 12.5px; color: #64748b;">Student: - | PRN: -</p>
+        </div>
+        <button type="button" id="btnCloseHistoryModal" style="background: none; border: none; font-size: 20px; color: #64748b; cursor: pointer;">&times;</button>
+      </div>
+      <div id="historyModalBody" style="padding: 20px; overflow-y: auto; flex: 1;">
+        <div id="historyLoadingIndicator" style="text-align: center; padding: 24px; color: #64748b;">Loading attempt history...</div>
+        <div id="historyListContainer" style="display: flex; flex-direction: column; gap: 12px;"></div>
+      </div>
+      <div style="padding: 12px 20px; border-top: 1px solid #e2e8f0; background: #f8fafc; display: flex; justify-content: flex-end;">
+        <button type="button" id="btnCloseHistoryFooter" style="padding: 7px 16px; border: 1px solid #cbd5e1; background: #ffffff; color: #334155; border-radius: 6px; font-size: 13px; cursor: pointer; font-weight: 600;">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CORE SCRIPTS -->
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/teacher-shell.js"></script>
+  <script src="/js/user-menu.js"></script>
+  <script src="/js/teacher-assignments.js"></script>
+</body>
+</html>

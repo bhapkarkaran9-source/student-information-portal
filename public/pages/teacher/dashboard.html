@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teacher Dashboard - Student Information Portal</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/teacher-dashboard.css">
+</head>
+<body class="teacher-layout">
+
+  <!-- Mobile Sidebar Backdrop -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop hidden"></div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- FIXED LEFT SIDEBAR (Standardized by teacher-shell.js with 14 Standalone Modules) -->
+  <aside id="teacherSidebar" class="teacher-sidebar" aria-label="Faculty Navigation"></aside>
+
+  <!-- MAIN VIEWPORT WRAPPER -->
+  <div class="teacher-main-wrapper" style="margin-left: 260px; min-height: 100vh; display: flex; flex-direction: column;">
+    
+    <!-- 1. STICKY TOP HEADER -->
+    <header class="teacher-header" id="teacherHeader">
+      <div class="header-left">
+        <button type="button" id="toggleSidebarBtn" class="sidebar-toggle-btn" aria-label="Open menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <div class="header-heading-group">
+          <h1 class="header-title" style="margin: 0; font-size: 18px; font-weight: 700; color: #0f172a;">Teacher Dashboard</h1>
+          <div class="header-breadcrumb">
+            <a href="/pages/teacher/dashboard.html">Home</a>
+            <span>/</span>
+            <span>Dashboard</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <!-- Notification Bell Icon (Clickable, live unread badge) -->
+        <button type="button" id="headerNotificationBtn" class="header-notify-btn" title="View notifications" aria-label="Notifications" onclick="window.location.href='/pages/teacher/notifications.html'">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          <span id="headerNotificationDot" class="header-notify-badge hidden">0</span>
+        </button>
+
+        <!-- Right-side User Profile Menu Trigger (Managed globally by user-menu.js) -->
+        <div class="profile-dropdown-wrapper" id="profileDropdownWrapper">
+          <button type="button" id="profileDropdownBtn" class="header-profile-btn" aria-haspopup="true" aria-expanded="false" aria-label="User profile menu">
+            <div class="header-avatar" id="headerUserAvatar" style="background: linear-gradient(135deg, #0d9488, #059669);">T</div>
+            <div class="header-profile-meta">
+              <span class="header-profile-name" id="navUserName">Faculty Member</span>
+              <span class="header-profile-badge" id="userRoleBadge" style="background: #ccfbf1; color: #0f766e;">TEACHER</span>
+            </div>
+            <svg class="dropdown-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN SCROLLABLE DASHBOARD CONTENT -->
+    <main class="dashboard-main teacher-dashboard-content">
+
+      <!-- 2. WELCOME / PROFILE OVERVIEW SECTION -->
+      <section class="teacher-welcome-card" aria-label="Teacher Welcome & Status">
+        <div class="teacher-welcome-text">
+          <h2>Welcome back, <span id="welcomeTeacherName">Faculty Teacher</span></h2>
+          <p>Manage your lectures, attendance rosters, assignments, and student advisory records for the ongoing academic term.</p>
+          <div class="teacher-meta-chips">
+            <span class="teacher-meta-chip">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              Username: <strong id="welcomeUsername">teacher</strong>
+            </span>
+            <span class="teacher-meta-chip">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+              Dept: <strong id="welcomeDepartment">General Faculty</strong>
+            </span>
+            <span class="teacher-meta-chip">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+              Faculty ID: <strong id="welcomeFacultyId">FAC-001</strong>
+            </span>
+            <span class="teacher-meta-chip">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+              <span id="welcomeCurrentDate">Academic Term</span>
+            </span>
+          </div>
+        </div>
+        <div class="teacher-status-badge-container">
+          <div class="teacher-on-duty-badge">
+            <span class="teacher-status-dot"></span>
+            <span>Active &bull; On Duty</span>
+          </div>
+          <span style="font-size: 11px; color: #ccfbf1;">Portal Role: Teacher</span>
+        </div>
+      </section>
+
+      <!-- 3. KPI SUMMARY CARDS (Top Row - 4 Clickable Cards) -->
+      <section class="teacher-kpi-grid" aria-label="KPI Metrics">
+        <!-- 1. My Courses -->
+        <a href="/pages/teacher/courses.html" class="teacher-kpi-card" id="kpiCardCourses">
+          <div class="teacher-kpi-top">
+            <span class="teacher-kpi-title">My Courses</span>
+            <div class="teacher-kpi-icon kpi-icon-teal">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            </div>
+          </div>
+          <div class="teacher-kpi-value" id="kpiCoursesCount">0</div>
+          <div class="teacher-kpi-subtext">Active courses</div>
+        </a>
+
+        <!-- 2. Total Students -->
+        <a href="/pages/teacher/students.html" class="teacher-kpi-card" id="kpiCardStudents">
+          <div class="teacher-kpi-top">
+            <span class="teacher-kpi-title">Total Students</span>
+            <div class="teacher-kpi-icon kpi-icon-blue">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            </div>
+          </div>
+          <div class="teacher-kpi-value" id="kpiStudentsCount">0</div>
+          <div class="teacher-kpi-subtext">Across all assigned classes</div>
+        </a>
+
+        <!-- 3. Today's Classes -->
+        <a href="/pages/teacher/timetable.html" class="teacher-kpi-card" id="kpiCardClasses">
+          <div class="teacher-kpi-top">
+            <span class="teacher-kpi-title">Today's Classes</span>
+            <div class="teacher-kpi-icon kpi-icon-amber">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            </div>
+          </div>
+          <div class="teacher-kpi-value" id="kpiClassesCount">0</div>
+          <div class="teacher-kpi-subtext">Scheduled for <span id="kpiTodayDayName">Today</span></div>
+        </a>
+
+        <!-- 4. Pending Assignments -->
+        <a href="/pages/teacher/assignments.html" class="teacher-kpi-card" id="kpiCardAssignments">
+          <div class="teacher-kpi-top">
+            <span class="teacher-kpi-title">Pending Assignments</span>
+            <div class="teacher-kpi-icon kpi-icon-purple">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            </div>
+          </div>
+          <div class="teacher-kpi-value" id="kpiAssignmentsCount">0</div>
+          <div class="teacher-kpi-subtext">Active / due assignments</div>
+        </a>
+      </section>
+
+      <!-- 12. QUICK ACTIONS BAR / GRID (6 Buttons) -->
+      <section class="teacher-quick-actions-card" aria-label="Quick Actions">
+        <div class="quick-actions-header">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+          <span>Quick Actions</span>
+        </div>
+        <div class="quick-actions-grid">
+          <a href="/pages/teacher/attendance.html" class="quick-action-btn">
+            <div class="quick-action-icon kpi-icon-teal">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+            </div>
+            <span>Take Attendance</span>
+          </a>
+          <a href="/pages/teacher/assignments.html" class="quick-action-btn">
+            <div class="quick-action-icon kpi-icon-purple">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            </div>
+            <span>Create Assignment</span>
+          </a>
+          <a href="/pages/teacher/grades.html" class="quick-action-btn">
+            <div class="quick-action-icon kpi-icon-blue">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+            </div>
+            <span>Enter Grades</span>
+          </a>
+          <a href="/pages/teacher/students.html" class="quick-action-btn">
+            <div class="quick-action-icon kpi-icon-teal">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+            </div>
+            <span>View Students</span>
+          </a>
+          <a href="/pages/teacher/timetable.html" class="quick-action-btn">
+            <div class="quick-action-icon kpi-icon-amber">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            </div>
+            <span>View Timetable</span>
+          </a>
+          <a href="/pages/teacher/queries.html" class="quick-action-btn">
+            <div class="quick-action-icon kpi-icon-purple">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            </div>
+            <span>Student Queries</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- TWO-COLUMN DASHBOARD CONTENT -->
+      <div class="teacher-main-grid">
+
+        <!-- LEFT COLUMN (Schedule, Courses, Attendance, Assignments) -->
+        <div class="teacher-col">
+
+          <!-- PROMINENT NEXT LECTURE CARD -->
+          <section class="teacher-next-lecture-card" id="nextLectureSection" style="margin-bottom: 20px; overflow: hidden;">
+            <div style="background: linear-gradient(135deg, #042f2e 0%, #0f766e 50%, #1e293b 100%); color: #ffffff; border-radius: 14px; padding: 20px 24px; position: relative; overflow: hidden; box-shadow: 0 10px 25px -5px rgba(15, 118, 110, 0.3);">
+              <div style="position: absolute; top: -20px; right: -20px; width: 140px; height: 140px; background: rgba(45, 212, 191, 0.15); border-radius: 50%; pointer-events: none;"></div>
+              
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; margin-bottom: 12px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span style="font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; background: rgba(255,255,255,0.18); padding: 3px 10px; border-radius: 9999px; color: #ccfbf1;">
+                    Next Lecture
+                  </span>
+                  <span id="nextLectureStatusBadge" class="badge" style="font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 9999px; display: none;"></span>
+                </div>
+                <div id="nextLectureCountdownWrap" style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #99f6e4;">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                  <span id="nextLectureCountdown">Loading schedule...</span>
+                </div>
+              </div>
+
+              <div id="nextLectureContent" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px;">
+                  <div>
+                    <h3 id="nextLectureCourse" style="font-size: 20px; font-weight: 700; margin: 0; color: #ffffff;">-</h3>
+                    <p id="nextLectureMeta" style="font-size: 13px; color: #ccfbf1; margin: 4px 0 0 0;">-</p>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap; font-size: 13px; color: #e2e8f0;">
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                      <span id="nextLectureTime">-</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                      <span id="nextLectureRoom">-</span>
+                    </div>
+                    <div id="nextLectureAttendanceWrap" style="margin-left: auto;">
+                      <span id="nextLectureAttendanceAction"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Empty State (No more lectures today) -->
+              <div id="nextLectureEmptyState" style="padding: 8px 0;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#5eead4" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                  <div>
+                    <div style="font-weight: 700; font-size: 15px; color: #ffffff;">No more lectures today</div>
+                    <div style="font-size: 12.5px; color: #ccfbf1; margin-top: 2px;">All scheduled classes for today have concluded or no sessions are scheduled.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 4. TODAY'S SCHEDULE / TIMETABLE SECTION -->
+          <section class="teacher-section-card" id="todayScheduleCard" aria-label="Today Schedule">
+            <div class="teacher-card-header">
+              <div class="teacher-card-header-left">
+                <div>
+                  <h2 class="teacher-card-title">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                    <span>Today's Schedule</span>
+                  </h2>
+                  <p class="teacher-card-subtitle">Lectures and lab sessions planned for today</p>
+                </div>
+              </div>
+              <a href="/pages/teacher/timetable.html" class="teacher-btn-outline" id="btnViewFullTimetable">View Full Timetable &rarr;</a>
+            </div>
+            <div id="todayClassesContainer">
+              <div class="teacher-empty-state" id="emptyScheduleState">
+                <div class="teacher-empty-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                </div>
+                <h3 class="teacher-empty-title">No classes scheduled for today.</h3>
+                <p class="teacher-empty-desc">You have no teaching periods or laboratory hours on today's roster.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- 5. MY COURSES SECTION -->
+          <section class="teacher-section-card" id="myCoursesCard" aria-label="Assigned Courses">
+            <div class="teacher-card-header">
+              <div class="teacher-card-header-left">
+                <div>
+                  <h2 class="teacher-card-title">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                    <span>My Assigned Courses</span>
+                  </h2>
+                  <p class="teacher-card-subtitle">Curriculum and subjects currently under your instruction</p>
+                </div>
+              </div>
+              <a href="/pages/teacher/courses.html" class="teacher-btn-outline" id="btnViewAllCourses">View All Courses &rarr;</a>
+            </div>
+            <div id="myCoursesContainer">
+              <div class="teacher-empty-state" id="emptyCoursesState">
+                <div class="teacher-empty-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                </div>
+                <h3 class="teacher-empty-title">No courses assigned yet.</h3>
+                <p class="teacher-empty-desc">Your department head or administrator has not linked courses to your teaching load.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- 8. ATTENDANCE QUICK ACTION & SUMMARY -->
+          <section class="teacher-section-card" id="attendanceCard" aria-label="Attendance Management">
+            <div class="teacher-card-header">
+              <div>
+                <h2 class="teacher-card-title">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                  <span>Attendance Management</span>
+                </h2>
+                <p class="teacher-card-subtitle">Daily roll calls, session attendance, and summary tracking</p>
+              </div>
+              <a href="/pages/teacher/attendance.html" class="teacher-btn-primary" id="btnTakeAttendanceToday">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                <span>Take Attendance Today</span>
+              </a>
+            </div>
+            <div id="attendanceSummaryContainer">
+              <div class="teacher-empty-state" id="emptyAttendanceState">
+                <div class="teacher-empty-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                </div>
+                <h3 class="teacher-empty-title">No attendance records recorded yet.</h3>
+                <p class="teacher-empty-desc">Click "Take Attendance Today" to mark the register for today's lecture sessions.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- 7. RECENT / PENDING ASSIGNMENTS -->
+          <section class="teacher-section-card" id="assignmentsCard" aria-label="Recent Assignments">
+            <div class="teacher-card-header">
+              <div>
+                <h2 class="teacher-card-title">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                  <span>Recent Assignments</span>
+                </h2>
+                <p class="teacher-card-subtitle">Course homework, deliverables, and submissions awaiting review</p>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <a href="/pages/teacher/assignments.html" class="teacher-btn-outline" id="btnViewAllAssignments">View All &rarr;</a>
+              </div>
+            </div>
+            <div id="assignmentsContainer">
+              <div class="teacher-empty-state" id="emptyAssignmentsState">
+                <div class="teacher-empty-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                </div>
+                <h3 class="teacher-empty-title">No assignments created yet.</h3>
+                <p class="teacher-empty-desc">Create homework, assignments, and projects for your courses.</p>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+        <!-- RIGHT COLUMN (Advisory, Grades, Queries, Notices, Insights) -->
+        <div class="teacher-col">
+
+          <!-- 6. STUDENT OVERVIEW / CLASS ADVISORY -->
+          <section class="teacher-section-card" id="studentOverviewCard" aria-label="Student Overview">
+            <div class="teacher-card-header">
+              <div>
+                <h2 class="teacher-card-title">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+                  <span>Student Overview</span>
+                </h2>
+                <p class="teacher-card-subtitle">Class advisory, defaulters, and academic tracking</p>
+              </div>
+              <a href="/pages/teacher/students.html" class="teacher-btn-outline" id="btnManageStudents">Manage &rarr;</a>
+            </div>
+            <div class="advisory-metric-grid">
+              <div class="advisory-metric-box">
+                <div class="advisory-metric-val" id="overviewTotalStudents">0</div>
+                <div class="advisory-metric-lbl">Total Enrolled</div>
+              </div>
+              <div class="advisory-metric-box">
+                <div class="advisory-metric-val" id="overviewLowAttendance" style="color: #d97706;">0</div>
+                <div class="advisory-metric-lbl">Attendance &lt;75%</div>
+              </div>
+              <div class="advisory-metric-box">
+                <div class="advisory-metric-val" id="overviewAcademicRisk" style="color: #dc2626;">0</div>
+                <div class="advisory-metric-lbl">Academic Risk</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 9. GRADES & EVALUATION QUICK ACTION -->
+          <section class="teacher-section-card" id="gradesCard" aria-label="Grades and Assessment">
+            <div class="teacher-card-header">
+              <div>
+                <h2 class="teacher-card-title">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                  <span>Grades & Assessment</span>
+                </h2>
+                <p class="teacher-card-subtitle">Exams, internal tests, and evaluation entries</p>
+              </div>
+            </div>
+            <div style="padding: 16px 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+              <a href="/pages/teacher/grades.html" class="teacher-btn-primary" id="btnEnterGrades" style="flex: 1; justify-content: center;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                <span>Enter Grades</span>
+              </a>
+              <a href="/pages/teacher/performance.html" class="teacher-btn-outline" id="btnViewPerformanceAnalytics" style="flex: 1; justify-content: center;">
+                <span>View Performance</span>
+              </a>
+            </div>
+            <div id="recentGradesContainer" style="border-top: 1px solid #f1f5f9;">
+              <div class="teacher-empty-state" id="emptyGradesState" style="padding: 24px 16px;">
+                <h3 class="teacher-empty-title">No recent grade entries.</h3>
+                <p class="teacher-empty-desc">Recorded semester and mid-term marks will appear here.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- 10. STUDENT QUERIES / DOUBTS -->
+          <section class="teacher-section-card" id="queriesCard" aria-label="Student Queries">
+            <div class="teacher-card-header">
+              <div>
+                <h2 class="teacher-card-title">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                  <span>Student Queries</span>
+                </h2>
+                <p class="teacher-card-subtitle">Academic inquiries and doubts submitted by students</p>
+              </div>
+              <a href="/pages/teacher/queries.html" class="teacher-btn-outline" id="btnViewAllQueries">View All &rarr;</a>
+            </div>
+            <div id="queriesContainer">
+              <div class="teacher-empty-state" id="emptyQueriesState">
+                <div class="teacher-empty-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                </div>
+                <h3 class="teacher-empty-title">No student queries.</h3>
+                <p class="teacher-empty-desc">There are no pending doubts or academic questions awaiting reply.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- UPCOMING ACADEMIC EVENTS & EXAMS -->
+          <section class="teacher-section-card" id="upcomingCalendarCard" aria-label="Academic Calendar">
+            <div class="teacher-card-header">
+              <div>
+                <h2 class="teacher-card-title">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                  <span>Upcoming Events & Exams</span>
+                </h2>
+                <p class="teacher-card-subtitle">Upcoming term exams, meetings, and deadlines</p>
+              </div>
+              <a href="/pages/teacher/calendar.html" class="teacher-btn-outline">Calendar &rarr;</a>
+            </div>
+            <div id="upcomingEventsContainer" style="padding: 12px 16px;">
+              <div class="teacher-empty-state" id="emptyCalendarState">
+                <div class="teacher-empty-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                </div>
+                <h3 class="teacher-empty-title">No upcoming events.</h3>
+                <p class="teacher-empty-desc">Faculty meetings and exams will appear here.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- 11. NOTICES & ANNOUNCEMENTS -->
+          <section class="teacher-section-card" id="noticesCard" aria-label="Notice Board">
+            <div class="teacher-card-header">
+              <div>
+                <h2 class="teacher-card-title">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                  <span>Notice Board</span>
+                </h2>
+                <p class="teacher-card-subtitle">Latest institutional announcements and circulars</p>
+              </div>
+              <a href="/pages/teacher/notices.html" class="teacher-btn-outline" id="btnViewAllNotices">View All &rarr;</a>
+            </div>
+            <div id="noticesContainer">
+              <div class="teacher-empty-state" id="emptyNoticesState">
+                <div class="teacher-empty-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path></svg>
+                </div>
+                <h3 class="teacher-empty-title">No notices published.</h3>
+                <p class="teacher-empty-desc">Active announcements for faculty and campus will be displayed here.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- 13. PERFORMANCE / INSIGHTS OVERVIEW -->
+          <section class="teacher-section-card" id="insightsCard" aria-label="Performance Overview">
+            <div class="teacher-card-header">
+              <div>
+                <h2 class="teacher-card-title">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+                  <span>Academic Insights</span>
+                </h2>
+                <p class="teacher-card-subtitle">Aggregated course metrics and pass rates</p>
+              </div>
+              <a href="/pages/teacher/performance.html" class="teacher-btn-outline" id="btnViewInsightsDetails">Details &rarr;</a>
+            </div>
+            <div class="insights-metric-grid">
+              <div class="insights-box">
+                <div class="insights-val" id="insightPassRate">--</div>
+                <div class="insights-lbl">Avg Pass Rate</div>
+              </div>
+              <div class="insights-box">
+                <div class="insights-val" id="insightAvgAttendance">--</div>
+                <div class="insights-lbl">Avg Attendance</div>
+              </div>
+              <div class="insights-box">
+                <div class="insights-val" id="insightSubmissionRate">--</div>
+                <div class="insights-lbl">Submissions</div>
+              </div>
+            </div>
+          </section>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- CORE SCRIPTS -->
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/teacher-shell.js"></script>
+  <script src="/js/user-menu.js"></script>
+  <script src="/js/teacher-dashboard.js"></script>
+</body>
+</html>

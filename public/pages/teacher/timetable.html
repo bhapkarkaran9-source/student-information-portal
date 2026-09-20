@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Faculty Timetable - Faculty Portal</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/teacher-dashboard.css">
+</head>
+<body class="teacher-layout">
+
+  <!-- Mobile Sidebar Backdrop -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop hidden"></div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- FIXED LEFT SIDEBAR -->
+  <aside id="teacherSidebar" class="teacher-sidebar" aria-label="Faculty Navigation"></aside>
+
+  <!-- MAIN WRAPPER -->
+  <div class="teacher-main-wrapper" style="margin-left: 260px; min-height: 100vh; display: flex; flex-direction: column;">
+    <!-- STICKY TOP HEADER -->
+    <header class="teacher-header" id="teacherHeader">
+      <div class="header-left">
+        <button type="button" id="toggleSidebarBtn" class="sidebar-toggle-btn" aria-label="Open menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <div class="header-heading-group">
+          <h1 class="header-title">Faculty Timetable</h1>
+          <p class="header-subtitle">Weekly day-by-day lecture periods, lab schedules, and classroom allocations</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <button type="button" id="headerNotificationBtn" class="header-notify-btn" title="View notifications" aria-label="Notifications">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          <span id="headerNotificationDot" class="header-notify-badge hidden"></span>
+        </button>
+        <div class="profile-dropdown-wrapper" id="profileDropdownWrapper">
+          <button type="button" id="profileDropdownBtn" class="header-profile-btn" aria-haspopup="true" aria-expanded="false" aria-label="User profile menu">
+            <div class="header-avatar" id="headerUserAvatar" style="background: linear-gradient(135deg, #0d9488, #059669);">T</div>
+            <div class="header-profile-meta">
+              <span class="header-profile-name" id="navUserName">Faculty Member</span>
+              <span class="header-profile-badge" id="userRoleBadge" style="background: #ccfbf1; color: #0f766e;">TEACHER</span>
+            </div>
+            <svg class="dropdown-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="dashboard-main" style="padding: 24px; flex: 1;">
+      <!-- KPI Stats Row -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px;">
+        <div class="card" style="padding: 16px 20px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px;">
+          <div style="font-size: 13px; color: #64748b; font-weight: 500;">Total Weekly Periods</div>
+          <div id="statTotalWeeklyPeriods" style="font-size: 24px; font-weight: 700; color: #0f172a; margin-top: 4px;">0</div>
+        </div>
+        <div class="card" style="padding: 16px 20px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px;">
+          <div style="font-size: 13px; color: #64748b; font-weight: 500;">Today's Classes</div>
+          <div id="statTodayPeriods" style="font-size: 24px; font-weight: 700; color: #0d9488; margin-top: 4px;">0</div>
+        </div>
+        <div class="card" style="padding: 16px 20px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px;">
+          <div style="font-size: 13px; color: #64748b; font-weight: 500;">Weekly Lab Sessions</div>
+          <div id="statWeeklyLabs" style="font-size: 24px; font-weight: 700; color: #2563eb; margin-top: 4px;">0</div>
+        </div>
+      </div>
+
+      <!-- View Switcher Tabs (TODAY, UPCOMING, WEEK) -->
+      <div class="card mb-4" style="padding: 12px 18px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;" id="viewTabsContainer">
+          <button type="button" class="btn btn-sm view-tab active" data-view="TODAY" id="tabBtnToday" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 6px; font-size: 13px; font-weight: 600; background: #0d9488; color: #ffffff; border: none; cursor: pointer;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            <span>Today's Lectures</span>
+          </button>
+          <button type="button" class="btn btn-sm view-tab" data-view="UPCOMING" id="tabBtnUpcoming" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 6px; font-size: 13px; font-weight: 600; background: #f1f5f9; color: #334155; border: none; cursor: pointer;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            <span>Upcoming Lectures</span>
+          </button>
+          <button type="button" class="btn btn-sm view-tab" data-view="WEEK" id="tabBtnWeek" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 6px; font-size: 13px; font-weight: 600; background: #f1f5f9; color: #334155; border: none; cursor: pointer;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            <span>Full Week Timetable</span>
+          </button>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span id="timetableLiveIndicator" style="font-size: 12px; color: #0d9488; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+            <span style="width: 8px; height: 8px; border-radius: 50%; background: #0d9488; display: inline-block;"></span>
+            <span>Live Auto-Sync</span>
+          </span>
+          <button type="button" class="teacher-btn-outline" onclick="window.print()" style="font-size: 12px; padding: 4px 10px; cursor: pointer;">Print</button>
+        </div>
+      </div>
+
+      <!-- VIEW 1: TODAY'S SCHEDULE -->
+      <div id="sectionViewToday" class="timetable-view-section">
+        <!-- Next Lecture Prominent Card -->
+        <section class="teacher-next-lecture-card" id="todayNextLectureSection" style="margin-bottom: 20px;">
+          <div style="background: linear-gradient(135deg, #042f2e 0%, #0f766e 50%, #1e293b 100%); color: #ffffff; border-radius: 14px; padding: 20px 24px; position: relative; overflow: hidden; box-shadow: 0 10px 25px -5px rgba(15, 118, 110, 0.3);">
+            <div style="position: absolute; top: -20px; right: -20px; width: 140px; height: 140px; background: rgba(45, 212, 191, 0.15); border-radius: 50%; pointer-events: none;"></div>
+            
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; margin-bottom: 12px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; background: rgba(255,255,255,0.18); padding: 3px 10px; border-radius: 9999px; color: #ccfbf1;">
+                  Next Lecture
+                </span>
+                <span id="pageNextLectureBadge" class="badge" style="font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 9999px; display: none;"></span>
+              </div>
+              <div id="pageNextLectureCountdownWrap" style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #99f6e4;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                <span id="pageNextLectureCountdown">Loading schedule...</span>
+              </div>
+            </div>
+
+            <div id="pageNextLectureContent" style="display: none;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px;">
+                <div>
+                  <h3 id="pageNextLectureCourse" style="font-size: 20px; font-weight: 700; margin: 0; color: #ffffff;">-</h3>
+                  <p id="pageNextLectureMeta" style="font-size: 13px; color: #ccfbf1; margin: 4px 0 0 0;">-</p>
+                </div>
+                <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap; font-size: 13px; color: #e2e8f0;">
+                  <div style="display: flex; align-items: center; gap: 6px;">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                    <span id="pageNextLectureTime">-</span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 6px;">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    <span id="pageNextLectureRoom">-</span>
+                  </div>
+                  <div id="pageNextLectureAttendanceWrap" style="margin-left: auto;">
+                    <span id="pageNextLectureAttendanceAction"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Empty State (No more lectures today) -->
+            <div id="pageNextLectureEmptyState" style="padding: 8px 0;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#5eead4" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                <div>
+                  <div style="font-weight: 700; font-size: 15px; color: #ffffff;">No more lectures today</div>
+                  <div style="font-size: 12.5px; color: #ccfbf1; margin-top: 2px;">All scheduled classes for today have concluded or no sessions are scheduled.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Today's Schedule Timeline & Highlights Card -->
+        <section class="card mb-4" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">
+            <div>
+              <h3 id="todayScheduleHeading" style="margin: 0; font-size: 16px; font-weight: 700; color: #0f172a;">Today's Lectures</h3>
+              <p style="font-size: 12.5px; color: #64748b; margin: 3px 0 0 0;">Timeline view with dynamic countdown, live lecture status, and attendance controls</p>
+            </div>
+            <span id="todayLectureCountBadge" class="teacher-meta-chip" style="background: #ccfbf1; color: #0f766e; font-weight: 700; font-size: 12px; padding: 4px 10px; border-radius: 9999px;">0 Lectures</span>
+          </div>
+          <div id="todayTimelineList" style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="text-align: center; padding: 36px 16px; color: #64748b;">Loading today's schedule...</div>
+          </div>
+        </section>
+      </div>
+
+      <!-- VIEW 2: UPCOMING LECTURES -->
+      <div id="sectionViewUpcoming" class="timetable-view-section" style="display: none;">
+        <section class="card mb-4" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px;">
+          <div style="margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">
+            <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: #0f172a;">Upcoming Lectures</h3>
+            <p style="font-size: 12.5px; color: #64748b; margin: 3px 0 0 0;">Chronological list of all forthcoming teaching periods across your roster</p>
+          </div>
+          <div id="upcomingLecturesList" style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="text-align: center; padding: 36px 16px; color: #64748b;">Loading upcoming lectures...</div>
+          </div>
+        </section>
+      </div>
+
+      <!-- VIEW 3: FULL WEEK TIMETABLE -->
+      <div id="sectionViewWeek" class="timetable-view-section" style="display: none;">
+        <!-- Day Tabs Toolbar Card -->
+        <div class="card mb-4" style="padding: 14px 20px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            <div>
+              <h2 style="font-size: 16px; font-weight: 600; color: #0f172a; margin: 0;">Weekly Schedule</h2>
+              <p style="font-size: 13px; color: #64748b; margin: 2px 0 0 0;">View lecture timing, room assignments, and class divisions</p>
+            </div>
+            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+              <button type="button" class="btn btn-sm day-filter-btn active" data-day="All" style="padding: 6px 12px; border-radius: 6px; font-size: 12.5px; font-weight: 600; border: none; cursor: pointer;">All Days</button>
+              <button type="button" class="btn btn-sm day-filter-btn" data-day="Monday" style="padding: 6px 12px; border-radius: 6px; font-size: 12.5px; font-weight: 600; border: none; cursor: pointer;">Monday</button>
+              <button type="button" class="btn btn-sm day-filter-btn" data-day="Tuesday" style="padding: 6px 12px; border-radius: 6px; font-size: 12.5px; font-weight: 600; border: none; cursor: pointer;">Tuesday</button>
+              <button type="button" class="btn btn-sm day-filter-btn" data-day="Wednesday" style="padding: 6px 12px; border-radius: 6px; font-size: 12.5px; font-weight: 600; border: none; cursor: pointer;">Wednesday</button>
+              <button type="button" class="btn btn-sm day-filter-btn" data-day="Thursday" style="padding: 6px 12px; border-radius: 6px; font-size: 12.5px; font-weight: 600; border: none; cursor: pointer;">Thursday</button>
+              <button type="button" class="btn btn-sm day-filter-btn" data-day="Friday" style="padding: 6px 12px; border-radius: 6px; font-size: 12.5px; font-weight: 600; border: none; cursor: pointer;">Friday</button>
+              <button type="button" class="btn btn-sm day-filter-btn" data-day="Saturday" style="padding: 6px 12px; border-radius: 6px; font-size: 12.5px; font-weight: 600; border: none; cursor: pointer;">Saturday</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Timetable Container -->
+        <div id="timetableContainer">
+          <div class="card" style="padding: 48px 24px; text-align: center; background: #ffffff; border: 1px dashed #cbd5e1; border-radius: 8px;">
+            <div style="width: 56px; height: 56px; margin: 0 auto 16px; border-radius: 50%; background: #ccfbf1; display: flex; align-items: center; justify-content: center; color: #0d9488;">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+            </div>
+            <h3 style="font-size: 18px; font-weight: 700; margin: 0 0 8px 0; color: #0f172a;">No Timetable Schedule Published</h3>
+            <p style="color: #64748b; max-width: 480px; margin: 0 auto; font-size: 14px;">Your teaching schedule has not been finalized for the current term.</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- CORE SCRIPTS -->
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/teacher-shell.js"></script>
+  <script src="/js/user-menu.js"></script>
+  <script src="/js/teacher-timetable.js"></script>
+</body>
+</html>

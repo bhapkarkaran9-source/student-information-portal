@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reports & Export Center - Student Information Portal</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/admin-erp-modules.css">
+  <link rel="stylesheet" href="/css/admin-theme.css">
+</head>
+<body class="admin-dashboard-body">
+
+  <!-- Floating Toast Notifications -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- Mobile Backdrop Overlay -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop hidden" aria-hidden="true"></div>
+
+  <!-- ========================================================================
+       1. FIXED ADMIN SIDEBAR (CANONICAL)
+       ======================================================================== -->
+  <aside id="adminSidebar" class="admin-sidebar" aria-label="Portal Navigation">
+    <!-- Brand Header -->
+    <div class="sidebar-header">
+      <a href="/pages/admin/dashboard.html" class="sidebar-brand">
+        <div class="sidebar-logo" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/>
+          </svg>
+        </div>
+        <div class="sidebar-title">
+          <span class="brand-main">Student Portal</span>
+          <span class="brand-sub">ADMINISTRATION</span>
+        </div>
+      </a>
+      <button type="button" id="sidebarCloseBtn" class="sidebar-close-btn" aria-label="Close menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Scrollable Navigation Groups -->
+    <nav class="sidebar-nav" id="sidebarNavContainer">
+      <!-- OVERVIEW -->
+      <div class="nav-group-title">Overview</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/admin/dashboard.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+            <span>Dashboard</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- USER MANAGEMENT -->
+      <div class="nav-group-title">User Management</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/admin/users.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            <span>Users</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/students.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span>Students</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/teachers.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+            </svg>
+            <span>Teachers</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- ACADEMICS -->
+      <div class="nav-group-title">Academics</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/admin/departments.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+              <path d="M9 22v-4h6v4"></path>
+              <path d="M8 6h.01M16 6h.01M12 6h.01M8 10h.01M16 10h.01M12 10h.01M8 14h.01M16 14h.01M12 14h.01"></path>
+            </svg>
+            <span>Departments</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/courses.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            </svg>
+            <span>Courses</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/enrollments.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="8.5" cy="7" r="4"></circle>
+              <polyline points="17 11 19 13 23 9"></polyline>
+            </svg>
+            <span>Enrollment</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/timetable.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span>Timetable</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- ACADEMIC OPERATIONS -->
+      <div class="nav-group-title">Academic Operations</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/admin/attendance.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 11 12 14 22 4"></polyline>
+              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+            </svg>
+            <span>Attendance</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/grades.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="9" y1="15" x2="15" y2="15"></line>
+            </svg>
+            <span>Grades</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/performance.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+            <span>Performance</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- ACADEMIC RESOURCES -->
+      <div class="nav-group-title">Academic Resources</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/admin/assignments.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            <span>Assignments</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/study-material.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            <span>Study Material</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/notices.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span>Notice Board</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- COMMUNICATION & SYSTEM -->
+      <div class="nav-group-title">Communication & System</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/admin/notifications.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span>Notifications</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/queries.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+            <span>Queries</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/reports.html" class="nav-link active" aria-current="page">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            <span>Reports</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/audit-logs.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <span>Audit Logs</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/backups.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            <span>Backup & Restore</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Sidebar Footer -->
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sidebarAdminAvatar">S</div>
+        <div class="sidebar-user-info">
+          <span class="sidebar-user-name" id="sidebarAdminName">System Admin</span>
+          <span class="sidebar-user-role" id="sidebarAdminEmail">admin@portal.local</span>
+        </div>
+      </div>
+      <button type="button" class="btn-sidebar-logout" id="sidebarLogoutBtn" title="Sign Out">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16 17 21 12 16 7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ========================================================================
+       2. MAIN CONTENT WRAPPER
+       ======================================================================== -->
+  <div class="admin-layout">
+    
+    <!-- Top Header -->
+    <header class="admin-header">
+      <div class="header-left">
+        <button type="button" id="sidebarToggleBtn" class="sidebar-toggle-btn" aria-label="Toggle navigation menu">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <div class="header-breadcrumbs">
+          <a href="/pages/admin/dashboard.html" class="breadcrumb-item">Dashboard</a>
+          <span class="breadcrumb-separator">/</span>
+          <span class="breadcrumb-current">Reports & Analytics</span>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <!-- Profile Dropdown Trigger -->
+        <div class="profile-dropdown-wrapper">
+          <button type="button" class="header-profile-btn" id="profileDropdownTrigger" aria-haspopup="true" aria-expanded="false" aria-label="Administrator Menu">
+            <div class="header-avatar" id="headerAdminAvatar">S</div>
+            <div class="header-admin-info">
+              <span class="header-admin-name" id="headerAdminName">System Admin</span>
+              <span class="header-admin-badge">ADMIN</span>
+            </div>
+            <svg class="dropdown-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+
+          <!-- Standardized 7-Item Dropdown Menu -->
+          <div class="profile-dropdown-menu" id="profileDropdownMenu" role="menu">
+            <div class="dropdown-header">
+              <div id="dropdownAdminName" class="dropdown-user-name">System Admin</div>
+              <div id="dropdownAdminEmail" class="dropdown-email">admin@portal.local</div>
+            </div>
+            
+            <button type="button" id="dropdownMyProfile" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <span>My Profile</span>
+            </button>
+
+            <button type="button" id="dropdownEditProfile" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
+              <span>Edit Profile</span>
+            </button>
+
+            <button type="button" id="dropdownChangePassword" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              <span>Change Password</span>
+            </button>
+
+            <button type="button" id="dropdownAccountSettings" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+              </svg>
+              <span>Account Settings</span>
+            </button>
+
+            <a href="/pages/admin/notifications.html" id="dropdownNotifications" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+              <span>Notifications</span>
+            </a>
+
+            <a href="/pages/admin/audit-logs.html" id="dropdownAuditActivity" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+              </svg>
+              <span>Audit Activity</span>
+            </a>
+
+            <div class="dropdown-divider"></div>
+
+            <button type="button" id="dropdownLogoutBtn" class="dropdown-item dropdown-item-danger" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
+              <span>Logout</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- PAGE BODY -->
+    <main class="admin-main">
+      
+      <!-- PAGE HEADER -->
+      <div class="erp-page-header-row no-print">
+        <div class="erp-page-header-title-block">
+          <h1 class="erp-page-title">Reports & Export Center</h1>
+          <p class="erp-page-subtitle">Generate official dynamic academic reports, preview live data, print, and export to CSV or Excel.</p>
+        </div>
+        <div class="erp-header-actions">
+          <button type="button" id="btnPrintReport" class="btn-erp btn-erp-secondary">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 6 2 18 2 18 9"></polyline>
+              <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+              <rect x="6" y="14" width="12" height="8"></rect>
+            </svg>
+            Print Report
+          </button>
+          <button type="button" id="btnExportCsv" class="btn-erp btn-erp-secondary">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Export CSV
+          </button>
+          <button type="button" id="btnExportExcel" class="btn-erp btn-erp-primary">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="8" y1="13" x2="16" y2="13"></line>
+              <line x1="8" y1="17" x2="16" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            Export Excel
+          </button>
+        </div>
+      </div>
+
+      <!-- 8 REPORT CATEGORY CARDS -->
+      <div class="erp-report-cards-grid no-print" id="reportCategoryCards">
+        <!-- 1. Student Profile -->
+        <div class="erp-report-card" data-report="student-profile">
+          <div class="erp-report-card-top">
+            <div class="erp-report-card-icon erp-kpi-icon-amber">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </div>
+            <span class="erp-badge erp-badge-warning">01</span>
+          </div>
+          <h4 class="erp-report-card-title">Student Profile</h4>
+          <p class="erp-report-card-desc">Individual student demographic details, active enrollments, and academic progression record.</p>
+          <button type="button" class="btn-report-view btn-erp btn-erp-secondary btn-sm" style="margin-top: 12px; width: 100%; justify-content: center; font-size: 12px; font-weight: 600;">View Report &rarr;</button>
+        </div>
+
+        <!-- 2. Attendance -->
+        <div class="erp-report-card active" data-report="attendance">
+          <div class="erp-report-card-top">
+            <div class="erp-report-card-icon erp-kpi-icon-blue">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9 11 12 14 22 4"></polyline>
+                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+              </svg>
+            </div>
+            <span class="erp-badge erp-badge-primary">02</span>
+          </div>
+          <h4 class="erp-report-card-title">Attendance</h4>
+          <p class="erp-report-card-desc">Course & student breakdown with attendance percentage and defaulter identification (&lt; 75%).</p>
+          <button type="button" class="btn-report-view btn-erp btn-erp-secondary btn-sm" style="margin-top: 12px; width: 100%; justify-content: center; font-size: 12px; font-weight: 600;">View Report &rarr;</button>
+        </div>
+
+        <!-- 3. Grade / Result -->
+        <div class="erp-report-card" data-report="grades">
+          <div class="erp-report-card-top">
+            <div class="erp-report-card-icon erp-kpi-icon-emerald">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="9" y1="15" x2="15" y2="15"></line>
+              </svg>
+            </div>
+            <span class="erp-badge erp-badge-success">03</span>
+          </div>
+          <h4 class="erp-report-card-title">Grade / Result</h4>
+          <p class="erp-report-card-desc">Marks distribution, 10-point scale grade points, letter grades, and cumulative SGPA analysis.</p>
+          <button type="button" class="btn-report-view btn-erp btn-erp-secondary btn-sm" style="margin-top: 12px; width: 100%; justify-content: center; font-size: 12px; font-weight: 600;">View Report &rarr;</button>
+        </div>
+
+        <!-- 4. Academic Performance -->
+        <div class="erp-report-card" data-report="performance">
+          <div class="erp-report-card-top">
+            <div class="erp-report-card-icon erp-kpi-icon-indigo">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="20" x2="18" y2="10"></line>
+                <line x1="12" y1="20" x2="12" y2="4"></line>
+                <line x1="6" y1="20" x2="6" y2="14"></line>
+              </svg>
+            </div>
+            <span class="erp-badge erp-badge-primary">04</span>
+          </div>
+          <h4 class="erp-report-card-title">Academic Performance</h4>
+          <p class="erp-report-card-desc">Risk categorization, academic standing (Good/Probation), and semester-wise progress trends.</p>
+          <button type="button" class="btn-report-view btn-erp btn-erp-secondary btn-sm" style="margin-top: 12px; width: 100%; justify-content: center; font-size: 12px; font-weight: 600;">View Report &rarr;</button>
+        </div>
+
+        <!-- 5. Course-wise -->
+        <div class="erp-report-card" data-report="course-wise">
+          <div class="erp-report-card-top">
+            <div class="erp-report-card-icon erp-kpi-icon-cyan">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+              </svg>
+            </div>
+            <span class="erp-badge erp-badge-info">05</span>
+          </div>
+          <h4 class="erp-report-card-title">Course-wise</h4>
+          <p class="erp-report-card-desc">Subject roster analytics, pass percentage, average attendance, and instructor summary.</p>
+          <button type="button" class="btn-report-view btn-erp btn-erp-secondary btn-sm" style="margin-top: 12px; width: 100%; justify-content: center; font-size: 12px; font-weight: 600;">View Report &rarr;</button>
+        </div>
+
+        <!-- 6. Student-wise Consolidated -->
+        <div class="erp-report-card" data-report="student-wise">
+          <div class="erp-report-card-top">
+            <div class="erp-report-card-icon erp-kpi-icon-violet">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M12 6v6l4 2"></path>
+              </svg>
+            </div>
+            <span class="erp-badge erp-badge-neutral">06</span>
+          </div>
+          <h4 class="erp-report-card-title">Student-wise Consolidated</h4>
+          <p class="erp-report-card-desc">Comprehensive multi-semester student report combining attendance, marks, and SGPA history.</p>
+          <button type="button" class="btn-report-view btn-erp btn-erp-secondary btn-sm" style="margin-top: 12px; width: 100%; justify-content: center; font-size: 12px; font-weight: 600;">View Report &rarr;</button>
+        </div>
+
+        <!-- 7. Enrollment -->
+        <div class="erp-report-card" data-report="enrollment">
+          <div class="erp-report-card-top">
+            <div class="erp-report-card-icon erp-kpi-icon-slate">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="8.5" cy="7" r="4"></circle>
+                <polyline points="17 11 19 13 23 9"></polyline>
+              </svg>
+            </div>
+            <span class="erp-badge erp-badge-neutral">07</span>
+          </div>
+          <h4 class="erp-report-card-title">Enrollment</h4>
+          <p class="erp-report-card-desc">Course registration audits, credit accounting, enrollment dates, and status tracking.</p>
+          <button type="button" class="btn-report-view btn-erp btn-erp-secondary btn-sm" style="margin-top: 12px; width: 100%; justify-content: center; font-size: 12px; font-weight: 600;">View Report &rarr;</button>
+        </div>
+
+        <!-- 8. Timetable -->
+        <div class="erp-report-card" data-report="timetable">
+          <div class="erp-report-card-top">
+            <div class="erp-report-card-icon erp-kpi-icon-rose">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+            </div>
+            <span class="erp-badge erp-badge-danger">08</span>
+          </div>
+          <h4 class="erp-report-card-title">Timetable</h4>
+          <p class="erp-report-card-desc">Classroom schedules, weekly division timetable, faculty room allocations, and slots.</p>
+          <button type="button" class="btn-report-view btn-erp btn-erp-secondary btn-sm" style="margin-top: 12px; width: 100%; justify-content: center; font-size: 12px; font-weight: 600;">View Report &rarr;</button>
+        </div>
+      </div>
+
+      <!-- REPORT TYPE SELECTOR & DYNAMIC FILTERS -->
+      <div class="erp-filter-card no-print">
+        <form id="reportFilterForm" onsubmit="return false;">
+          <div class="erp-filter-grid mb-3" style="border-bottom: 1px solid #f1f5f9; padding-bottom: 14px;">
+            <div class="erp-filter-group">
+              <label for="reportTypeSelect" class="erp-label" style="font-weight: 700; color: #0f172a;">Active Report Type</label>
+              <select id="reportTypeSelect" class="erp-select" style="font-size: 14px; font-weight: 600; background-color: #f8fafc;">
+                <option value="student-profile">1. Student Profile Report (Enrollments & Academic Record)</option>
+                <option value="attendance" selected>2. Attendance Report (Course & Student Breakdown, Defaulters)</option>
+                <option value="grades">3. Grade / Result Report (Marks, Scale, Points, SGPA)</option>
+                <option value="performance">4. Academic Performance Report (Risk Analysis, SGPA, Standing)</option>
+                <option value="course-wise">5. Course-wise Report (Roster, Attendance %, Grade Summary)</option>
+                <option value="student-wise">6. Student-wise Consolidated Academic Report (360° Record)</option>
+                <option value="enrollment">7. Course Enrollment Report (Status, Dates, Credits)</option>
+                <option value="timetable">8. Timetable Schedule Report (Class, Division, Room, Time)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Dynamic Filter Fields Grid -->
+          <div class="erp-filter-grid" id="dynamicFilterFields">
+            <!-- Student Field -->
+            <div class="erp-filter-group filter-field" id="fieldStudent">
+              <label for="filterStudent" class="erp-label">Student</label>
+              <select id="filterStudent" class="erp-select">
+                <option value="">-- All Students --</option>
+              </select>
+            </div>
+
+            <!-- Course Field -->
+            <div class="erp-filter-group filter-field" id="fieldCourse">
+              <label for="filterCourse" class="erp-label">Course</label>
+              <select id="filterCourse" class="erp-select">
+                <option value="">-- All Courses --</option>
+              </select>
+            </div>
+
+            <!-- Department Field -->
+            <div class="erp-filter-group filter-field" id="fieldDepartment">
+              <label for="filterDepartment" class="erp-label">Department</label>
+              <select id="filterDepartment" class="erp-select">
+                <option value="">-- All Departments --</option>
+              </select>
+            </div>
+
+            <!-- Semester Field -->
+            <div class="erp-filter-group filter-field" id="fieldSemester">
+              <label for="filterSemester" class="erp-label">Semester</label>
+              <select id="filterSemester" class="erp-select">
+                <option value="">-- All Semesters --</option>
+                <option value="1">Semester 1</option>
+                <option value="2">Semester 2</option>
+                <option value="3">Semester 3</option>
+                <option value="4">Semester 4</option>
+                <option value="5">Semester 5</option>
+                <option value="6">Semester 6</option>
+                <option value="7">Semester 7</option>
+                <option value="8">Semester 8</option>
+              </select>
+            </div>
+
+            <!-- Academic Year Field -->
+            <div class="erp-filter-group filter-field" id="fieldAcademicYear">
+              <label for="filterAcademicYear" class="erp-label">Academic Year</label>
+              <select id="filterAcademicYear" class="erp-select">
+                <option value="">-- All Years --</option>
+              </select>
+            </div>
+
+            <!-- Start Date Field -->
+            <div class="erp-filter-group filter-field" id="fieldStartDate">
+              <label for="filterStartDate" class="erp-label">From Date</label>
+              <input type="date" id="filterStartDate" class="erp-input">
+            </div>
+
+            <!-- End Date Field -->
+            <div class="erp-filter-group filter-field" id="fieldEndDate">
+              <label for="filterEndDate" class="erp-label">To Date</label>
+              <input type="date" id="filterEndDate" class="erp-input">
+            </div>
+
+            <!-- Status Field -->
+            <div class="erp-filter-group filter-field" id="fieldStatus">
+              <label for="filterStatus" class="erp-label">Status</label>
+              <select id="filterStatus" class="erp-select">
+                <option value="">-- All Statuses --</option>
+                <option value="Enrolled">Enrolled</option>
+                <option value="Completed">Completed</option>
+                <option value="Dropped">Dropped</option>
+              </select>
+            </div>
+
+            <!-- Day of Week (Timetable) -->
+            <div class="erp-filter-group filter-field" id="fieldDayOfWeek">
+              <label for="filterDayOfWeek" class="erp-label">Day of Week</label>
+              <select id="filterDayOfWeek" class="erp-select">
+                <option value="">-- All Days --</option>
+                <option value="Monday">Monday</option>
+                <option value="Tuesday">Tuesday</option>
+                <option value="Wednesday">Wednesday</option>
+                <option value="Thursday">Thursday</option>
+                <option value="Friday">Friday</option>
+                <option value="Saturday">Saturday</option>
+              </select>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="erp-filter-actions" style="margin-top: 20px;">
+              <button type="button" id="btnGenerateReport" class="btn-erp btn-erp-primary">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+                Generate Report
+              </button>
+              <button type="button" id="btnResetFilters" class="btn-erp btn-erp-secondary" title="Reset Filters">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                  <path d="M3 3v5h5"></path>
+                </svg>
+                Reset
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- ====================================================================
+           3. REPORT PREVIEW CONTAINER (PRINTABLE AREA)
+           ==================================================================== -->
+      <div class="erp-table-card" id="reportPrintArea">
+        
+        <!-- Printable Header Banner (Always visible in print) -->
+        <div class="report-print-header" style="padding: 20px 24px; border-bottom: 1px solid #e2e8f0; background-color: #fafbfc;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 14px;">
+            <div>
+              <div style="font-size: 11px; font-weight: 700; color: #7c3aed; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 2px;">Student Information Portal &bull; Official Academic Document</div>
+              <h2 id="previewReportTitle" style="font-size: 20px; font-weight: 700; color: #0f172a; margin: 0 0 4px 0;">Attendance Report</h2>
+              <div id="previewFilterMetadata" class="print-meta" style="font-size: 12.5px; color: #64748b;">
+                Criteria: All Records | Status: Active
+              </div>
+            </div>
+            <div style="font-size: 12px; color: #64748b; line-height: 1.5; text-align: right;">
+              <div><strong>Date Generated:</strong> <span id="previewTimestamp">-</span></div>
+              <div><strong>Generated By:</strong> <span id="previewGeneratedBy">Administrator</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Student Profile Box (Visible only for Profile and Consolidated Reports) -->
+        <div id="previewStudentBioBox" class="hidden" style="margin: 20px 24px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px;">
+          <h3 style="font-size: 14px; font-weight: 700; margin: 0 0 10px 0; color: #0f172a;">Student Profile Information</h3>
+          <div style="display: flex; gap: 24px; flex-wrap: wrap; font-size: 13px; color: #475569;">
+            <div><strong style="color: #0f172a;">Name:</strong> <span id="bioName">-</span></div>
+            <div><strong style="color: #0f172a;">PRN:</strong> <span id="bioPrn">-</span></div>
+            <div><strong style="color: #0f172a;">Department:</strong> <span id="bioDept">-</span></div>
+            <div><strong style="color: #0f172a;">Class / Div:</strong> <span id="bioClass">-</span></div>
+            <div><strong style="color: #0f172a;">Semester:</strong> <span id="bioSemester">-</span></div>
+            <div><strong style="color: #0f172a;">Email:</strong> <span id="bioEmail">-</span></div>
+          </div>
+        </div>
+
+        <!-- Summary Metric Cards -->
+        <div id="previewSummaryGrid" class="erp-kpi-grid-4" style="padding: 20px 24px 0 24px; margin-bottom: 0;">
+          <!-- Dynamically populated KPI cards -->
+        </div>
+
+        <!-- Main Report Data Table -->
+        <div class="erp-table-container">
+          <table class="erp-table" id="reportPreviewTable">
+            <thead id="reportPreviewThead">
+              <!-- Dynamically populated table header -->
+            </thead>
+            <tbody id="reportPreviewTbody">
+              <tr>
+                <td colspan="10" style="padding: 40px 16px;">
+                  <div class="erp-empty-state">
+                    <div class="erp-empty-icon">
+                      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                      </svg>
+                    </div>
+                    <div class="erp-empty-title">Ready to Generate Report</div>
+                    <div class="erp-empty-desc">Select report criteria above and click "Generate Report" to preview live academic data.</div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Client Scripts -->
+  <script src="/js/admin-reports.js"></script>
+  <script src="/js/admin-shell.js"></script>
+  <script src="/js/user-menu.js"></script>
+</body>
+</html>

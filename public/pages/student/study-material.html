@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Study Material - Student Information Portal</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/student-dashboard.css">
+  <link rel="stylesheet" href="/css/student-study-material.css">
+</head>
+<body class="student-portal-body">
+
+  <div id="sidebarBackdrop" class="sidebar-backdrop hidden"></div>
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- FIXED LEFT SIDEBAR -->
+  <aside id="studentSidebar" class="student-sidebar" aria-label="Student Navigation">
+    <div class="sidebar-header">
+      <a href="/pages/student/dashboard.html" class="sidebar-brand">
+        <div class="sidebar-logo" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/>
+          </svg>
+        </div>
+        <div class="sidebar-title">
+          <span class="brand-main">Student Portal</span>
+          <span class="brand-sub">STUDENT</span>
+        </div>
+      </a>
+      <button type="button" id="closeSidebarBtn" class="sidebar-close-btn" aria-label="Close menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-group-title">ACADEMIC MODULES</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/student/dashboard.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/profile.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <span>My Profile</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/courses.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            <span>My Courses / Enrollment</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/attendance.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+            <span>My Attendance</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/grades.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+            <span>My Results / Grades</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/timetable.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            <span>Timetable</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/assignments.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+            <span>Assignments</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/study-material.html" class="nav-link active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+            <span>Study Material</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="nav-group-title">CAMPUS & SERVICES</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/student/notices.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+            <span>Notices</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/notifications.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+            <span>Notifications</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/queries.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            <span>Queries</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/student/reports.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            <span>Reports</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sidebarAvatar">S</div>
+        <div class="sidebar-user-info">
+          <span class="sidebar-user-name" id="sidebarUserName">Student</span>
+          <span class="sidebar-user-role">STUDENT</span>
+        </div>
+      </div>
+      <button type="button" id="sidebarLogoutBtn" class="btn-sidebar-logout" title="Sign Out" aria-label="Sign Out">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN WRAPPER -->
+  <div class="student-main-wrapper">
+    <header class="student-header" id="studentHeader">
+      <div class="header-left">
+        <button type="button" id="toggleSidebarBtn" class="sidebar-toggle-btn" aria-label="Open menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <div class="header-heading-group">
+          <h1 class="header-title">Study Material</h1>
+          <p class="header-subtitle">Download verified lecture notes, reference PDFs, and course handouts</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <button type="button" id="headerNotificationBtn" class="header-notify-btn" title="View notifications" aria-label="Notifications">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+          <span id="headerNotificationDot" class="header-notify-badge"></span>
+        </button>
+        <div class="profile-dropdown-wrapper" id="profileDropdownWrapper">
+          <button type="button" id="profileDropdownBtn" class="header-profile-btn" aria-haspopup="true" aria-expanded="false">
+            <div class="header-avatar" id="headerUserAvatar">S</div>
+            <div class="header-profile-meta">
+              <span class="header-profile-name" id="navUserName">Student</span>
+              <span class="header-profile-badge" id="userRoleBadge">STUDENT</span>
+            </div>
+            <svg class="dropdown-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="dashboard-main">
+
+      <!-- KPI Summary -->
+      <section class="stats-grid mb-4">
+        <div class="stat-card card-border-blue">
+          <div class="stat-icon-wrap stat-icon-blue">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+          </div>
+          <div class="stat-meta">
+            <span class="stat-label">Total Handouts</span>
+            <div class="stat-value card-val-blue" id="kpiTotalHandouts">0 Files</div>
+            <span class="stat-trend neutral" id="kpiHandoutsTrend">Verified course resources</span>
+          </div>
+        </div>
+
+        <div class="stat-card card-border-green">
+          <div class="stat-icon-wrap stat-icon-emerald">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+          </div>
+          <div class="stat-meta">
+            <span class="stat-label">Subjects Covered</span>
+            <div class="stat-value card-val-green" id="kpiSubjectsCovered">0 Subjects</div>
+            <span class="stat-trend neutral" id="kpiSubjectsTrend">Curriculum Handouts</span>
+          </div>
+        </div>
+
+        <div class="stat-card card-border-indigo">
+          <div class="stat-icon-wrap stat-icon-indigo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          </div>
+          <div class="stat-meta">
+            <span class="stat-label">Available Handouts</span>
+            <div class="stat-value card-val-indigo" id="kpiAddedRecently">0 Modules</div>
+            <span class="stat-trend neutral" id="kpiRecentTrend">Verified materials</span>
+          </div>
+        </div>
+
+        <div class="stat-card card-border-indigo">
+          <div class="stat-icon-wrap stat-icon-purple">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+          </div>
+          <div class="stat-meta">
+            <span class="stat-label">Digital Library</span>
+            <div class="stat-value card-val-indigo" id="kpiDigitalLibrary">Active Access</div>
+            <span class="stat-trend positive">Course Enrollment Verified</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Search & Filters -->
+      <div class="study-material-filter-card">
+        <div class="study-material-filter-row">
+          <div class="study-material-filter-inputs">
+            <input type="text" id="matSearch" class="study-material-search-input" placeholder="Search resources, topics, or faculty..." aria-label="Search resources">
+            <select id="matSubjectFilter" class="study-material-subject-select" aria-label="Filter by subject">
+              <option value="all">All Subjects</option>
+            </select>
+          </div>
+          <div class="study-material-count-label">
+            Available Handouts: <strong id="matCount">0</strong> modules
+          </div>
+        </div>
+      </div>
+
+      <!-- Materials List Section -->
+      <section class="study-material-section-card">
+        <!-- Desktop Table View -->
+        <div class="study-material-table-wrapper" id="studyMaterialTableWrapper">
+          <table class="study-material-table" aria-label="Study Materials List">
+            <thead>
+              <tr>
+                <th class="col-mat-name">Resource Name</th>
+                <th class="col-mat-course">Course</th>
+                <th class="col-mat-type">Format &amp; Type</th>
+                <th class="col-mat-instructor">Instructor</th>
+                <th class="col-mat-uploaded">Uploaded</th>
+                <th class="col-mat-action">Action</th>
+              </tr>
+            </thead>
+            <tbody id="matTbody">
+              <tr>
+                <td colspan="6" style="text-align: center; padding: 48px 16px; color: #64748b;">
+                  Loading study materials...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Mobile Cards View (Active at <= 768px) -->
+        <div class="study-material-mobile-cards-container" id="studyMaterialMobileCardsContainer" aria-label="Study Materials Cards">
+          <!-- Populated by JavaScript -->
+        </div>
+
+        <!-- Clean Empty State (When no results found) -->
+        <div class="study-material-empty-state hidden" id="studyMaterialEmptyState">
+          <div class="study-material-empty-icon-wrap" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+            </svg>
+          </div>
+          <h3 class="study-material-empty-title">No study materials found.</h3>
+          <p class="study-material-empty-desc">No study materials found for your enrolled courses.</p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/student-shell.js"></script>
+  <script src="/js/user-menu.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const user = await requireAuth('STUDENT');
+      if (!user) return;
+
+      let allMaterials = [];
+
+      function escapeHtml(str) {
+        if (str === null || str === undefined) return '';
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      }
+
+      function renderMaterials(list) {
+        const tbody = document.getElementById('matTbody');
+        const countEl = document.getElementById('matCount');
+        const mobileContainer = document.getElementById('studyMaterialMobileCardsContainer');
+        const emptyState = document.getElementById('studyMaterialEmptyState');
+        const tableWrapper = document.getElementById('studyMaterialTableWrapper');
+        if (!tbody) return;
+
+        if (countEl) countEl.textContent = list.length;
+
+        if (list.length === 0) {
+          tbody.innerHTML = '';
+          if (mobileContainer) mobileContainer.innerHTML = '';
+          if (emptyState) emptyState.classList.remove('hidden');
+          if (tableWrapper) tableWrapper.style.display = 'none';
+          return;
+        }
+
+        if (emptyState) emptyState.classList.add('hidden');
+        if (tableWrapper) tableWrapper.style.display = '';
+
+        const token = localStorage.getItem('token');
+
+        // Render Desktop Table Rows
+        tbody.innerHTML = list.map(m => {
+          const uploadDate = m.created_at ? new Date(m.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '-';
+          const matType = m.material_type || 'Notes';
+          
+          let typeClass = '';
+          if (matType === 'Syllabus') {
+            typeClass = 'badge-mat-syllabus';
+          } else if (matType === 'Reference Link' || matType === 'Reference Book') {
+            typeClass = 'badge-mat-reference';
+          }
+
+          const downloadUrl = `/api/study-materials/${m.material_id}/download?token=${encodeURIComponent(token)}`;
+          const viewUrl = `/api/study-materials/${m.material_id}/view?token=${encodeURIComponent(token)}`;
+
+          return `
+            <tr class="mat-row">
+              <td class="col-mat-name">
+                <span class="mat-cell-title" title="${escapeHtml(m.title)}">${escapeHtml(m.title)}</span>
+                ${m.description ? `<span class="mat-cell-desc" title="${escapeHtml(m.description)}">${escapeHtml(m.description)}</span>` : ''}
+              </td>
+              <td class="col-mat-course">
+                <span class="mat-course-pill">${escapeHtml(m.course_code || 'COURSE')}</span>
+                <span class="mat-course-name">${escapeHtml(m.course_name || '')}</span>
+              </td>
+              <td class="col-mat-type">
+                <span class="badge-mat-type ${typeClass}">
+                  ${escapeHtml(matType)}
+                </span>
+              </td>
+              <td class="col-mat-instructor">
+                <span class="mat-instructor-name">${escapeHtml(m.teacher_name || 'Faculty Staff')}</span>
+              </td>
+              <td class="col-mat-uploaded">
+                <span class="mat-uploaded-date">${uploadDate}</span>
+              </td>
+              <td class="col-mat-action">
+                <div class="btn-mat-action-group">
+                  <a href="${viewUrl}" target="_blank" rel="noopener" class="btn-mat-action btn-mat-view" title="View resource" aria-label="View resource">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    <span>View</span>
+                  </a>
+                  <a href="${downloadUrl}" class="btn-mat-action btn-mat-download" title="Download resource" aria-label="Download resource" download>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    <span>Download</span>
+                  </a>
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join('');
+
+        // Render Mobile Cards
+        if (mobileContainer) {
+          mobileContainer.innerHTML = list.map(m => {
+            const uploadDate = m.created_at ? new Date(m.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '-';
+            const matType = m.material_type || 'Notes';
+            
+            let typeClass = '';
+            if (matType === 'Syllabus') {
+              typeClass = 'badge-mat-syllabus';
+            } else if (matType === 'Reference Link' || matType === 'Reference Book') {
+              typeClass = 'badge-mat-reference';
+            }
+
+            const downloadUrl = `/api/study-materials/${m.material_id}/download?token=${encodeURIComponent(token)}`;
+            const viewUrl = `/api/study-materials/${m.material_id}/view?token=${encodeURIComponent(token)}`;
+
+            return `
+              <article class="study-material-mobile-card">
+                <div class="mat-mobile-header">
+                  <h4 class="mat-mobile-title">${escapeHtml(m.title)}</h4>
+                  ${m.description ? `<p class="mat-mobile-desc">${escapeHtml(m.description)}</p>` : ''}
+                  <div class="mat-mobile-course-tag">
+                    <span class="mat-course-pill">${escapeHtml(m.course_code || 'COURSE')}</span>
+                    <span>${escapeHtml(m.course_name || '')}</span>
+                  </div>
+                </div>
+                <hr class="mat-mobile-divider">
+                <div class="mat-mobile-grid">
+                  <div class="mat-mobile-grid-cell">
+                    <span class="mat-mobile-label">Type</span>
+                    <div><span class="badge-mat-type ${typeClass}">${escapeHtml(matType)}</span></div>
+                  </div>
+                  <div class="mat-mobile-grid-cell">
+                    <span class="mat-mobile-label">Instructor</span>
+                    <span class="mat-mobile-val">${escapeHtml(m.teacher_name || 'Faculty Staff')}</span>
+                  </div>
+                  <div class="mat-mobile-grid-cell">
+                    <span class="mat-mobile-label">Uploaded</span>
+                    <span class="mat-mobile-val">${uploadDate}</span>
+                  </div>
+                </div>
+                <div class="mat-mobile-action-wrap">
+                  <a href="${viewUrl}" target="_blank" rel="noopener" class="btn-mat-action btn-mat-view" title="View resource" aria-label="View resource">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    <span>View</span>
+                  </a>
+                  <a href="${downloadUrl}" class="btn-mat-action btn-mat-download" title="Download resource" aria-label="Download resource" download>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    <span>Download</span>
+                  </a>
+                </div>
+              </article>
+            `;
+          }).join('');
+        }
+      }
+
+      function filterMaterials() {
+        const query = (document.getElementById('matSearch')?.value || '').toLowerCase().trim();
+        const sub = document.getElementById('matSubjectFilter')?.value || 'all';
+
+        const filtered = allMaterials.filter(m => {
+          const matchQ = !query || 
+            (m.title && m.title.toLowerCase().includes(query)) ||
+            (m.course_code && m.course_code.toLowerCase().includes(query)) ||
+            (m.course_name && m.course_name.toLowerCase().includes(query)) ||
+            (m.teacher_name && m.teacher_name.toLowerCase().includes(query));
+
+          const matchSub = sub === 'all' || (m.course_code && m.course_code.toLowerCase() === sub.toLowerCase());
+          return matchQ && matchSub;
+        });
+
+        renderMaterials(filtered);
+      }
+
+      async function loadMaterials() {
+        try {
+          const res = await apiRequest('/study-materials');
+          if (res.ok && res.data) {
+            allMaterials = res.data.materials || [];
+
+            // Update KPIs
+            const kpiHandouts = document.getElementById('kpiTotalHandouts');
+            if (kpiHandouts) kpiHandouts.textContent = `${allMaterials.length} File${allMaterials.length === 1 ? '' : 's'}`;
+
+            const subjects = [...new Set(allMaterials.map(m => m.course_code))].filter(Boolean);
+            const kpiSubs = document.getElementById('kpiSubjectsCovered');
+            if (kpiSubs) kpiSubs.textContent = `${subjects.length} Subject${subjects.length === 1 ? '' : 's'}`;
+
+            const kpiRecent = document.getElementById('kpiAddedRecently');
+            if (kpiRecent) kpiRecent.textContent = `${allMaterials.length} Modules`;
+
+            // Populate subject dropdown
+            const filterDropdown = document.getElementById('matSubjectFilter');
+            if (filterDropdown) {
+              filterDropdown.innerHTML = '<option value="all">All Subjects</option>' + 
+                subjects.map(s => `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('');
+            }
+
+            renderMaterials(allMaterials);
+          } else {
+            showErrorState();
+          }
+        } catch (err) {
+          console.error('Failed to load study materials:', err);
+          showErrorState();
+        }
+      }
+
+      function showErrorState() {
+        const tbody = document.getElementById('matTbody');
+        const emptyState = document.getElementById('studyMaterialEmptyState');
+        const tableWrapper = document.getElementById('studyMaterialTableWrapper');
+        const mobileContainer = document.getElementById('studyMaterialMobileCardsContainer');
+        if (emptyState) emptyState.classList.add('hidden');
+        if (mobileContainer) mobileContainer.innerHTML = '';
+        if (tableWrapper) tableWrapper.style.display = '';
+        if (tbody) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="6" style="text-align: center; padding: 48px 16px;">
+                <div style="color: #b91c1c; font-weight: 700; margin-bottom: 8px;">Unable to load study materials</div>
+                <p style="color: #64748b; font-size: 13px; margin: 0 0 14px 0;">Please check your connection and try again.</p>
+                <button type="button" class="btn btn-primary btn-sm" id="btnRetryMaterials">Retry</button>
+              </td>
+            </tr>
+          `;
+          document.getElementById('btnRetryMaterials')?.addEventListener('click', loadMaterials);
+        }
+      }
+
+      document.getElementById('matSearch')?.addEventListener('input', filterMaterials);
+      document.getElementById('matSubjectFilter')?.addEventListener('change', filterMaterials);
+
+      loadMaterials();
+    });
+  </script>
+</body>
+</html>

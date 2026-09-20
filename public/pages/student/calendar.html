@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Academic Calendar & Exams - Student Portal</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/student-dashboard.css">
+  <style>
+    /* Student Blue Theme Calendar styles */
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 1px;
+      background: #e2e8f0;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .calendar-day-header {
+      background: #f8fafc;
+      padding: 12px 8px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: #1e40af;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .calendar-day-cell {
+      background: #ffffff;
+      min-height: 110px;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      transition: background 0.15s ease;
+      position: relative;
+    }
+    .calendar-day-cell:hover {
+      background: #f0f7ff;
+    }
+    .calendar-day-cell.other-month {
+      background: #f8fafc;
+      color: #94a3b8;
+    }
+    .calendar-day-cell.today {
+      background: #eff6ff;
+      border: 2px solid #2563eb;
+      z-index: 2;
+    }
+    .day-number-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .day-number {
+      font-size: 13px;
+      font-weight: 600;
+      color: #0f172a;
+      width: 26px;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+    .calendar-day-cell.today .day-number {
+      background: #2563eb;
+      color: #ffffff;
+    }
+    .day-events-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+      overflow: hidden;
+    }
+    .event-pill {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 6px;
+      border-radius: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      border-left: 3px solid transparent;
+      transition: transform 0.15s ease;
+    }
+    .event-pill:hover {
+      transform: translateY(-1px);
+    }
+    .pill-exam {
+      background: #fee2e2;
+      color: #b91c1c;
+      border-left-color: #ef4444;
+    }
+    .pill-holiday {
+      background: #dcfce7;
+      color: #15803d;
+      border-left-color: #22c55e;
+    }
+    .pill-seminar {
+      background: #eff6ff;
+      color: #1d4ed8;
+      border-left-color: #2563eb;
+    }
+    .pill-college_event {
+      background: #fef3c7;
+      color: #b45309;
+      border-left-color: #f59e0b;
+    }
+    .pill-assignment {
+      background: #ffedd5;
+      color: #c2410c;
+      border-left-color: #f97316;
+    }
+    .pill-result {
+      background: #ecfeff;
+      color: #0e7490;
+      border-left-color: #06b6d4;
+    }
+    .pill-other {
+      background: #f1f5f9;
+      color: #475569;
+      border-left-color: #64748b;
+    }
+
+    /* Week View Columns */
+    .week-view-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .week-day-col {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      min-height: 480px;
+      overflow: hidden;
+    }
+    .week-col-header {
+      padding: 12px;
+      background: #f8fafc;
+      border-bottom: 1px solid #e2e8f0;
+      text-align: center;
+    }
+    .week-col-header.today {
+      background: #dbeafe;
+      border-bottom-color: #2563eb;
+    }
+    .week-col-body {
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    @media (max-width: 640px) {
+      .calendar-day-header { padding: 8px 2px; font-size: 11px; }
+      .calendar-day-cell { min-height: 80px; padding: 4px; }
+      .day-number { font-size: 11px; width: 20px; height: 20px; }
+      .event-pill { font-size: 9.5px; padding: 2px 4px; }
+      .week-view-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ========================================================================
+       CLEAN MINIMAL KPI METRIC CARDS (Matches Reference Design Exactly)
+       - White background, light gray borders, subtle shadow, rounded corners (8px)
+       - ONLY left border has the semantic accent color (4px)
+       - Title in slate-500 (#64748b)
+       - Number color strictly matches left border color
+       - Responsive: Desktop 4-col, Tablet 2-col, Mobile 1-col
+       ======================================================================== */
+    .kpi-event-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 1024px) {
+      .kpi-event-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .dashboard-main {
+        padding: 16px 12px !important;
+      }
+      .kpi-event-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+      #calendarNavControls {
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      #currentPeriodTitle {
+        min-width: unset !important;
+        font-size: 14px !important;
+      }
+    }
+
+    .kpi-minimal-card {
+      background: #ffffff !important;
+      border: 1px solid #e2e8f0 !important;
+      border-radius: 8px !important;
+      padding: 16px 20px !important;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03) !important;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-sizing: border-box;
+      min-height: 84px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .kpi-minimal-card:hover {
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.06), 0 2px 4px -2px rgba(0, 0, 0, 0.04) !important;
+    }
+
+    /* Semantic Left Borders (4px solid, no other sides colored) */
+    .kpi-card-blue {
+      border-left: 4px solid #2563eb !important;
+    }
+
+    .kpi-card-red {
+      border-left: 4px solid #ef4444 !important;
+    }
+
+    .kpi-card-green {
+      border-left: 4px solid #10b981 !important;
+    }
+
+    .kpi-card-orange {
+      border-left: 4px solid #f59e0b !important;
+    }
+
+    /* Card Title / Label */
+    .kpi-card-title {
+      font-size: 13px;
+      color: #64748b;
+      font-weight: 500;
+      line-height: 1.3;
+      margin: 0;
+    }
+
+    /* Card Number / Value */
+    .kpi-card-number {
+      font-size: 26px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-top: 4px;
+      margin-bottom: 0;
+    }
+
+    /* Value colors strictly matching left border */
+    .kpi-num-blue {
+      color: #2563eb !important;
+    }
+
+    .kpi-num-red {
+      color: #ef4444 !important;
+    }
+
+    .kpi-num-green {
+      color: #10b981 !important;
+    }
+
+    .kpi-num-orange {
+      color: #f59e0b !important;
+    }
+  </style>
+</head>
+<body class="student-portal-body">
+
+  <div id="sidebarBackdrop" class="sidebar-backdrop hidden"></div>
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- FIXED LEFT SIDEBAR (Managed by student-shell.js) -->
+  <aside id="studentSidebar" class="student-sidebar" aria-label="Student Navigation"></aside>
+
+  <!-- MAIN WRAPPER -->
+  <div class="student-main-wrapper">
+    
+    <!-- STICKY TOP HEADER -->
+    <header class="student-header" id="studentHeader">
+      <div class="header-left">
+        <button type="button" id="sidebarToggleBtn" class="sidebar-toggle-btn" aria-label="Open menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <div class="header-heading-group">
+          <h1 class="header-title">Academic Calendar & Exam Schedule</h1>
+          <p class="header-subtitle">Term dates, exam timetables, assignment deadlines, and campus events</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <!-- Exactly 1 Bell Icon -->
+        <button type="button" id="headerNotificationBtn" class="header-notify-btn" title="View notifications" aria-label="Notifications">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          <span id="headerNotificationDot" class="header-notify-badge hidden"></span>
+        </button>
+        <div class="profile-dropdown-wrapper" id="profileDropdownWrapper">
+          <button type="button" id="profileDropdownBtn" class="header-profile-btn" aria-haspopup="true" aria-expanded="false" aria-label="User profile menu">
+            <div class="header-avatar" id="headerUserAvatar" style="background: linear-gradient(135deg, #2563eb, #1d4ed8);">S</div>
+            <div class="header-profile-meta">
+              <span class="header-profile-name" id="navUserName">Enrolled Student</span>
+              <span class="header-profile-badge" id="userRoleBadge" style="background: #dbeafe; color: #1e40af;">STUDENT</span>
+            </div>
+            <svg class="dropdown-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="dashboard-main" style="padding: 24px; flex: 1;">
+      
+      <!-- KPI Stats Row (Clean Minimal Style - Matching Reference Exactly) -->
+      <div class="kpi-event-grid">
+        <!-- 1. Academic Milestones (Blue) -->
+        <div class="card kpi-minimal-card kpi-card-blue">
+          <div class="kpi-card-title">Academic Milestones</div>
+          <div id="statTotalEvents" class="kpi-card-number kpi-num-blue">0</div>
+        </div>
+        <!-- 2. Upcoming Examinations (Red) -->
+        <div class="card kpi-minimal-card kpi-card-red">
+          <div class="kpi-card-title">Upcoming Examinations</div>
+          <div id="statTotalExams" class="kpi-card-number kpi-num-red">0</div>
+        </div>
+        <!-- 3. Holidays & Vacations (Green) -->
+        <div class="card kpi-minimal-card kpi-card-green">
+          <div class="kpi-card-title">Holidays & Vacations</div>
+          <div id="statTotalHolidays" class="kpi-card-number kpi-num-green">0</div>
+        </div>
+        <!-- 4. Workshops & Events (Orange/Amber) -->
+        <div class="card kpi-minimal-card kpi-card-orange">
+          <div class="kpi-card-title">Workshops & Events</div>
+          <div id="statTotalEventsCampus" class="kpi-card-number kpi-num-orange">0</div>
+        </div>
+      </div>
+
+      <!-- View Switcher & Toolbar -->
+      <div class="card mb-4" style="padding: 14px 20px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;" id="viewTabsContainer">
+          <button type="button" class="btn btn-sm cal-view-tab active" data-view="MONTH" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 6px; font-size: 13px; font-weight: 600; background: #2563eb; color: #ffffff; border: none; cursor: pointer;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            <span>Month View</span>
+          </button>
+          <button type="button" class="btn btn-sm cal-view-tab" data-view="WEEK" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 6px; font-size: 13px; font-weight: 600; background: #f1f5f9; color: #334155; border: none; cursor: pointer;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            <span>Week View</span>
+          </button>
+          <button type="button" class="btn btn-sm cal-view-tab" data-view="LIST" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 6px; font-size: 13px; font-weight: 600; background: #f1f5f9; color: #334155; border: none; cursor: pointer;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+            <span>List View</span>
+          </button>
+          <button type="button" class="btn btn-sm cal-view-tab" data-view="EXAMS" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 6px; font-size: 13px; font-weight: 600; background: #f1f5f9; color: #334155; border: none; cursor: pointer;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+            <span>My Exam Schedule</span>
+          </button>
+        </div>
+
+        <div id="calendarNavControls" style="display: flex; align-items: center; gap: 8px;">
+          <button type="button" id="prevPeriodBtn" class="btn btn-sm" style="padding: 6px 12px; background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+          <button type="button" id="todayPeriodBtn" class="btn btn-sm" style="padding: 6px 12px; background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 6px; font-weight: 600; cursor: pointer;">Today</button>
+          <button type="button" id="nextPeriodBtn" class="btn btn-sm" style="padding: 6px 12px; background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+          <span id="currentPeriodTitle" style="font-size: 15px; font-weight: 700; color: #0f172a; min-width: 140px; text-align: center;">September 2026</span>
+        </div>
+      </div>
+
+      <!-- Filters Row -->
+      <div class="card mb-4" style="padding: 12px 18px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; align-items: center;">
+          <div>
+            <input type="text" id="filterSearch" class="form-control" placeholder="Search event, exam, subject..." style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
+          </div>
+          <div>
+            <select id="filterEventType" class="form-control" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
+              <option value="">All Event Types</option>
+              <option value="EXAM">Examinations</option>
+              <option value="HOLIDAY">Holidays</option>
+              <option value="COLLEGE_EVENT">Campus Events</option>
+              <option value="SEMINAR">Workshops & Seminars</option>
+              <option value="ASSIGNMENT">Assignment Deadlines</option>
+              <option value="RESULT">Results Declaration</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- View Containers -->
+      <!-- A. Month View Container -->
+      <div id="monthViewContainer" class="card" style="padding: 16px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 24px;">
+        <div class="calendar-grid">
+          <div class="calendar-day-header">Sun</div>
+          <div class="calendar-day-header">Mon</div>
+          <div class="calendar-day-header">Tue</div>
+          <div class="calendar-day-header">Wed</div>
+          <div class="calendar-day-header">Thu</div>
+          <div class="calendar-day-header">Fri</div>
+          <div class="calendar-day-header">Sat</div>
+        </div>
+        <div id="calendarGridBody" class="calendar-grid" style="border-top: none;">
+          <!-- Day cells rendered dynamically -->
+        </div>
+      </div>
+
+      <!-- B. Week View Container -->
+      <div id="weekViewContainer" class="hidden" style="margin-bottom: 24px;">
+        <div class="week-view-grid" id="weekViewGrid">
+          <!-- 7 day columns rendered dynamically -->
+        </div>
+      </div>
+
+      <!-- C. List View Container -->
+      <div id="listViewContainer" class="card hidden" style="padding: 20px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <h3 style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0;">My Academic Agenda</h3>
+          <span id="listTotalCount" style="font-size: 13px; color: #64748b;">Showing 0 events</span>
+        </div>
+        <div class="table-responsive">
+          <table class="table" id="agendaTable" style="width: 100%;">
+            <thead>
+              <tr style="border-bottom: 1px solid #e2e8f0;">
+                <th style="padding: 10px; font-size: 13px; text-align: left; color: #64748b;">Date & Time</th>
+                <th style="padding: 10px; font-size: 13px; text-align: left; color: #64748b;">Event & Category</th>
+                <th style="padding: 10px; font-size: 13px; text-align: left; color: #64748b;">Venue / Room</th>
+                <th style="padding: 10px; font-size: 13px; text-align: left; color: #64748b;">Course / Scope</th>
+                <th style="padding: 10px; font-size: 13px; text-align: right; color: #64748b;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="agendaTableBody">
+              <!-- Rows rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- D. Exam Schedule View Container -->
+      <div id="examsViewContainer" class="card hidden" style="padding: 20px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 24px;">
+        <div style="margin-bottom: 16px;">
+          <h3 style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0;">My Examination Timetable</h3>
+          <p style="font-size: 13px; color: #64748b; margin: 2px 0 0 0;">Exam dates, timings, venues, and student instructions for your enrolled courses</p>
+        </div>
+        <div class="table-responsive">
+          <table class="table" id="examsTable" style="width: 100%;">
+            <thead>
+              <tr style="border-bottom: 1px solid #e2e8f0;">
+                <th style="padding: 10px; font-size: 13px; text-align: left; color: #64748b;">Date & Time</th>
+                <th style="padding: 10px; font-size: 13px; text-align: left; color: #64748b;">Course / Subject</th>
+                <th style="padding: 10px; font-size: 13px; text-align: left; color: #64748b;">Exam Category</th>
+                <th style="padding: 10px; font-size: 13px; text-align: left; color: #64748b;">Room / Hall</th>
+                <th style="padding: 10px; font-size: 13px; text-align: left; color: #64748b;">Instructions</th>
+                <th style="padding: 10px; font-size: 13px; text-align: right; color: #64748b;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="examsTableBody">
+              <!-- Exam rows rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- DETAILS MODAL -->
+  <div id="detailsModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" style="position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center;">
+    <div class="modal-dialog" style="max-width: 540px; width: 95%; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.15);">
+      <div class="modal-header" style="padding: 16px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span id="detailsTypeBadge" class="event-pill pill-exam" style="font-size: 11px;">EXAM</span>
+          <h3 id="detailsModalTitle" style="font-size: 17px; font-weight: 700; color: #0f172a; margin: 0;">Event Details</h3>
+        </div>
+        <button type="button" class="modal-close-btn" id="closeDetailsModalBtn" style="background: none; border: none; font-size: 22px; cursor: pointer; color: #64748b;">&times;</button>
+      </div>
+      <div class="modal-body" style="padding: 20px;" id="detailsModalContent">
+        <!-- Injected dynamically -->
+      </div>
+      <div class="modal-footer" style="padding: 14px 20px; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end; gap: 10px;">
+        <button type="button" class="btn btn-secondary" id="closeDetailsBtn" style="padding: 7px 14px; border: 1px solid #cbd5e1; background: #f8fafc; border-radius: 6px; cursor: pointer;">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/student-shell.js"></script>
+  <script src="/js/student-calendar.js"></script>
+</body>
+</html>

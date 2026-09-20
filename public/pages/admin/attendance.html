@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance Management - Student Information Portal</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/attendance.css">
+  <link rel="stylesheet" href="/css/admin-theme.css">
+</head>
+<body class="admin-dashboard-body">
+
+  <!-- Floating Toast Notifications -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- Mobile Backdrop Overlay -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop hidden" aria-hidden="true"></div>
+
+  <!-- ========================================================================
+       1. FIXED ADMIN SIDEBAR (CANONICAL)
+       ======================================================================== -->
+  <aside id="adminSidebar" class="admin-sidebar" aria-label="Portal Navigation">
+    <!-- Brand Header -->
+    <div class="sidebar-header">
+      <a href="/pages/admin/dashboard.html" class="sidebar-brand">
+        <div class="sidebar-logo" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/>
+          </svg>
+        </div>
+        <div class="sidebar-title">
+          <span class="brand-main">Student Portal</span>
+          <span class="brand-sub">ADMINISTRATION</span>
+        </div>
+      </a>
+      <button type="button" id="sidebarCloseBtn" class="sidebar-close-btn" aria-label="Close menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Scrollable Navigation Groups -->
+    <nav class="sidebar-nav" id="sidebarNavContainer">
+      <!-- OVERVIEW -->
+      <div class="nav-group-title">Overview</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/admin/dashboard.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+            <span>Dashboard</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- USER MANAGEMENT -->
+      <div class="nav-group-title">User Management</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/admin/users.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            <span>Users</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/students.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span>Students</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/teachers.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+            </svg>
+            <span>Teachers</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- ACADEMICS -->
+      <div class="nav-group-title">Academics</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/admin/departments.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+              <path d="M9 22v-4h6v4"></path>
+              <path d="M8 6h.01M16 6h.01M12 6h.01M8 10h.01M16 10h.01M12 10h.01M8 14h.01M16 14h.01M12 14h.01"></path>
+            </svg>
+            <span>Departments</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/courses.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            </svg>
+            <span>Courses</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/enrollments.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="8.5" cy="7" r="4"></circle>
+              <polyline points="17 11 19 13 23 9"></polyline>
+            </svg>
+            <span>Enrollment</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/timetable.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span>Timetable</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- ACADEMIC OPERATIONS -->
+      <div class="nav-group-title">Academic Operations</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/admin/attendance.html" class="nav-link active" aria-current="page">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 11 12 14 22 4"></polyline>
+              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+            </svg>
+            <span>Attendance</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/grades.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="9" y1="15" x2="15" y2="15"></line>
+            </svg>
+            <span>Grades</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/performance.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+            <span>Performance</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- ACADEMIC RESOURCES -->
+      <div class="nav-group-title">Academic Resources</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/admin/assignments.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            <span>Assignments</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/study-material.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            <span>Study Material</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/notices.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span>Notice Board</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- COMMUNICATION & SYSTEM -->
+      <div class="nav-group-title">Communication & System</div>
+      <ul class="nav-list">
+        <li>
+          <a href="/pages/admin/notifications.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span>Notifications</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/queries.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+            <span>Queries</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/reports.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            <span>Reports</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/audit-logs.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <span>Audit Logs</span>
+          </a>
+        </li>
+        <li>
+          <a href="/pages/admin/backups.html" class="nav-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            <span>Backup & Restore</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Sidebar Footer / Current Admin Info -->
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sidebarAdminAvatar">S</div>
+        <div class="sidebar-user-info">
+          <span class="sidebar-user-name" id="sidebarAdminName">System Admin</span>
+          <span class="sidebar-user-role" id="sidebarAdminEmail">admin@portal.local</span>
+        </div>
+      </div>
+      <button type="button" class="btn-sidebar-logout" id="sidebarLogoutBtn" title="Sign Out">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16 17 21 12 16 7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ========================================================================
+       2. MAIN CONTENT AREA
+       ======================================================================== -->
+  <div class="admin-layout">
+    <!-- Top Header Bar -->
+    <header class="admin-header">
+      <div class="header-left">
+        <button type="button" id="sidebarToggleBtn" class="sidebar-toggle-btn" aria-label="Toggle navigation menu">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <div class="header-breadcrumbs">
+          <a href="/pages/admin/dashboard.html" class="breadcrumb-item">Dashboard</a>
+          <span class="breadcrumb-separator">/</span>
+          <span class="breadcrumb-current">Attendance</span>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <!-- Profile Dropdown Trigger -->
+        <div class="profile-dropdown-wrapper">
+          <button type="button" class="header-profile-btn" id="profileDropdownTrigger" aria-haspopup="true" aria-expanded="false" aria-label="Administrator Menu">
+            <div class="header-avatar" id="headerAdminAvatar">S</div>
+            <div class="header-admin-info">
+              <span class="header-admin-name" id="headerAdminName">System Admin</span>
+              <span class="header-admin-badge">ADMIN</span>
+            </div>
+            <svg class="dropdown-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+
+          <!-- Standardized 7-Item Dropdown Menu -->
+          <div class="profile-dropdown-menu" id="profileDropdownMenu" role="menu">
+            <div class="dropdown-header">
+              <div id="dropdownAdminName" class="dropdown-user-name">System Admin</div>
+              <div id="dropdownAdminEmail" class="dropdown-email">admin@portal.local</div>
+            </div>
+            
+            <button type="button" id="dropdownMyProfile" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <span>My Profile</span>
+            </button>
+
+            <button type="button" id="dropdownEditProfile" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
+              <span>Edit Profile</span>
+            </button>
+
+            <button type="button" id="dropdownChangePassword" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              <span>Change Password</span>
+            </button>
+
+            <button type="button" id="dropdownAccountSettings" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+              </svg>
+              <span>Account Settings</span>
+            </button>
+
+            <a href="/pages/admin/notifications.html" id="dropdownNotifications" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+              <span>Notifications</span>
+            </a>
+
+            <a href="/pages/admin/audit-logs.html" id="dropdownAuditActivity" class="dropdown-item" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+              </svg>
+              <span>Audit Activity</span>
+            </a>
+
+            <div class="dropdown-divider"></div>
+
+            <button type="button" id="dropdownLogoutBtn" class="dropdown-item dropdown-item-danger" role="menuitem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
+              <span>Logout</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Page Body -->
+    <main class="admin-main-content">
+      <!-- Page Header -->
+      <div class="page-title-row" style="margin-bottom: 24px;">
+        <div>
+          <h1 class="page-title">Attendance Management</h1>
+          <p class="page-subtitle">Track, monitor, and manage student attendance records, course attendance, and low-attendance alerts.</p>
+        </div>
+        <div class="page-title-actions" style="display: flex; gap: 10px; align-items: center;">
+          <button type="button" id="openAddAttendanceBtn" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 8px; font-weight: 600; padding: 9px 18px; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+              <path d="M9 16l2 2 4-4"></path>
+            </svg>
+            + Record Attendance
+          </button>
+          <button type="button" id="refreshBtn" class="btn btn-secondary btn-sm" title="Refresh all data" aria-label="Refresh attendance data">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="23 4 23 10 17 10"></polyline>
+              <polyline points="1 20 1 14 7 14"></polyline>
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- ====================================================================
+           3 & 4. 5-CARD KPI GRID
+           ==================================================================== -->
+      <section class="attendance-kpi-grid" aria-label="Attendance KPI Metrics">
+        <!-- Card 1: Total Records -->
+        <div class="att-kpi-card" id="kpiCardTotal" style="border-left: 4px solid #7c3aed;">
+          <div class="att-kpi-top">
+            <div class="att-kpi-icon att-kpi-icon-indigo" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                <path d="M9 14l2 2 4-4"></path>
+              </svg>
+            </div>
+          </div>
+          <div>
+            <div class="att-kpi-number-row">
+              <span class="att-kpi-value" id="kpiTotalRecords">0</span>
+            </div>
+            <div class="att-kpi-title">Total Records</div>
+            <p class="att-kpi-desc">Conducted lecture logs</p>
+          </div>
+        </div>
+
+        <!-- Card 2: Present Logs -->
+        <div class="att-kpi-card" id="kpiCardPresent" style="border-left: 4px solid #10b981;">
+          <div class="att-kpi-top">
+            <div class="att-kpi-icon att-kpi-icon-green" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+            </div>
+          </div>
+          <div>
+            <div class="att-kpi-number-row">
+              <span class="att-kpi-value" id="kpiPresentCount">0</span>
+            </div>
+            <div class="att-kpi-title">Present Logs</div>
+            <p class="att-kpi-desc" id="kpiPresentRatio">0% of recorded</p>
+          </div>
+        </div>
+
+        <!-- Card 3: Absent Logs -->
+        <div class="att-kpi-card" id="kpiCardAbsent" style="border-left: 4px solid #ef4444;">
+          <div class="att-kpi-top">
+            <div class="att-kpi-icon att-kpi-icon-red" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="15" y1="9" x2="9" y2="15"></line>
+                <line x1="9" y1="9" x2="15" y2="15"></line>
+              </svg>
+            </div>
+          </div>
+          <div>
+            <div class="att-kpi-number-row">
+              <span class="att-kpi-value" id="kpiAbsentCount">0</span>
+            </div>
+            <div class="att-kpi-title">Absent Logs</div>
+            <p class="att-kpi-desc">Missed lecture attendances</p>
+          </div>
+        </div>
+
+        <!-- Card 4: Average Attendance -->
+        <div class="att-kpi-card" id="kpiCardAverage" style="border-left: 4px solid #7c3aed;">
+          <div class="att-kpi-top">
+            <div class="att-kpi-icon att-kpi-icon-blue" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="20" x2="18" y2="10"></line>
+                <line x1="12" y1="20" x2="12" y2="4"></line>
+                <line x1="6" y1="20" x2="6" y2="14"></line>
+              </svg>
+            </div>
+          </div>
+          <div>
+            <div class="att-kpi-number-row">
+              <span class="att-kpi-value" id="kpiAvgPercentage">0.00%</span>
+            </div>
+            <div class="att-kpi-title">Average Attendance</div>
+            <p class="att-kpi-desc">Portal-wide present rate</p>
+          </div>
+        </div>
+
+        <!-- Card 5: Low Attendance Alert (< 75%) -->
+        <div class="att-kpi-card" id="kpiLowAttendanceCard" style="border-left: 4px solid #f59e0b; cursor: pointer;" title="Click to view low attendance defaulters">
+          <div class="att-kpi-top">
+            <div class="att-kpi-icon att-kpi-icon-amber" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+              </svg>
+            </div>
+            <span class="att-kpi-badge att-badge-amber">&lt; 75%</span>
+          </div>
+          <div>
+            <div class="att-kpi-number-row">
+              <span class="att-kpi-value" id="kpiLowAttendanceCount" style="color: #b45309;">0</span>
+            </div>
+            <div class="att-kpi-title">Low Attendance Alert</div>
+            <p class="att-kpi-desc">Students below minimum threshold</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           5 & 15. ATTENDANCE OVERVIEW & QUICK ACTIONS
+           ==================================================================== -->
+      <section class="attendance-overview-grid" aria-label="Attendance Overview and Operations">
+        <!-- Panel 1: Attendance Overview -->
+        <div class="att-panel-card">
+          <div class="att-panel-header">
+            <div>
+              <h2 class="att-panel-title">Attendance Overview</h2>
+              <p class="att-panel-subtitle">Portal-wide student participation statistics across all lecture sessions</p>
+            </div>
+          </div>
+
+          <div class="att-overview-body">
+            <!-- Left Circular Attendance Indicator -->
+            <div class="att-circle-container">
+              <div class="att-circle-wrapper">
+                <svg class="att-circle-svg" viewBox="0 0 120 120">
+                  <circle class="att-circle-bg" cx="60" cy="60" r="50"></circle>
+                  <circle class="att-circle-bar" id="overviewCircleBar" cx="60" cy="60" r="50" stroke-dasharray="314.16" stroke-dashoffset="314.16"></circle>
+                </svg>
+                <div class="att-circle-inner">
+                  <span class="att-circle-percent" id="overviewCirclePercent">0.00%</span>
+                  <span class="att-circle-label">Attendance</span>
+                </div>
+              </div>
+              <div class="att-circle-caption">Portal-wide Attendance<br><small style="color: #94a3b8;">Based on recorded lectures</small></div>
+            </div>
+
+            <!-- Right Compact Progress Bar Rows -->
+            <div class="att-breakdown-list">
+              <!-- Present -->
+              <div class="att-breakdown-item">
+                <div class="att-breakdown-row">
+                  <span class="att-breakdown-label">
+                    <span class="att-breakdown-dot" style="background-color: #10b981;"></span>
+                    Present
+                  </span>
+                  <span class="att-breakdown-numbers">
+                    <span class="att-breakdown-bold" id="overviewPresentCount">0</span>
+                    (<span id="overviewPresentPct">0.0%</span>)
+                  </span>
+                </div>
+                <div class="att-progress-track">
+                  <div class="att-progress-fill fill-emerald" id="overviewPresentBar" style="width: 0%;"></div>
+                </div>
+              </div>
+
+              <!-- Absent -->
+              <div class="att-breakdown-item">
+                <div class="att-breakdown-row">
+                  <span class="att-breakdown-label">
+                    <span class="att-breakdown-dot" style="background-color: #ef4444;"></span>
+                    Absent
+                  </span>
+                  <span class="att-breakdown-numbers">
+                    <span class="att-breakdown-bold" id="overviewAbsentCount">0</span>
+                    (<span id="overviewAbsentPct">0.0%</span>)
+                  </span>
+                </div>
+                <div class="att-progress-track">
+                  <div class="att-progress-fill fill-rose" id="overviewAbsentBar" style="width: 0%;"></div>
+                </div>
+              </div>
+
+              <!-- Late -->
+              <div class="att-breakdown-item">
+                <div class="att-breakdown-row">
+                  <span class="att-breakdown-label">
+                    <span class="att-breakdown-dot" style="background-color: #f59e0b;"></span>
+                    Late
+                  </span>
+                  <span class="att-breakdown-numbers">
+                    <span class="att-breakdown-bold" id="overviewLateCount">0</span>
+                    (<span id="overviewLatePct">0.0%</span>)
+                  </span>
+                </div>
+                <div class="att-progress-track">
+                  <div class="att-progress-fill fill-amber" id="overviewLateBar" style="width: 0%;"></div>
+                </div>
+              </div>
+
+              <!-- Excused -->
+              <div class="att-breakdown-item">
+                <div class="att-breakdown-row">
+                  <span class="att-breakdown-label">
+                    <span class="att-breakdown-dot" style="background-color: #8b5cf6;"></span>
+                    Excused
+                  </span>
+                  <span class="att-breakdown-numbers">
+                    <span class="att-breakdown-bold" id="overviewExcusedCount">0</span>
+                    (<span id="overviewExcusedPct">0.0%</span>)
+                  </span>
+                </div>
+                <div class="att-progress-track">
+                  <div class="att-progress-fill fill-indigo" id="overviewExcusedBar" style="width: 0%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel 2: Quick Actions -->
+        <div class="att-panel-card">
+          <div class="att-panel-header">
+            <div>
+              <h2 class="att-panel-title">Quick Actions</h2>
+              <p class="att-panel-subtitle">Immediate attendance and academic workflows</p>
+            </div>
+          </div>
+
+          <div class="att-quick-actions-list">
+            <button type="button" class="att-quick-btn" id="qaRecordAttendanceBtn">
+              <div class="att-quick-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="12" y1="11" x2="12" y2="17"></line>
+                  <line x1="9" y1="14" x2="15" y2="14"></line>
+                </svg>
+              </div>
+              <div>
+                <div>Record Attendance</div>
+                <small style="color: #64748b; font-weight: normal;">Log lecture participation for student</small>
+              </div>
+            </button>
+
+            <button type="button" class="att-quick-btn" id="qaStudentAttendanceBtn">
+              <div class="att-quick-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </div>
+              <div>
+                <div>View Student Attendance</div>
+                <small style="color: #64748b; font-weight: normal;">Inspect individual student profile</small>
+              </div>
+            </button>
+
+            <button type="button" class="att-quick-btn" id="qaCourseAttendanceBtn">
+              <div class="att-quick-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                </svg>
+              </div>
+              <div>
+                <div>View Course Attendance</div>
+                <small style="color: #64748b; font-weight: normal;">Class summary and enrollment rates</small>
+              </div>
+            </button>
+
+            <button type="button" class="att-quick-btn" id="qaLowAttendanceBtn">
+              <div class="att-quick-icon" aria-hidden="true" style="color: #b45309; background: #fffbeb;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                  <line x1="12" y1="9" x2="12" y2="13"></line>
+                  <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+              </div>
+              <div>
+                <div>Low Attendance Report</div>
+                <small style="color: #64748b; font-weight: normal;">Review defaulters below 75% threshold</small>
+              </div>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           14. LOW ATTENDANCE ALERT SECTION
+           ==================================================================== -->
+      <section class="att-low-alert-section" id="lowAttendanceSection" aria-label="Low Attendance Policy Monitor">
+        <div class="att-alert-card">
+          <div class="att-panel-header" style="margin-bottom: 14px;">
+            <div>
+              <h2 class="att-panel-title" style="display: flex; align-items: center; gap: 8px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                  <line x1="12" y1="9" x2="12" y2="13"></line>
+                  <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+                Low Attendance Alert
+              </h2>
+              <p class="att-panel-subtitle">Students whose attendance is below the minimum required threshold of 75%.</p>
+            </div>
+            <div id="lowAttendanceBadgeCount"></div>
+          </div>
+
+          <!-- State A: Empty State when no students below 75% -->
+          <div id="lowAttendanceEmptyBox" class="att-alert-empty-box">
+            <div class="att-alert-empty-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+            </div>
+            <div>
+              <div class="att-alert-empty-title">✓ All students are currently above the minimum threshold.</div>
+              <p class="att-alert-empty-sub">No student enrollment currently falls below the mandatory 75% attendance compliance policy.</p>
+            </div>
+          </div>
+
+          <!-- State B: Populated Table of Defaulters -->
+          <div id="lowAttendanceDefaulterBox" class="table-responsive hidden">
+            <table class="att-defaulter-table" aria-label="Defaulter Students List">
+              <thead>
+                <tr>
+                  <th scope="col">Student</th>
+                  <th scope="col">PRN</th>
+                  <th scope="col">Course</th>
+                  <th scope="col">Conducted</th>
+                  <th scope="col">Present</th>
+                  <th scope="col">Attendance %</th>
+                  <th scope="col">Status</th>
+                  <th scope="col" style="text-align: right;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="lowAttendanceDefaulterBody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           6. FILTER / SEARCH TOOLBAR
+           ==================================================================== -->
+      <section class="att-toolbar-panel" aria-label="Attendance search and filter toolbar">
+        <div class="att-toolbar-header">
+          <h2 class="att-toolbar-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+            </svg>
+            Attendance Records
+          </h2>
+          <span style="font-size: 12px; color: #64748b;" id="filterStatusIndicator">Showing active records</span>
+        </div>
+
+        <div class="att-toolbar-controls">
+          <!-- Search Student -->
+          <div class="att-search-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input 
+              type="text" 
+              id="attendanceSearchInput" 
+              class="form-control form-control-sm" 
+              placeholder="Search student, PRN, course..." 
+              aria-label="Search student by name, PRN, or course"
+            >
+          </div>
+
+          <!-- Student Dropdown -->
+          <select id="filterStudentSelect" class="form-control form-control-sm" aria-label="Filter by Student">
+            <option value="">All Students</option>
+          </select>
+
+          <!-- Course Dropdown -->
+          <select id="filterCourseSelect" class="form-control form-control-sm" aria-label="Filter by Course">
+            <option value="">All Courses</option>
+          </select>
+
+          <!-- Teacher Dropdown -->
+          <select id="filterTeacherSelect" class="form-control form-control-sm" aria-label="Filter by Instructor">
+            <option value="">All Teachers</option>
+          </select>
+
+          <!-- Status Dropdown -->
+          <select id="filterStatusSelect" class="form-control form-control-sm" aria-label="Filter by Status">
+            <option value="">All Statuses</option>
+            <option value="Present">Present</option>
+            <option value="Absent">Absent</option>
+            <option value="Late">Late</option>
+            <option value="Excused">Excused</option>
+          </select>
+
+          <!-- Date From -->
+          <input 
+            type="date" 
+            id="filterDateFromInput" 
+            class="form-control form-control-sm" 
+            placeholder="Date From" 
+            title="Date From" 
+            aria-label="Filter attendance starting from date"
+          >
+
+          <!-- Date To -->
+          <input 
+            type="date" 
+            id="filterDateToInput" 
+            class="form-control form-control-sm" 
+            placeholder="Date To" 
+            title="Date To" 
+            aria-label="Filter attendance up to date"
+          >
+
+          <!-- Action Buttons -->
+          <button type="button" id="applyFiltersBtn" class="btn btn-primary btn-sm" style="white-space: nowrap;">
+            Apply Filters
+          </button>
+
+          <button type="button" id="clearFiltersBtn" class="btn btn-secondary btn-sm" style="white-space: nowrap;">
+            Reset
+          </button>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           7 & 8. ATTENDANCE DATA TABLE & EMPTY STATE
+           ==================================================================== -->
+      <section class="att-table-card" aria-label="Attendance Table">
+        <div class="att-table-header-bar">
+          <div style="font-weight: 700; font-size: 14px; color: #0f172a;">Recorded Attendance Logs</div>
+          <div id="tableActiveFilterSummary" style="font-size: 12px; color: #64748b;">All lectures</div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="erp-table" id="attendanceTable" aria-label="Attendance Records List">
+            <thead>
+              <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Student</th>
+                <th scope="col">PRN</th>
+                <th scope="col">Course</th>
+                <th scope="col">Teacher</th>
+                <th scope="col">Status</th>
+                <th scope="col">Remarks</th>
+                <th scope="col" style="text-align: right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="attendanceTableBody">
+              <!-- Dynamically populated via admin-attendance.js -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 8. Beautiful Empty State Card -->
+        <div id="attendanceTableEmpty" class="att-empty-state-card hidden">
+          <div class="att-empty-icon-circle" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+              <circle cx="12" cy="15" r="2"></circle>
+            </svg>
+          </div>
+          <h3 class="att-empty-title">No Attendance Records</h3>
+          <p class="att-empty-desc">No attendance records have been recorded yet. Click below to begin logging lecture attendance for enrolled students.</p>
+          <button type="button" id="emptyRecordAttendanceBtn" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Record Attendance
+          </button>
+        </div>
+
+        <!-- 16. Server-side Pagination Row -->
+        <div id="attendancePagination" class="att-pagination-bar hidden">
+          <span class="pagination-info" id="paginationInfo" style="font-size: 13px; color: #64748b;">Showing 0 of 0 records</span>
+          <div class="pagination-controls" style="display: flex; align-items: center; gap: 8px;">
+            <button type="button" id="prevPageBtn" class="btn btn-secondary btn-sm" disabled>Previous</button>
+            <span class="pagination-current-page" id="paginationCurrent" style="font-size: 13px; font-weight: 600; color: #334155; padding: 0 6px;">Page 1</span>
+            <button type="button" id="nextPageBtn" class="btn btn-secondary btn-sm" disabled>Next</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ========================================================================
+       MODALS (Zero href="#", Accessible, Real Database Operations)
+       ======================================================================== -->
+
+  <!-- Modal 1: 9. Record Attendance Modal -->
+  <div id="addAttendanceModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="addAttendanceModalTitle">
+    <div class="modal-card" style="max-width: 580px; max-height: 90vh; display: flex; flex-direction: column;">
+      <div class="modal-header">
+        <h3 id="addAttendanceModalTitle" class="modal-title" style="display: flex; align-items: center; gap: 8px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          Record Attendance
+        </h3>
+        <button type="button" class="modal-close-btn" data-close-modal="addAttendanceModal" aria-label="Close modal">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <form id="addAttendanceForm" autocomplete="off" style="overflow-y: auto; flex: 1;">
+        <div class="modal-body" style="display: flex; flex-direction: column; gap: 14px;">
+          <!-- Student Select -->
+          <div class="form-group">
+            <label for="addStudentId" class="form-label">Student <span class="required" style="color: #ef4444;">*</span></label>
+            <select id="addStudentId" name="student_id" class="form-control" required>
+              <option value="">Select Enrolled Student...</option>
+            </select>
+            <small class="form-hint" id="addStudentHint" style="color: #64748b;">Choose a student to view their enrolled courses.</small>
+          </div>
+
+          <!-- Course Select (Filtered by Active Enrollments) -->
+          <div class="form-group">
+            <label for="addCourseId" class="form-label">Course <span class="required" style="color: #ef4444;">*</span></label>
+            <select id="addCourseId" name="course_id" class="form-control" required>
+              <option value="">Select Course...</option>
+            </select>
+            <small class="form-hint" style="color: #64748b;">Only courses in which the student is actively enrolled are eligible.</small>
+          </div>
+
+          <!-- Teacher Select -->
+          <div class="form-group">
+            <label for="addTeacherId" class="form-label">Teacher / Instructor <span class="required" style="color: #ef4444;">*</span></label>
+            <select id="addTeacherId" name="teacher_id" class="form-control" required>
+              <option value="">Select Instructor...</option>
+            </select>
+          </div>
+
+          <!-- Date & Status Row -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div class="form-group">
+              <label for="addAttendanceDate" class="form-label">Attendance Date <span class="required" style="color: #ef4444;">*</span></label>
+              <input type="date" id="addAttendanceDate" name="attendance_date" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+              <label for="addStatus" class="form-label">Status <span class="required" style="color: #ef4444;">*</span></label>
+              <select id="addStatus" name="status" class="form-control" required>
+                <option value="Present" selected>Present</option>
+                <option value="Absent">Absent</option>
+                <option value="Late">Late</option>
+                <option value="Excused">Excused</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Remarks -->
+          <div class="form-group">
+            <label for="addRemarks" class="form-label">Remarks (Optional)</label>
+            <input type="text" id="addRemarks" name="remarks" class="form-control" placeholder="e.g. Lecture session, Lab experiment, Approved leave" maxlength="255">
+          </div>
+
+          <!-- Form error feedback -->
+          <div id="addAttendanceError" class="alert alert-danger hidden" style="margin-top: 6px; font-size: 13px;"></div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" data-close-modal="addAttendanceModal">Cancel</button>
+          <button type="submit" id="submitAddAttendanceBtn" class="btn btn-primary btn-sm">Save Attendance</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 2: 12. Edit Attendance Modal -->
+  <div id="editAttendanceModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="editAttendanceModalTitle">
+    <div class="modal-card" style="max-width: 580px; max-height: 90vh; display: flex; flex-direction: column;">
+      <div class="modal-header">
+        <h3 id="editAttendanceModalTitle" class="modal-title" style="display: flex; align-items: center; gap: 8px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ca8a04" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+          </svg>
+          Edit Attendance Record
+        </h3>
+        <button type="button" class="modal-close-btn" data-close-modal="editAttendanceModal" aria-label="Close modal">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <form id="editAttendanceForm" autocomplete="off" style="overflow-y: auto; flex: 1;">
+        <input type="hidden" id="editAttendanceId">
+
+        <div class="modal-body" style="display: flex; flex-direction: column; gap: 14px;">
+          <!-- Student Select -->
+          <div class="form-group">
+            <label for="editStudentId" class="form-label">Student <span class="required" style="color: #ef4444;">*</span></label>
+            <select id="editStudentId" name="student_id" class="form-control" required>
+              <option value="">Select Enrolled Student...</option>
+            </select>
+          </div>
+
+          <!-- Course Select -->
+          <div class="form-group">
+            <label for="editCourseId" class="form-label">Course <span class="required" style="color: #ef4444;">*</span></label>
+            <select id="editCourseId" name="course_id" class="form-control" required>
+              <option value="">Select Course...</option>
+            </select>
+          </div>
+
+          <!-- Teacher Select -->
+          <div class="form-group">
+            <label for="editTeacherId" class="form-label">Teacher / Instructor <span class="required" style="color: #ef4444;">*</span></label>
+            <select id="editTeacherId" name="teacher_id" class="form-control" required>
+              <option value="">Select Instructor...</option>
+            </select>
+          </div>
+
+          <!-- Date & Status Row -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div class="form-group">
+              <label for="editAttendanceDate" class="form-label">Attendance Date <span class="required" style="color: #ef4444;">*</span></label>
+              <input type="date" id="editAttendanceDate" name="attendance_date" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+              <label for="editStatus" class="form-label">Status <span class="required" style="color: #ef4444;">*</span></label>
+              <select id="editStatus" name="status" class="form-control" required>
+                <option value="Present">Present</option>
+                <option value="Absent">Absent</option>
+                <option value="Late">Late</option>
+                <option value="Excused">Excused</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Remarks -->
+          <div class="form-group">
+            <label for="editRemarks" class="form-label">Remarks</label>
+            <input type="text" id="editRemarks" name="remarks" class="form-control" maxlength="255">
+          </div>
+
+          <!-- Form error feedback -->
+          <div id="editAttendanceError" class="alert alert-danger hidden" style="margin-top: 6px; font-size: 13px;"></div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" data-close-modal="editAttendanceModal">Cancel</button>
+          <button type="submit" id="submitEditAttendanceBtn" class="btn btn-primary btn-sm">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 3: 11. View Attendance Details Modal (Two-Column Layout) -->
+  <div id="viewAttendanceModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="viewAttendanceModalTitle">
+    <div class="modal-card" style="max-width: 620px;">
+      <div class="modal-header">
+        <h3 id="viewAttendanceModalTitle" class="modal-title" style="display: flex; align-items: center; gap: 8px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+          Attendance Record Details
+        </h3>
+        <button type="button" class="modal-close-btn" data-close-modal="viewAttendanceModal" aria-label="Close modal">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-body" style="display: flex; flex-direction: column; gap: 16px;">
+        <!-- Status & Date Header Pill -->
+        <div id="viewStatusHeaderBox" style="padding: 12px 18px; border-radius: 10px; background: #f8fafc; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between;">
+          <div>
+            <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 0.04em;">Recorded Status</div>
+            <div id="viewAttendanceStatusBadge" style="margin-top: 4px;">Present</div>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 0.04em;">Attendance Date</div>
+            <div id="viewAttendanceDate" style="font-size: 14px; font-weight: 700; color: #0f172a; margin-top: 4px;">2026-09-12</div>
+          </div>
+        </div>
+
+        <!-- Two-Column Information Layout -->
+        <div class="att-view-grid">
+          <!-- Column 1: Student Information -->
+          <div class="att-info-box">
+            <div class="att-info-box-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              Student Information
+            </div>
+            <div class="att-info-row">
+              <span class="att-info-label">Student:</span>
+              <span class="att-info-val" id="viewStudentName">-</span>
+            </div>
+            <div class="att-info-row">
+              <span class="att-info-label">PRN:</span>
+              <span class="att-info-val" id="viewStudentPRN">-</span>
+            </div>
+            <div class="att-info-row">
+              <span class="att-info-label">Email:</span>
+              <span class="att-info-val" id="viewStudentEmail" style="font-size: 12px;">-</span>
+            </div>
+            <div class="att-info-row">
+              <span class="att-info-label">Department:</span>
+              <span class="att-info-val" id="viewStudentDept">-</span>
+            </div>
+          </div>
+
+          <!-- Column 2: Course & Instructor -->
+          <div class="att-info-box">
+            <div class="att-info-box-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+              </svg>
+              Course & Instructor
+            </div>
+            <div class="att-info-row">
+              <span class="att-info-label">Course Code:</span>
+              <span class="att-info-val" id="viewCourseCode">-</span>
+            </div>
+            <div class="att-info-row">
+              <span class="att-info-label">Course Name:</span>
+              <span class="att-info-val" id="viewCourseName">-</span>
+            </div>
+            <div class="att-info-row">
+              <span class="att-info-label">Teacher:</span>
+              <span class="att-info-val" id="viewTeacherName">-</span>
+            </div>
+            <div class="att-info-row">
+              <span class="att-info-label">Remarks:</span>
+              <span class="att-info-val" id="viewAttendanceRemarks">None</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Course Attendance Metric & Timestamps -->
+        <div class="att-info-box">
+          <div class="att-info-box-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+            Student Course Attendance Ratio
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px;">
+            <span style="color: #64748b;">Overall Participation in Course:</span>
+            <strong id="viewAttendancePctText" style="color: #0f172a;">0.00% (0 / 0 Lectures)</strong>
+          </div>
+          <div style="width: 100%; height: 8px; background-color: #f1f5f9; border-radius: 999px; overflow: hidden; margin-bottom: 12px;">
+            <div id="viewAttendanceProgressBar" style="width: 0%; height: 100%; background-color: #10b981; transition: width 0.4s ease;"></div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: #94a3b8; border-top: 1px solid #f1f5f9; padding-top: 8px;">
+            <span>Created: <strong id="viewCreatedAt" style="color: #64748b;">-</strong></span>
+            <span>Updated: <strong id="viewUpdatedAt" style="color: #64748b;">-</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-close-modal="viewAttendanceModal">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 4: Student-Wise Attendance Breakdown Modal -->
+  <div id="studentAttendanceModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="studentAttendanceModalTitle">
+    <div class="modal-card" style="max-width: 740px; max-height: 90vh; display: flex; flex-direction: column;">
+      <div class="modal-header">
+        <h3 id="studentAttendanceModalTitle" class="modal-title" style="display: flex; align-items: center; gap: 8px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          Student Attendance Profile
+        </h3>
+        <button type="button" class="modal-close-btn" data-close-modal="studentAttendanceModal" aria-label="Close modal">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-body" style="overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 16px;">
+        <!-- Student Header Card -->
+        <div style="padding: 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h4 id="studentModalName" style="margin: 0 0 4px; font-size: 16px; color: #0f172a; font-weight: 700;">Student Name</h4>
+            <p id="studentModalMeta" style="margin: 0; font-size: 12.5px; color: #64748b;">PRN: - | Department: - | Sem: -</p>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: 11px; text-transform: uppercase; color: #64748b; font-weight: 700; letter-spacing: 0.04em;">Overall Attendance</div>
+            <div id="studentModalOverallPct" style="font-size: 22px; font-weight: 800; color: #10b981;">0.00%</div>
+            <div id="studentModalLecturesCount" style="font-size: 11.5px; color: #64748b;">0 / 0 Present</div>
+          </div>
+        </div>
+
+        <!-- Course-wise breakdown table -->
+        <div>
+          <h4 style="margin: 0 0 8px; font-size: 13px; text-transform: uppercase; color: #334155; font-weight: 700; letter-spacing: 0.03em;">Course-Wise Attendance Breakdown</h4>
+          <div class="table-responsive">
+            <table class="erp-table" style="font-size: 12.5px;">
+              <thead>
+                <tr>
+                  <th scope="col">Course</th>
+                  <th scope="col">Conducted</th>
+                  <th scope="col">Present</th>
+                  <th scope="col">Absent</th>
+                  <th scope="col">Attendance %</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody id="studentCoursesTableBody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-close-modal="studentAttendanceModal">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 5: Course-Wise Attendance Modal -->
+  <div id="courseAttendanceModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="courseAttendanceModalTitle">
+    <div class="modal-card" style="max-width: 780px; max-height: 90vh; display: flex; flex-direction: column;">
+      <div class="modal-header">
+        <h3 id="courseAttendanceModalTitle" class="modal-title" style="display: flex; align-items: center; gap: 8px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+          </svg>
+          Course Attendance Summary
+        </h3>
+        <button type="button" class="modal-close-btn" data-close-modal="courseAttendanceModal" aria-label="Close modal">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-body" style="overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 16px;">
+        <!-- Course Header Card -->
+        <div style="padding: 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h4 id="courseModalTitle" style="margin: 0 0 4px; font-size: 16px; color: #0f172a; font-weight: 700;">Course Code - Course Name</h4>
+            <p id="courseModalMeta" style="margin: 0; font-size: 12.5px; color: #64748b;">Dept: - | Semester: - | Enrolled Students: 0</p>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: 11px; text-transform: uppercase; color: #64748b; font-weight: 700; letter-spacing: 0.04em;">Class Average</div>
+            <div id="courseModalAvgPct" style="font-size: 22px; font-weight: 800; color: #7c3aed;">0.00%</div>
+          </div>
+        </div>
+
+        <!-- Enrolled Students Breakdown table -->
+        <div>
+          <h4 style="margin: 0 0 8px; font-size: 13px; text-transform: uppercase; color: #334155; font-weight: 700; letter-spacing: 0.03em;">Enrolled Students Attendance</h4>
+          <div class="table-responsive">
+            <table class="erp-table" style="font-size: 12.5px;">
+              <thead>
+                <tr>
+                  <th scope="col">Student</th>
+                  <th scope="col">PRN</th>
+                  <th scope="col">Total</th>
+                  <th scope="col">Present</th>
+                  <th scope="col">Absent</th>
+                  <th scope="col">Attendance %</th>
+                  <th scope="col">Alert</th>
+                </tr>
+              </thead>
+              <tbody id="courseStudentsTableBody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-close-modal="courseAttendanceModal">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 6: 13. Delete Confirmation Modal -->
+  <div id="confirmModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="confirmModalTitle">
+    <div class="modal-card" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 id="confirmModalTitle" class="modal-title" style="display: flex; align-items: center; gap: 8px; color: #dc2626;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+          </svg>
+          Delete Attendance Record?
+        </h3>
+        <button type="button" class="modal-close-btn" data-close-modal="confirmModal" aria-label="Close modal">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p id="confirmModalMessage" style="font-size: 14px; color: #334155; line-height: 1.5; margin: 0 0 8px;"></p>
+        <p style="font-size: 13px; color: #dc2626; font-weight: 500; margin: 0;">This attendance record will be permanently removed.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-close-modal="confirmModal">Cancel</button>
+        <button type="button" id="confirmModalActionBtn" class="btn btn-danger btn-sm">Delete Record</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Core Portal Scripts -->
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/admin-attendance.js"></script>
+  <script src="/js/admin-shell.js"></script>
+  <script src="/js/user-menu.js"></script>
+</body>
+</html>
