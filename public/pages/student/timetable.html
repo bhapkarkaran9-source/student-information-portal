@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/dashboard.css">
   <link rel="stylesheet" href="/css/student-dashboard.css">
+  <link rel="stylesheet" href="/css/student-timetable.css">
 </head>
 <body class="student-portal-body">
 
@@ -151,7 +152,7 @@
       <div class="header-right">
         <button type="button" id="headerNotificationBtn" class="header-notify-btn" title="View notifications" aria-label="Notifications">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-          <span id="headerNotificationDot" class="header-notify-badge"></span>
+          <span id="headerNotificationDot" class="header-notify-badge hidden"></span>
         </button>
         <div class="profile-dropdown-wrapper" id="profileDropdownWrapper">
           <button type="button" id="profileDropdownBtn" class="header-profile-btn" aria-haspopup="true" aria-expanded="false">
@@ -326,29 +327,46 @@
 
       <!-- VIEW 3: FULL WEEK TIMETABLE -->
       <div id="sectionViewWeek" class="timetable-view-section" style="display: none;">
-        <!-- Day Tabs -->
-        <div class="card mb-4" style="padding: 12px 16px;">
-          <div style="display: flex; gap: 8px; flex-wrap: wrap;" id="dayTabsContainer">
-            <button type="button" class="btn btn-primary day-tab active" data-day="Monday">Monday</button>
-            <button type="button" class="btn btn-secondary day-tab" data-day="Tuesday">Tuesday</button>
-            <button type="button" class="btn btn-secondary day-tab" data-day="Wednesday">Wednesday</button>
-            <button type="button" class="btn btn-secondary day-tab" data-day="Thursday">Thursday</button>
-            <button type="button" class="btn btn-secondary day-tab" data-day="Friday">Friday</button>
-            <button type="button" class="btn btn-secondary day-tab" data-day="Saturday">Saturday</button>
+        <section class="timetable-week-card mb-4">
+          <!-- Timetable Header -->
+          <div class="timetable-week-header">
+            <div class="timetable-header-left">
+              <div class="timetable-title-row">
+                <h3 class="timetable-title">Full Week Timetable</h3>
+                <span class="timetable-active-day-pill" id="dayTitleHeading">Monday Lecture Schedule</span>
+              </div>
+              <p class="timetable-subtitle">Weekly schedule and lecture details</p>
+            </div>
+            <div class="timetable-header-right">
+              <span class="timetable-live-badge" id="weekLiveSyncBadge">
+                <span class="pulse-dot"></span>
+                <span>Live Auto-Sync</span>
+              </span>
+              <button type="button" class="btn btn-secondary btn-sm timetable-print-btn" onclick="window.print()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                <span>Print Timetable</span>
+              </button>
+            </div>
           </div>
-        </div>
 
-        <!-- Schedule Table -->
-        <section class="card mb-4">
-          <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
-            <h3 class="card-title" id="dayTitleHeading">Monday Lecture Schedule</h3>
-            <button type="button" class="btn btn-secondary btn-sm" onclick="window.print()">Print Timetable</button>
+          <!-- Segmented Day Tabs -->
+          <div class="timetable-day-tabs-wrapper">
+            <div class="timetable-day-tabs" id="dayTabsContainer" role="tablist" aria-label="Timetable Days">
+              <button type="button" class="day-tab active" data-day="Monday" role="tab" aria-selected="true">Monday</button>
+              <button type="button" class="day-tab" data-day="Tuesday" role="tab" aria-selected="false">Tuesday</button>
+              <button type="button" class="day-tab" data-day="Wednesday" role="tab" aria-selected="false">Wednesday</button>
+              <button type="button" class="day-tab" data-day="Thursday" role="tab" aria-selected="false">Thursday</button>
+              <button type="button" class="day-tab" data-day="Friday" role="tab" aria-selected="false">Friday</button>
+              <button type="button" class="day-tab" data-day="Saturday" role="tab" aria-selected="false">Saturday</button>
+            </div>
           </div>
-          <div class="table-responsive">
-            <table class="data-table">
+
+          <!-- Schedule Desktop Table Wrapper -->
+          <div id="weekTimetableTableWrapper" class="timetable-table-container">
+            <table class="data-table timetable-week-table">
               <thead>
                 <tr>
-                  <th style="width: 180px;">Time Slot</th>
+                  <th style="width: 190px;">Time Slot</th>
                   <th>Course Name</th>
                   <th>Course Code</th>
                   <th>Instructor</th>
@@ -358,12 +376,29 @@
               </thead>
               <tbody id="scheduleTbody">
                 <tr>
-                  <td colspan="6" style="text-align: center; padding: 48px 16px; color: var(--stu-text-muted);">
+                  <td colspan="6" style="text-align: center; padding: 48px 16px; color: #64748b;">
                     Loading schedule...
                   </td>
                 </tr>
               </tbody>
             </table>
+          </div>
+
+          <!-- Schedule Mobile Cards Container -->
+          <div id="weekTimetableMobileCards" class="timetable-mobile-cards-container"></div>
+
+          <!-- Empty Day State -->
+          <div id="weekTimetableEmptyState" class="timetable-empty-state" style="display: none;">
+            <div class="empty-icon-wrap">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+            </div>
+            <div class="empty-title" id="weekEmptyStateTitle">No lectures scheduled for Wednesday.</div>
+            <div class="empty-desc">Enjoy your open schedule for self-study, assignments, or laboratory preparation.</div>
           </div>
         </section>
       </div>
@@ -803,50 +838,103 @@
       // 3. Render Schedule for Full Week View
       function renderScheduleForDay(dayName) {
         const tbody = document.getElementById('scheduleTbody');
+        const mobileContainer = document.getElementById('weekTimetableMobileCards');
+        const tableWrapper = document.getElementById('weekTimetableTableWrapper');
+        const emptyState = document.getElementById('weekTimetableEmptyState');
+        const emptyTitle = document.getElementById('weekEmptyStateTitle');
         const heading = document.getElementById('dayTitleHeading');
         if (heading) heading.textContent = `${dayName} Lecture Schedule`;
-        if (!tbody) return;
 
         const daySlots = allTimetable.filter(t => (t.day_of_week || '').toLowerCase() === dayName.toLowerCase());
 
         if (daySlots.length === 0) {
-          tbody.innerHTML = `
-            <tr>
-              <td colspan="6" style="text-align: center; padding: 48px 16px; color: #64748b;">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" style="margin-bottom: 8px;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                <div style="font-weight: 600; font-size: 14px; color: #334155;">No lectures scheduled for ${escapeHtml(dayName)}</div>
-                <div style="font-size: 12px; color: #64748b; margin-top: 4px;">Self-study or lab work session</div>
-              </td>
-            </tr>
-          `;
+          if (emptyState) {
+            emptyState.style.display = 'block';
+            if (emptyTitle) emptyTitle.textContent = `No lectures scheduled for ${escapeHtml(dayName)}.`;
+          }
+          if (tableWrapper) tableWrapper.style.display = 'none';
+          if (mobileContainer) {
+            mobileContainer.style.display = 'none';
+            mobileContainer.innerHTML = '';
+          }
+          if (tbody) tbody.innerHTML = '';
           return;
         }
 
+        if (emptyState) emptyState.style.display = 'none';
+        if (tableWrapper) tableWrapper.style.display = '';
+        if (mobileContainer) mobileContainer.style.display = '';
+
         daySlots.sort((a, b) => (a.start_time || '').localeCompare(b.start_time || ''));
 
-        tbody.innerHTML = daySlots.map(slot => {
-          const s12 = formatTimeTo12Hour(slot.start_time);
-          const e12 = formatTimeTo12Hour(slot.end_time);
-          const timeRange = (s12 && e12) ? `${s12} - ${e12}` : (slot.start_time || '--');
-          const type = slot.course_type || 'Theory';
+        // 1. Render Desktop Table Rows
+        if (tbody) {
+          tbody.innerHTML = daySlots.map(slot => {
+            const s12 = formatTimeTo12Hour(slot.start_time);
+            const e12 = formatTimeTo12Hour(slot.end_time);
+            const timeRange = (s12 && e12) ? `${s12} - ${e12}` : (slot.start_time || '--');
+            const type = slot.course_type || 'Theory';
 
-          return `
-            <tr>
-              <td style="font-weight: 700; color: #4338ca; white-space: nowrap;">
-                <span style="background: #e0e7ff; padding: 4px 10px; border-radius: 6px;">${escapeHtml(timeRange)}</span>
-              </td>
-              <td style="font-weight: 600; color: #0f172a;">${escapeHtml(slot.course_name || 'Class Session')}</td>
-              <td><span class="badge" style="background: #f1f5f9; color: #334155; font-weight: 600;">${escapeHtml(slot.course_code || '-')}</span></td>
-              <td style="color: #475569;">${escapeHtml(slot.teacher_name || 'Faculty Staff')}</td>
-              <td><span class="badge" style="background: #f8fafc; border: 1px solid #e2e8f0; color: #0f172a; font-weight: 600;">${escapeHtml(slot.room_no || 'TBA')}</span></td>
-              <td>
-                <span class="badge" style="background: #dcfce7; color: #15803d; font-weight: 600;">
-                  ${escapeHtml(type)}
-                </span>
-              </td>
-            </tr>
-          `;
-        }).join('');
+            return `
+              <tr>
+                <td class="col-timeslot">
+                  <span class="slot-time-badge">${escapeHtml(timeRange)}</span>
+                </td>
+                <td class="col-course-name">
+                  <span class="course-name-text">${escapeHtml(slot.course_name || 'Class Session')}</span>
+                </td>
+                <td class="col-course-code">
+                  <span class="course-code-badge">${escapeHtml(slot.course_code || '-')}</span>
+                </td>
+                <td class="col-instructor">
+                  <span class="instructor-text">${escapeHtml(slot.teacher_name || 'Faculty Staff')}</span>
+                </td>
+                <td class="col-room">
+                  <span class="room-venue-badge">${escapeHtml(slot.room_no || 'TBA')}</span>
+                </td>
+                <td class="col-type">
+                  <span class="course-type-badge">${escapeHtml(type)}</span>
+                </td>
+              </tr>
+            `;
+          }).join('');
+        }
+
+        // 2. Render Mobile Lecture Cards (<= 768px)
+        if (mobileContainer) {
+          mobileContainer.innerHTML = daySlots.map(slot => {
+            const s12 = formatTimeTo12Hour(slot.start_time);
+            const e12 = formatTimeTo12Hour(slot.end_time);
+            const timeRange = (s12 && e12) ? `${s12} - ${e12}` : (slot.start_time || '--');
+            const type = slot.course_type || 'Theory';
+
+            return `
+              <div class="timetable-lecture-card">
+                <div class="card-top-row">
+                  <div class="card-time-slot">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+                    <span>${escapeHtml(timeRange)}</span>
+                  </div>
+                  <span class="course-type-badge">${escapeHtml(type)}</span>
+                </div>
+                <div class="card-course-row">
+                  <div class="card-course-name">${escapeHtml(slot.course_name || 'Class Session')}</div>
+                  <span class="course-code-badge">${escapeHtml(slot.course_code || '-')}</span>
+                </div>
+                <div class="card-meta-grid">
+                  <div class="meta-item">
+                    <span class="meta-label">Instructor</span>
+                    <span class="meta-value">${escapeHtml(slot.teacher_name || 'Faculty Staff')}</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-label">Room / Venue</span>
+                    <span class="meta-value room-val">${escapeHtml(slot.room_no || 'TBA')}</span>
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
       }
 
       async function loadTimetable() {
@@ -948,6 +1036,13 @@
         if (kpiSub) kpiSub.textContent = '0 Courses';
         if (kpiHall) kpiHall.textContent = 'Not Assigned';
         if (kpiHallTrend) kpiHallTrend.textContent = 'No Room Assigned';
+
+        const emptyState = document.getElementById('weekTimetableEmptyState');
+        const tableWrapper = document.getElementById('weekTimetableTableWrapper');
+        const mobileCards = document.getElementById('weekTimetableMobileCards');
+        if (emptyState) emptyState.style.display = 'none';
+        if (tableWrapper) tableWrapper.style.display = '';
+        if (mobileCards) mobileCards.innerHTML = '';
 
         const tbody = document.getElementById('scheduleTbody');
         if (tbody) {

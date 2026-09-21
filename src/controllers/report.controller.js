@@ -468,9 +468,11 @@ const exportReportExcel = async (req, res) => {
  */
 const getFilterOptions = async (req, res) => {
   try {
+    const courseId = req.query.course_id || req.query.courseId || null;
     const options = await Report.getReportFilterOptions({
       role: req.user.role,
-      userId: req.user.user_id
+      userId: req.user.user_id,
+      courseId
     });
 
     return res.status(200).json({

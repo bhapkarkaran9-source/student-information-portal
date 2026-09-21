@@ -1,0 +1,558 @@
+/* ==========================================================================
+   Student Timetable - Full Week Timetable & Responsive Styling
+   Student Portal Professional Blue Theme
+   ========================================================================== */
+
+/* Full Week Timetable Main Section Card */
+.timetable-week-card {
+  width: 100% !important;
+  max-width: none !important;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  padding: 20px 24px;
+  box-sizing: border-box;
+}
+
+/* Header Section */
+.timetable-week-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: 18px;
+}
+
+.timetable-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.timetable-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.timetable-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+  letter-spacing: -0.2px;
+}
+
+.timetable-active-day-pill {
+  font-size: 12px;
+  font-weight: 600;
+  color: #2563eb;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.timetable-subtitle {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+}
+
+.timetable-header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Live Auto-Sync Badge */
+.timetable-live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 9999px;
+  letter-spacing: 0.2px;
+}
+
+.timetable-live-badge .pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #2563eb;
+  display: inline-block;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+  animation: pulseSync 2s infinite;
+}
+
+@keyframes pulseSync {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.5);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 5px rgba(37, 99, 235, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(37, 99, 235, 0);
+  }
+}
+
+/* Print Button */
+.timetable-print-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.timetable-print-btn:hover {
+  background: #f8fafc;
+  color: #0f172a;
+  border-color: #94a3b8;
+}
+
+/* Segmented Day Tabs */
+.timetable-day-tabs-wrapper {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 6px 8px;
+  margin-bottom: 20px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.timetable-day-tabs-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+.timetable-day-tabs {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  min-width: min-content;
+}
+
+.day-tab {
+  padding: 8px 18px;
+  border-radius: 6px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #64748b;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  box-sizing: border-box;
+}
+
+.day-tab:hover:not(.active) {
+  background: #eff6ff;
+  color: #2563eb;
+  border-color: #bfdbfe;
+}
+
+.day-tab.active {
+  background: #2563eb !important;
+  color: #ffffff !important;
+  border-color: #2563eb !important;
+  box-shadow: 0 1px 3px rgba(37, 99, 235, 0.25);
+}
+
+/* Desktop Timetable Table Container */
+.timetable-table-container {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+}
+
+.timetable-week-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.timetable-week-table th {
+  background: #f8fafc;
+  color: #0f172a;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.3px;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 14px 16px;
+  white-space: nowrap;
+}
+
+.timetable-week-table td {
+  padding: 14px 16px;
+  vertical-align: middle;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 13.5px;
+  color: #334155;
+}
+
+.timetable-week-table tbody tr {
+  transition: background-color 0.15s ease;
+}
+
+.timetable-week-table tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+.timetable-week-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Column Specific Styles */
+.col-timeslot {
+  white-space: nowrap;
+}
+
+.slot-time-badge {
+  font-weight: 600;
+  color: #2563eb;
+  font-size: 13px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  padding: 4px 10px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.course-name-text {
+  font-weight: 600;
+  color: #0f172a;
+  font-size: 14px;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.course-code-badge {
+  background: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+  font-weight: 600;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 12px;
+  display: inline-block;
+  letter-spacing: 0.3px;
+}
+
+.instructor-text {
+  color: #0f172a;
+  font-weight: 500;
+  font-size: 13.5px;
+  word-break: break-word;
+}
+
+.room-venue-badge {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #0f172a;
+  font-weight: 600;
+  font-size: 12.5px;
+  border-radius: 4px;
+  padding: 3px 8px;
+  display: inline-block;
+}
+
+.course-type-badge {
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
+  color: #1d4ed8;
+  font-weight: 600;
+  font-size: 12px;
+  border-radius: 4px;
+  padding: 2px 8px;
+  display: inline-block;
+  text-transform: capitalize;
+}
+
+/* Mobile Lecture Cards Container */
+.timetable-mobile-cards-container {
+  display: none;
+  width: 100%;
+}
+
+.timetable-lecture-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-left: 4px solid #2563eb;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.card-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.card-time-slot {
+  font-weight: 600;
+  font-size: 13.5px;
+  color: #2563eb;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+.card-course-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.card-course-name {
+  font-weight: 600;
+  font-size: 15px;
+  color: #0f172a;
+  line-height: 1.35;
+  flex: 1 1 auto;
+}
+
+.card-meta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.meta-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.meta-value {
+  font-size: 13px;
+  font-weight: 500;
+  color: #0f172a;
+  word-break: break-word;
+}
+
+.meta-value.room-val {
+  font-weight: 600;
+}
+
+/* Empty Day State */
+.timetable-empty-state {
+  text-align: center;
+  padding: 48px 20px;
+  background: #ffffff;
+  border: 1px dashed #cbd5e1;
+  border-radius: 8px;
+  margin: 4px 0;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.timetable-empty-state .empty-icon-wrap {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #eff6ff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  color: #2563eb;
+}
+
+.timetable-empty-state .empty-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 6px;
+}
+
+.timetable-empty-state .empty-desc {
+  font-size: 13px;
+  color: #64748b;
+  max-width: 420px;
+  margin: 0 auto;
+  line-height: 1.45;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 768px) {
+  .timetable-week-card {
+    padding: 14px 14px;
+  }
+
+  .timetable-week-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding-bottom: 14px;
+    margin-bottom: 14px;
+  }
+
+  .timetable-header-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .timetable-table-container {
+    display: none !important;
+  }
+
+  .timetable-mobile-cards-container {
+    display: flex !important;
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .card-meta-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+
+/* Print Styles */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  .student-sidebar,
+  .sidebar-backdrop,
+  .student-header,
+  .toast-container,
+  .stats-grid,
+  #viewTabsContainer,
+  .timetable-day-tabs-wrapper,
+  .timetable-print-btn,
+  .timetable-live-badge,
+  #sectionViewToday,
+  #sectionViewUpcoming,
+  .timetable-mobile-cards-container,
+  .timetable-empty-state {
+    display: none !important;
+  }
+
+  #sectionViewWeek {
+    display: block !important;
+  }
+
+  .timetable-week-card {
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+
+  .timetable-week-header {
+    border-bottom: 2px solid #000000 !important;
+    margin-bottom: 16px !important;
+    padding-bottom: 8px !important;
+  }
+
+  .timetable-title {
+    color: #000000 !important;
+    font-size: 20px !important;
+  }
+
+  .timetable-active-day-pill {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: 1px solid #000000 !important;
+  }
+
+  .timetable-table-container {
+    display: block !important;
+    border: 1px solid #000000 !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+  }
+
+  .timetable-week-table {
+    width: 100% !important;
+  }
+
+  .timetable-week-table th,
+  .timetable-week-table td {
+    border: 1px solid #999999 !important;
+    padding: 8px 10px !important;
+    color: #000000 !important;
+  }
+
+  .timetable-week-table th {
+    background-color: #f1f5f9 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .slot-time-badge,
+  .course-code-badge,
+  .room-venue-badge,
+  .course-type-badge {
+    background: transparent !important;
+    border: none !important;
+    color: #000000 !important;
+    padding: 0 !important;
+  }
+}

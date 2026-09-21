@@ -656,7 +656,7 @@ const getGradeReport = async (filters = {}) => {
 // 4. PERFORMANCE REPORT
 // ============================================================================
 const getPerformanceReport = async (filters = {}) => {
-  const { student_id, department_id, semester, academic_year, allowedCourseIds } = filters;
+  const { student_id, course_id, department_id, semester, academic_year, allowedCourseIds } = filters;
 
   const whereConditions = [];
   const queryParams = [];
@@ -664,6 +664,14 @@ const getPerformanceReport = async (filters = {}) => {
   if (student_id) {
     whereConditions.push('s.student_id = ?');
     queryParams.push(parseInt(student_id, 10));
+  } else if (course_id) {
+    const cid = parseInt(course_id, 10);
+    whereConditions.push('s.student_id IN (SELECT DISTINCT student_id FROM enrollments WHERE course_id = ?)');
+    queryParams.push(cid);
+  } else if (allowedCourseIds && allowedCourseIds.length > 0) {
+    const placeholders = allowedCourseIds.map(() => '?').join(',');
+    whereConditions.push(`s.student_id IN (SELECT DISTINCT student_id FROM enrollments WHERE course_id IN (${placeholders}))`);
+    queryParams.push(...allowedCourseIds);
   }
 
   if (department_id) {
@@ -708,14 +716,16 @@ const getPerformanceReport = async (filters = {}) => {
     const attFilter = { student_id: s.student_id };
     if (academic_year) attFilter.academic_year = academic_year;
     if (semester) attFilter.semester = semester;
-    if (allowedCourseIds) attFilter.allowedCourseIds = allowedCourseIds;
+    if (course_id) attFilter.course_id = course_id;
+    else if (allowedCourseIds) attFilter.allowedCourseIds = allowedCourseIds;
     const attRes = await getAttendanceReport(attFilter);
 
     // 2. Get grades for student
     const gradeFilter = { student_id: s.student_id };
     if (academic_year) gradeFilter.academic_year = academic_year;
     if (semester) gradeFilter.semester = semester;
-    if (allowedCourseIds) gradeFilter.allowedCourseIds = allowedCourseIds;
+    if (course_id) gradeFilter.course_id = course_id;
+    else if (allowedCourseIds) gradeFilter.allowedCourseIds = allowedCourseIds;
     const gradeRes = await getGradeReport(gradeFilter);
 
     const attPct = attRes.summary.overall_percentage;
@@ -1147,7 +1157,7 @@ const getTimetableReport = async (filters = {}) => {
 // ============================================================================
 // FILTER OPTIONS DROPDOWN HELPER
 // ============================================================================
-const getReportFilterOptions = async ({ role, userId }) => {
+const getReportFilterOptions = async ({ role, userId, courseId }) => {
   // Departments
   const [departments] = await pool.query('SELECT department_id, department_code, department_name FROM departments ORDER BY department_name ASC');
 
@@ -1229,18 +1239,31 @@ const getReportFilterOptions = async ({ role, userId }) => {
   // Students list (for Admin, or Teacher's enrolled students)
   let students = [];
   if (role === 'ADMIN') {
-    const [sRows] = await pool.query(`
+    let sql = `
       SELECT s.student_id, s.prn_number, TRIM(CONCAT(u.first_name, ' ', u.last_name)) AS full_name
       FROM students s
       INNER JOIN users u ON s.user_id = u.user_id
-      ORDER BY u.first_name ASC, u.last_name ASC
-    `);
+    `;
+    const params = [];
+    if (courseId) {
+      sql += ` INNER JOIN enrollments e ON s.student_id = e.student_id WHERE e.course_id = ? `;
+      params.push(parseInt(courseId, 10));
+    }
+    sql += ` ORDER BY u.first_name ASC, u.last_name ASC `;
+    const [sRows] = await pool.query(sql, params);
     students = sRows;
   } else if (role === 'TEACHER') {
     const teacherId = await getTeacherIdByUserId(userId);
     const assignedIds = teacherId ? await getTeacherAssignedCourseIds(teacherId) : [];
     if (assignedIds.length > 0) {
-      const placeholders = assignedIds.map(() => '?').join(',');
+      let targetCourseIds = assignedIds;
+      if (courseId) {
+        const cid = parseInt(courseId, 10);
+        if (assignedIds.includes(cid)) {
+          targetCourseIds = [cid];
+        }
+      }
+      const placeholders = targetCourseIds.map(() => '?').join(',');
       const [sRows] = await pool.query(`
         SELECT DISTINCT s.student_id, s.prn_number, TRIM(CONCAT(u.first_name, ' ', u.last_name)) AS full_name, u.first_name, u.last_name
         FROM enrollments e
@@ -1248,7 +1271,7 @@ const getReportFilterOptions = async ({ role, userId }) => {
         INNER JOIN users u ON s.user_id = u.user_id
         WHERE e.course_id IN (${placeholders})
         ORDER BY u.first_name ASC, u.last_name ASC
-      `, assignedIds);
+      `, targetCourseIds);
       students = sRows;
     }
   }

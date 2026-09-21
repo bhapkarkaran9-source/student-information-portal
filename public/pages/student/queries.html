@@ -152,7 +152,7 @@
       <div class="header-right">
         <button type="button" id="headerNotificationBtn" class="header-notify-btn" title="View notifications" aria-label="Notifications">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-          <span id="headerNotificationDot" class="header-notify-badge"></span>
+          <span id="headerNotificationDot" class="header-notify-badge hidden"></span>
         </button>
         <div class="profile-dropdown-wrapper" id="profileDropdownWrapper">
           <button type="button" id="profileDropdownBtn" class="header-profile-btn" aria-haspopup="true" aria-expanded="false">
@@ -171,13 +171,13 @@
     <main class="dashboard-main">
       
       <!-- Top Action Bar -->
-      <div class="page-header-row mb-4" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
-        <div>
-          <h2 style="font-size: 18px; font-weight: 700; margin: 0; color: #0f172a;">Student Queries</h2>
-          <p class="text-muted" style="margin: 2px 0 0 0; font-size: 13.5px;">Manage and track your questions with faculty</p>
+      <div class="query-header-row">
+        <div class="query-header-left">
+          <h2 class="query-header-title">Student Queries</h2>
+          <p class="query-header-subtitle">Manage and track your questions with faculty</p>
         </div>
-        <div>
-          <button type="button" id="btnOpenNewQuery" class="btn btn-primary" style="padding: 9px 18px; font-size: 13.5px; font-weight: 600; border-radius: 6px; display: inline-flex; align-items: center; gap: 6px;">
+        <div class="query-header-actions">
+          <button type="button" id="btnOpenNewQuery" class="btn-ask-teacher" title="Ask a Teacher">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="12" y1="5" x2="12" y2="19"></line>
               <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -187,59 +187,59 @@
         </div>
       </div>
 
-      <!-- KPI Metric Cards (4 Bounded Cards) -->
-      <div class="kpi-grid mb-4" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
-        <div class="kpi-card card-border-blue" style="background: #ffffff; border: 1px solid #e2e8f0; border-left: 4px solid #2563eb; border-radius: 8px; padding: 18px 20px; display: flex; align-items: center; gap: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);">
-          <div class="kpi-icon" style="background-color: #eff6ff; color: #2563eb; width: 48px; height: 48px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <!-- KPI Metric Cards (4/2/1 Responsive Grid) -->
+      <div class="queries-kpi-grid">
+        <div class="queries-kpi-card kpi-total">
+          <div class="kpi-icon-wrap kpi-icon-total">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
             </svg>
           </div>
-          <div class="kpi-content">
-            <span class="kpi-label" style="font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase;">Total Queries</span>
-            <div id="kpiTotalQueries" class="kpi-value card-val-blue" style="font-size: 24px; font-weight: 700; color: #2563eb; line-height: 1.2;">0</div>
-            <span class="kpi-meta" style="font-size: 12px; color: #94a3b8;">All submitted questions</span>
+          <div class="kpi-meta-wrap">
+            <span class="kpi-card-title">Total Queries</span>
+            <div id="kpiTotalQueries" class="kpi-card-number num-total">0</div>
+            <span class="kpi-card-desc">All submitted questions</span>
           </div>
         </div>
 
-        <div class="kpi-card card-border-orange" style="background: #ffffff; border: 1px solid #e2e8f0; border-left: 4px solid #f59e0b; border-radius: 8px; padding: 18px 20px; display: flex; align-items: center; gap: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);">
-          <div class="kpi-icon" style="background-color: #fef3c7; color: #b45309; width: 48px; height: 48px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <div class="queries-kpi-card kpi-open">
+          <div class="kpi-icon-wrap kpi-icon-open">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="10"></circle>
               <polyline points="12 6 12 12 14 14"></polyline>
             </svg>
           </div>
-          <div class="kpi-content">
-            <span class="kpi-label" style="font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase;">Open</span>
-            <div id="kpiOpenQueries" class="kpi-value card-val-orange" style="font-size: 24px; font-weight: 700; color: #f59e0b; line-height: 1.2;">0</div>
-            <span class="kpi-meta" style="font-size: 12px; color: #94a3b8;">Pending faculty response</span>
+          <div class="kpi-meta-wrap">
+            <span class="kpi-card-title">Open</span>
+            <div id="kpiOpenQueries" class="kpi-card-number num-open">0</div>
+            <span class="kpi-card-desc">Pending faculty response</span>
           </div>
         </div>
 
-        <div class="kpi-card card-border-indigo" style="background: #ffffff; border: 1px solid #e2e8f0; border-left: 4px solid #4f46e5; border-radius: 8px; padding: 18px 20px; display: flex; align-items: center; gap: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);">
-          <div class="kpi-icon" style="background-color: #eef2ff; color: #4f46e5; width: 48px; height: 48px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <div class="queries-kpi-card kpi-inprogress">
+          <div class="kpi-icon-wrap kpi-icon-inprogress">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
             </svg>
           </div>
-          <div class="kpi-content">
-            <span class="kpi-label" style="font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase;">In Progress</span>
-            <div id="kpiInProgressQueries" class="kpi-value card-val-indigo" style="font-size: 24px; font-weight: 700; color: #4f46e5; line-height: 1.2;">0</div>
-            <span class="kpi-meta" style="font-size: 12px; color: #94a3b8;">Under discussion</span>
+          <div class="kpi-meta-wrap">
+            <span class="kpi-card-title">In Progress</span>
+            <div id="kpiInProgressQueries" class="kpi-card-number num-inprogress">0</div>
+            <span class="kpi-card-desc">Under discussion</span>
           </div>
         </div>
 
-        <div class="kpi-card card-border-green" style="background: #ffffff; border: 1px solid #e2e8f0; border-left: 4px solid #10b981; border-radius: 8px; padding: 18px 20px; display: flex; align-items: center; gap: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);">
-          <div class="kpi-icon" style="background-color: #d1fae5; color: #047857; width: 48px; height: 48px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <div class="queries-kpi-card kpi-resolved">
+          <div class="kpi-icon-wrap kpi-icon-resolved">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
               <polyline points="22 4 12 14.01 9 11.01"></polyline>
             </svg>
           </div>
-          <div class="kpi-content">
-            <span class="kpi-label" style="font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase;">Resolved</span>
-            <div id="kpiResolvedQueries" class="kpi-value card-val-green" style="font-size: 24px; font-weight: 700; color: #10b981; line-height: 1.2;">0</div>
-            <span class="kpi-meta" style="font-size: 12px; color: #94a3b8;">Completed questions</span>
+          <div class="kpi-meta-wrap">
+            <span class="kpi-card-title">Resolved</span>
+            <div id="kpiResolvedQueries" class="kpi-card-number num-resolved">0</div>
+            <span class="kpi-card-desc">Completed questions</span>
           </div>
         </div>
       </div>
@@ -354,11 +354,11 @@
   <!-- ========================================================================
        MODAL: CREATE NEW QUERY
        ======================================================================== -->
-  <div id="newQueryModal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
-    <div class="modal-dialog" style="max-width: 580px;">
+  <div id="newQueryModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="newQueryModalTitle">
+    <div class="modal-dialog">
       <div class="modal-header">
-        <h2 class="modal-title">Ask a Teacher</h2>
-        <button type="button" class="modal-close" data-dismiss="modal">&times;</button>
+        <h2 class="modal-title" id="newQueryModalTitle">Ask a Teacher</h2>
+        <button type="button" class="modal-close" data-dismiss="modal" aria-label="Close dialog">&times;</button>
       </div>
       <form id="newQueryForm">
         <div class="modal-body">
@@ -406,14 +406,14 @@
   <!-- ========================================================================
        MODAL: CONVERSATION THREAD & REPLY
        ======================================================================== -->
-  <div id="threadModal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
-    <div class="modal-dialog modal-lg" style="max-width: 720px;">
+  <div id="threadModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="threadModalTitle">
+    <div class="modal-dialog modal-lg">
       <div class="modal-header">
         <div>
           <h2 class="modal-title" id="threadModalTitle">Query Discussion</h2>
           <span class="text-muted" style="font-size: 13px;" id="threadModalMeta"></span>
         </div>
-        <button type="button" class="modal-close" data-dismiss="modal">&times;</button>
+        <button type="button" class="modal-close" data-dismiss="modal" aria-label="Close dialog">&times;</button>
       </div>
       <div class="modal-body" style="max-height: 75vh; overflow-y: auto;">
         

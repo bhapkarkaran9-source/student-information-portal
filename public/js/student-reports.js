@@ -74,6 +74,7 @@
   const previewSummaryGrid = document.getElementById('previewSummaryGrid');
   const reportPreviewThead = document.getElementById('reportPreviewThead');
   const reportPreviewTbody = document.getElementById('reportPreviewTbody');
+  const reportPreviewMobileCards = document.getElementById('reportPreviewMobileCards');
   const toastContainer = document.getElementById('toastContainer');
 
   if (navUserName) {
@@ -99,25 +100,88 @@
     }
   }
 
+  function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  function formatCellValue(key, val, row = {}) {
+    if (val === null || val === undefined || val === '') return '-';
+
+    if (key === 'attendance_percentage' || key === 'percentage') {
+      const num = parseFloat(val);
+      if (!isNaN(num)) {
+        if (key === 'attendance_percentage' || row.hasOwnProperty('total_lectures') || row.hasOwnProperty('present_count')) {
+          const isDefaulter = num < 75;
+          return `<span class="report-badge ${isDefaulter ? 'badge-danger' : 'badge-success'}">${num.toFixed(1)}%</span>`;
+        }
+        const isPass = num >= 40;
+        return `<span class="report-badge ${isPass ? 'badge-success' : 'badge-danger'}">${num.toFixed(1)}%</span>`;
+      }
+      return escapeHtml(val);
+    }
+
+    if (key === 'letter_grade' || key === 'grade') {
+      const gradeStr = String(val).trim().toUpperCase();
+      if (gradeStr === 'F') {
+        return `<span class="report-badge badge-danger">${escapeHtml(val)}</span>`;
+      }
+      if (['O', 'A+', 'A'].includes(gradeStr)) {
+        return `<span class="report-badge badge-success">${escapeHtml(val)}</span>`;
+      }
+      return `<span class="report-badge badge-grade">${escapeHtml(val)}</span>`;
+    }
+
+    if (key === 'status' || key === 'overall_status' || key === 'standing' || key === 'risk_level') {
+      const s = String(val).trim().toUpperCase();
+      if (['ENROLLED', 'COMPLETED', 'PASS', 'PASSED', 'ACTIVE', 'GOOD STANDING', 'LOW', 'LOW RISK', 'NORMAL'].includes(s)) {
+        return `<span class="report-badge badge-success">${escapeHtml(val)}</span>`;
+      }
+      if (['DROPPED', 'FAIL', 'FAILED', 'HIGH', 'HIGH RISK', 'AT RISK', 'CRITICAL', 'DEFAULTER'].includes(s)) {
+        return `<span class="report-badge badge-danger">${escapeHtml(val)}</span>`;
+      }
+      if (['PENDING', 'NEEDS ATTENTION', 'MEDIUM', 'MODERATE'].includes(s)) {
+        return `<span class="report-badge badge-warning">${escapeHtml(val)}</span>`;
+      }
+      return `<span class="report-badge badge-neutral">${escapeHtml(val)}</span>`;
+    }
+
+    if (key === 'course_type') {
+      const t = String(val).toLowerCase();
+      if (t.includes('theory')) return `<span class="report-badge badge-theory">${escapeHtml(val)}</span>`;
+      if (t.includes('practical')) return `<span class="report-badge badge-practical">${escapeHtml(val)}</span>`;
+      return `<span class="report-badge badge-neutral">${escapeHtml(val)}</span>`;
+    }
+
+    if (key === 'course_code') {
+      return `<span style="font-weight: 700; color: #1d4ed8;">${escapeHtml(val)}</span>`;
+    }
+
+    return escapeHtml(val);
+  }
+
   function showToast(message, type = 'info') {
-    if (!toastContainer) return;
+    let container = document.getElementById('toastContainer');
+    if (!container) {
+      container = document.createElement('div');
+      container.id = 'toastContainer';
+      container.className = 'toast-container no-print';
+      document.body.appendChild(container);
+    }
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
-    toast.style.cssText = `
-      min-width: 250px;
-      margin-bottom: 8px;
-      padding: 12px 16px;
-      border-radius: 6px;
-      color: #fff;
-      font-size: 14px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      background-color: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
-      transition: opacity 0.3s ease;
-    `;
+    const bg = type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#2563eb';
+    toast.style.backgroundColor = bg;
     toast.textContent = message;
-    toastContainer.appendChild(toast);
+    container.appendChild(toast);
     setTimeout(() => {
       toast.style.opacity = '0';
+      toast.style.transition = 'opacity 0.3s ease';
       setTimeout(() => toast.remove(), 300);
     }, 4000);
   }
@@ -202,10 +266,17 @@
     if (reportPreviewTbody) {
       reportPreviewTbody.innerHTML = `
         <tr>
-          <td colspan="10" class="text-center py-5">
-            <p class="mt-2 text-muted">Loading your academic report from live records...</p>
+          <td colspan="12" class="text-center py-5">
+            <p class="mt-2 text-muted" style="margin: 30px 0; color: #64748b; font-size: 14px;">Loading your academic report from live records...</p>
           </td>
         </tr>
+      `;
+    }
+    if (reportPreviewMobileCards) {
+      reportPreviewMobileCards.innerHTML = `
+        <div style="text-align:center; padding: 32px 16px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px;">
+          <p style="color:#64748b; font-size:13.5px; margin:0;">Loading your academic report from live records...</p>
+        </div>
       `;
     }
     if (previewSummaryGrid) previewSummaryGrid.innerHTML = '';
@@ -233,10 +304,17 @@
       if (reportPreviewTbody) {
         reportPreviewTbody.innerHTML = `
           <tr>
-            <td colspan="10" class="text-center py-5 text-danger">
-              <p style="font-size: 14px; margin: 0;">${err.message || 'Error generating report. Please check filters or retry.'}</p>
+            <td colspan="12" class="text-center py-5 text-danger" style="text-align:center; padding: 40px 16px;">
+              <p style="font-size: 14px; margin: 0; color: #b91c1c; font-weight: 600;">${escapeHtml(err.message || 'Error generating report. Please check filters or retry.')}</p>
             </td>
           </tr>
+        `;
+      }
+      if (reportPreviewMobileCards) {
+        reportPreviewMobileCards.innerHTML = `
+          <div style="text-align:center; padding: 32px 16px; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; color: #991b1b;">
+            <p style="font-size: 14px; margin: 0; font-weight: 600;">${escapeHtml(err.message || 'Error generating report. Please check filters or retry.')}</p>
+          </div>
         `;
       }
     }
@@ -280,12 +358,20 @@
 
     // Summary KPIs
     if (data.summary && Object.keys(data.summary).length > 0 && previewSummaryGrid) {
-      previewSummaryGrid.innerHTML = Object.entries(data.summary).map(([key, val]) => {
+      const colors = ['kpi-blue', 'kpi-indigo', 'kpi-emerald', 'kpi-amber', 'kpi-rose'];
+      previewSummaryGrid.innerHTML = Object.entries(data.summary).map(([key, val], idx) => {
         const label = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        let accent = colors[idx % colors.length];
+        const lowerKey = key.toLowerCase();
+        if (lowerKey.includes('defaulter') || lowerKey.includes('risk') || lowerKey.includes('dropped') || lowerKey.includes('fail')) {
+          accent = 'kpi-rose';
+        } else if (lowerKey.includes('pass') || lowerKey.includes('good') || lowerKey.includes('attendance') || lowerKey.includes('credit') || lowerKey.includes('enrolled')) {
+          accent = 'kpi-emerald';
+        }
         return `
-          <div class="kpi-card" style="background:#fff; border:1px solid #e2e8f0; border-radius:8px; padding:12px 16px;">
-            <div style="font-size:11.5px; font-weight:600; color:#64748b; text-transform:uppercase;">${label}</div>
-            <div style="font-size:22px; font-weight:700; color:#1e293b; margin-top:4px;">${val !== null && val !== undefined ? val : '0'}</div>
+          <div class="report-kpi-card ${accent}">
+            <div class="report-kpi-label">${escapeHtml(label)}</div>
+            <div class="report-kpi-value">${val !== null && val !== undefined ? escapeHtml(val) : '0'}</div>
           </div>
         `;
       }).join('');
@@ -298,7 +384,7 @@
     if (reportPreviewThead) {
       reportPreviewThead.innerHTML = `
         <tr>
-          ${headers.map(h => `<th style="background:#f8fafc; color:#1e293b; font-weight:600; padding:10px 12px; border-bottom:2px solid #cbd5e1; font-size:13px;">${h.header}</th>`).join('')}
+          ${headers.map(h => `<th>${escapeHtml(h.header)}</th>`).join('')}
         </tr>
       `;
     }
@@ -315,34 +401,64 @@
           </tr>
         `;
       }
+      if (reportPreviewMobileCards) {
+        reportPreviewMobileCards.innerHTML = `
+          <div style="text-align:center; padding: 36px 16px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px;">
+            <div style="font-weight:600; font-size:14px; color:#475569;">No report data available for the selected filters.</div>
+            <div style="font-size:13px; color:#64748b; margin-top:4px;">Try adjusting your academic year, semester, or course filters.</div>
+          </div>
+        `;
+      }
       return;
     }
 
+    // Desktop Table View
     if (reportPreviewTbody) {
       reportPreviewTbody.innerHTML = records.map((row) => {
         return `
-          <tr style="border-bottom: 1px solid #f1f5f9;">
+          <tr>
             ${headers.map(h => {
-              let val = row[h.key];
-              if (val === null || val === undefined) val = '-';
-              if (h.key === 'attendance_percentage') {
-                const num = parseFloat(val);
-                const isDefaulter = !isNaN(num) && num < 75;
-                const color = isDefaulter ? '#ef4444' : '#10b981';
-                return `<td style="padding:10px 12px; font-weight:600; color:${color}; font-size:13px;">${val}%</td>`;
-              }
-              if (h.key === 'grade') {
-                const isFail = val === 'F';
-                const color = isFail ? '#ef4444' : '#1e293b';
-                return `<td style="padding:10px 12px; font-weight:700; color:${color}; font-size:13px;">${val}</td>`;
-              }
-              if (h.key === 'standing') {
-                const isGood = val === 'Good Standing';
-                return `<td style="padding:10px 12px;"><span style="display:inline-block; padding:2px 8px; border-radius:12px; font-size:11.5px; font-weight:600; background:${isGood ? '#ecfdf5' : '#fef2f2'}; color:${isGood ? '#065f46' : '#991b1b'};">${val}</span></td>`;
-              }
-              return `<td style="padding:10px 12px; color:#334155; font-size:13px;">${val}</td>`;
+              const formatted = formatCellValue(h.key, row[h.key], row);
+              return `<td>${formatted}</td>`;
             }).join('')}
           </tr>
+        `;
+      }).join('');
+    }
+
+    // Mobile Cards View (<= 768px)
+    if (reportPreviewMobileCards) {
+      reportPreviewMobileCards.innerHTML = records.map((row, idx) => {
+        const title = row.course_name || row.day_of_week || (row.semester ? `Semester ${row.semester}` : `Record #${idx + 1}`);
+        let badge = '';
+        if (row.course_code) {
+          badge = `<span class="report-badge badge-primary">${escapeHtml(row.course_code)}</span>`;
+        } else if (row.status) {
+          badge = formatCellValue('status', row.status, row);
+        } else if (row.percentage !== undefined) {
+          badge = formatCellValue('percentage', row.percentage, row);
+        }
+
+        const bodyItems = headers.map(h => {
+          const formatted = formatCellValue(h.key, row[h.key], row);
+          return `
+            <div class="mobile-data-row">
+              <div class="mobile-data-label">${escapeHtml(h.header)}</div>
+              <div class="mobile-data-val">${formatted}</div>
+            </div>
+          `;
+        }).join('');
+
+        return `
+          <div class="report-mobile-card">
+            <div class="report-mobile-card-header">
+              <span class="report-mobile-card-title">${escapeHtml(title)}</span>
+              ${badge}
+            </div>
+            <div class="report-mobile-card-body">
+              ${bodyItems}
+            </div>
+          </div>
         `;
       }).join('');
     }

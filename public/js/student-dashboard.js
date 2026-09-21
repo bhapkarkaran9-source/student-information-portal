@@ -347,11 +347,21 @@ function initNotificationActions() {
   }
 
   if (btnMarkAllRead) {
-    btnMarkAllRead.addEventListener('click', () => {
+    btnMarkAllRead.addEventListener('click', async () => {
       document.querySelectorAll('.notification-row.unread').forEach(row => {
         row.classList.remove('unread');
       });
-      if (notifyDot) notifyDot.style.display = 'none';
+      if (typeof window.updateStudentNotificationBadge === 'function') {
+        window.updateStudentNotificationBadge(0);
+      } else if (notifyDot) {
+        notifyDot.textContent = '';
+        notifyDot.classList.add('hidden');
+        notifyDot.style.display = 'none';
+      }
+      try {
+        await apiRequest('/notifications/read-all', { method: 'PATCH' });
+      } catch (e) {}
+      window.dispatchEvent(new CustomEvent('notifications-updated', { detail: { unreadCount: 0 } }));
       showToast('All notifications marked as read.', 'info');
     });
   }
@@ -746,9 +756,21 @@ async function loadDynamicStudentData(user) {
       const notifications = notifRes.data.notifications || [];
       const unreadCount = notifications.filter(n => !n.is_read).length;
 
-      const notifyDot = document.getElementById('headerNotificationDot');
-      if (notifyDot) {
-        notifyDot.style.display = unreadCount > 0 ? 'block' : 'none';
+      if (typeof window.updateStudentNotificationBadge === 'function') {
+        window.updateStudentNotificationBadge(unreadCount);
+      } else {
+        const notifyDot = document.getElementById('headerNotificationDot');
+        if (notifyDot) {
+          if (unreadCount <= 0) {
+            notifyDot.textContent = '';
+            notifyDot.classList.add('hidden');
+            notifyDot.style.display = 'none';
+          } else {
+            notifyDot.textContent = unreadCount > 99 ? '99+' : String(unreadCount);
+            notifyDot.classList.remove('hidden');
+            notifyDot.style.display = 'inline-flex';
+          }
+        }
       }
 
       const notifList = document.getElementById('notificationsList');

@@ -310,7 +310,7 @@
         const titleText = hasFilters ? 'No matching queries' : 'No queries found';
         const descText = hasFilters 
           ? 'No student queries match your selected filters. Try clearing or adjusting search criteria.' 
-          : 'You currently have no student-faculty queries. Click "Ask a Teacher" above to send your first question.';
+          : 'Ask a teacher when you need help with a course or academic topic.';
 
         if (queryEmptyState) {
           queryEmptyState.classList.remove('hidden');
@@ -397,16 +397,13 @@
               <div class="query-mobile-card-top">
                 <span class="query-id-tag">#${q.query_id}</span>
                 <div class="query-mobile-badges">
-                  ${getPriorityBadgeHtml(q.priority)}
                   ${getStatusBadgeHtml(q.status)}
                 </div>
               </div>
 
               <div class="query-mobile-subject-box">
-                <div class="query-mobile-label">SUBJECT / COURSE</div>
                 <div class="query-mobile-subject-text">${escapeHtml(q.subject)}</div>
                 <div class="query-subject-meta">
-                  ${courseDisplay}
                   <span class="query-reply-indicator ${q.reply_count > 0 ? 'has-replies' : 'no-replies'}">
                     ${q.reply_count > 0 ? `${q.reply_count} ${q.reply_count === 1 ? 'reply' : 'replies'}` : 'Awaiting faculty reply'}
                   </span>
@@ -415,18 +412,30 @@
 
               <div class="query-mobile-grid">
                 <div class="query-mobile-field">
-                  <span class="query-mobile-label">ASKED BY</span>
+                  <span class="query-mobile-label">Asked By</span>
                   <div class="query-mobile-val">${escapeHtml(studentName)}</div>
                   ${q.student_prn ? `<div class="query-mobile-meta">PRN: ${escapeHtml(q.student_prn)}</div>` : ''}
                 </div>
                 <div class="query-mobile-field">
-                  <span class="query-mobile-label">ASSIGNED FACULTY</span>
+                  <span class="query-mobile-label">Assigned Faculty</span>
                   <div class="query-mobile-val">${escapeHtml(teacherName)}</div>
                   ${q.teacher_designation ? `<div class="query-mobile-meta">${escapeHtml(q.teacher_designation)}</div>` : ''}
                 </div>
-                <div class="query-mobile-field" style="grid-column: span 2;">
-                  <span class="query-mobile-label">LAST UPDATED</span>
-                  <div class="query-mobile-meta">${formatDate(q.updated_at || q.created_at)}</div>
+                <div class="query-mobile-field">
+                  <span class="query-mobile-label">Course</span>
+                  <div class="query-mobile-val">${courseDisplay}</div>
+                </div>
+                <div class="query-mobile-field">
+                  <span class="query-mobile-label">Priority</span>
+                  <div class="query-mobile-val">${getPriorityBadgeHtml(q.priority)}</div>
+                </div>
+                <div class="query-mobile-field">
+                  <span class="query-mobile-label">Created</span>
+                  <div class="query-mobile-meta">${formatDate(q.created_at || q.updated_at)}</div>
+                </div>
+                <div class="query-mobile-field">
+                  <span class="query-mobile-label">Status</span>
+                  <div class="query-mobile-val">${getStatusBadgeHtml(q.status)}</div>
                 </div>
               </div>
 
@@ -787,6 +796,12 @@
   window.addEventListener('click', (e) => {
     if (e.target.classList.contains('modal-backdrop')) {
       e.target.classList.add('hidden');
+    }
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-backdrop').forEach((m) => m.classList.add('hidden'));
     }
   });
 

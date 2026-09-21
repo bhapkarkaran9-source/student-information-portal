@@ -446,7 +446,7 @@ const getUnreadCount = async (req, res) => {
     const count = await Notification.getUnreadCount(userId);
     return res.status(200).json({
       success: true,
-      data: { count }
+      data: { count, unread_count: count }
     });
   } catch (err) {
     console.error('Error fetching unread notification count:', err);

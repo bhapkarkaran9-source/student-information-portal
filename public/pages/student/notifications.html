@@ -151,7 +151,7 @@
       <div class="header-right">
         <button type="button" id="headerNotificationBtn" class="header-notify-btn" title="View notifications" aria-label="Notifications">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-          <span id="headerNotificationDot" class="header-notify-badge" style="display: none;"></span>
+          <span id="headerNotificationDot" class="header-notify-badge hidden" style="display: none;"></span>
         </button>
         <div class="profile-dropdown-wrapper" id="profileDropdownWrapper">
           <button type="button" id="profileDropdownBtn" class="header-profile-btn" aria-haspopup="true" aria-expanded="false">
@@ -366,8 +366,23 @@
         const bUnread = document.getElementById('btnNotifUnread');
         if (bUnread) bUnread.textContent = `Unread Only (${unreadCount})`;
 
-        const headerDot = document.getElementById('headerNotificationDot');
-        if (headerDot) headerDot.style.display = unreadCount > 0 ? 'block' : 'none';
+        if (typeof window.updateStudentNotificationBadge === 'function') {
+          window.updateStudentNotificationBadge(unreadCount);
+        } else {
+          const headerDot = document.getElementById('headerNotificationDot');
+          if (headerDot) {
+            if (unreadCount <= 0) {
+              headerDot.textContent = '';
+              headerDot.classList.add('hidden');
+              headerDot.style.display = 'none';
+            } else {
+              headerDot.textContent = unreadCount > 99 ? '99+' : String(unreadCount);
+              headerDot.classList.remove('hidden');
+              headerDot.style.display = 'inline-flex';
+            }
+          }
+        }
+        window.dispatchEvent(new CustomEvent('notifications-updated', { detail: { unreadCount } }));
 
         renderNotifications();
       }

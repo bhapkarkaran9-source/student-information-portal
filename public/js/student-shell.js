@@ -346,7 +346,7 @@
             '<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>' +
             '<path d="M13.73 21a2 2 0 0 1-3.46 0"></path>' +
           '</svg>' +
-          '<span id="headerNotificationDot" class="header-notify-badge"></span>' +
+          '<span id="headerNotificationDot" class="header-notify-badge hidden"></span>' +
         '</button>' +
         '<div class="profile-dropdown-wrapper" id="profileDropdownWrapper">' +
           '<button type="button" id="profileDropdownBtn" class="header-profile-btn" aria-haspopup="true" aria-expanded="false" aria-label="User profile menu">' +
@@ -619,8 +619,14 @@
     }
 
     const headerNotificationBtn = document.getElementById('headerNotificationBtn');
-    if (headerNotificationBtn) {
+    if (headerNotificationBtn && !headerNotificationBtn.hasAttribute('data-has-shell-click')) {
+      headerNotificationBtn.setAttribute('data-has-shell-click', 'true');
       headerNotificationBtn.addEventListener('click', () => {
+        const notifSection = document.getElementById('notificationsSection');
+        if (notifSection && window.location.pathname.includes('dashboard')) {
+          // On dashboard with in-page notifications section, allow default scroll
+          return;
+        }
         window.location.href = '/pages/student/notifications.html';
       });
     }
@@ -735,7 +741,97 @@
         }
       }).catch(() => {});
     }
+
+    // Initialize notification badge count
+    fetchStudentNotificationCount();
   }
+
+  /**
+   * Notification Badge Management
+   * Requirements:
+   * - unread = 0: Hide badge completely
+   * - unread 1..99: Exact count string ("1", "2", "5", etc.)
+   * - unread > 99: "99+"
+   * - Circular red badge with bold white centered text
+   * - Automatically update after marked as read
+   */
+  function updateStudentNotificationBadge(rawCount) {
+    const count = parseInt(rawCount, 10);
+    const validCount = (!isNaN(count) && count > 0) ? count : 0;
+    const badges = document.querySelectorAll('#headerNotificationDot, .header-notify-badge');
+
+    badges.forEach(badge => {
+      if (validCount <= 0) {
+        badge.textContent = '';
+        badge.classList.add('hidden');
+        badge.style.display = 'none';
+        badge.removeAttribute('aria-label');
+      } else {
+        const text = validCount > 99 ? '99+' : String(validCount);
+        badge.textContent = text;
+        badge.classList.remove('hidden');
+        badge.style.display = 'inline-flex';
+        badge.setAttribute('aria-label', `${validCount} unread notification${validCount === 1 ? '' : 's'}`);
+      }
+    });
+  }
+
+  // Export globally so any page or script can update the notification badge
+  window.updateStudentNotificationBadge = updateStudentNotificationBadge;
+  window.updateNotificationBadge = updateStudentNotificationBadge;
+
+  /**
+   * Fetch unread notification count from existing backend API
+   */
+  async function fetchStudentNotificationCount() {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+    try {
+      // 1. Try existing /api/notifications/unread-count
+      const res = await fetch('/api/notifications/unread-count', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      if (res.ok) {
+        const json = await res.json();
+        if (json && json.success && json.data) {
+          const count = (json.data.count !== undefined)
+            ? json.data.count
+            : (json.data.unread_count !== undefined ? json.data.unread_count : 0);
+          updateStudentNotificationBadge(count);
+          return;
+        }
+      }
+
+      // 2. Fallback to /api/notifications query if needed
+      const fallbackRes = await fetch('/api/notifications?is_read=0&limit=1', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      if (fallbackRes.ok) {
+        const fallbackJson = await fallbackRes.json();
+        if (fallbackJson && fallbackJson.data && fallbackJson.data.pagination) {
+          updateStudentNotificationBadge(fallbackJson.data.pagination.total || 0);
+        }
+      }
+    } catch (err) {
+      // Graceful fallback
+    }
+  }
+
+  window.fetchStudentNotificationCount = fetchStudentNotificationCount;
+
+  // Poll notification count periodically every 30 seconds
+  setInterval(fetchStudentNotificationCount, 30000);
+
+  // Re-sync on window focus or custom events
+  window.addEventListener('notification-read', () => fetchStudentNotificationCount());
+  window.addEventListener('notifications-updated', (evt) => {
+    if (evt && evt.detail && typeof evt.detail.unreadCount !== 'undefined') {
+      updateStudentNotificationBadge(evt.detail.unreadCount);
+    } else {
+      fetchStudentNotificationCount();
+    }
+  });
+  window.addEventListener('focus', () => fetchStudentNotificationCount());
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initStudentShell);

@@ -256,26 +256,29 @@
 }
 
 /* 4. Filter Card & Form Controls */
+/* 4. Filter Card & Form Controls */
 .erp-filter-card {
   background-color: #ffffff;
-  border-radius: 12px;
+  border-radius: 10px;
   border: 1px solid #e2e8f0;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
   padding: 18px 20px;
   margin-bottom: 24px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .erp-filter-header {
-  margin-bottom: 14px;
+  margin-bottom: 16px;
   padding-bottom: 10px;
   border-bottom: 1px solid #f1f5f9;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .erp-filter-title {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
   color: #0f172a;
   margin: 0;
@@ -285,9 +288,16 @@
 }
 
 .erp-filter-title svg {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
+  color: #7c3aed;
+}
+
+.erp-filter-subtitle {
+  font-size: 12.5px;
   color: #64748b;
+  margin: 0;
+  font-weight: 400;
 }
 
 .erp-filter-grid {
@@ -295,20 +305,27 @@
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 14px;
   align-items: flex-end;
+  width: 100%;
 }
 
 .erp-form-group {
   display: flex;
   flex-direction: column;
+  min-width: 0;
+  width: 100%;
+}
+
+.erp-form-group-search {
+  grid-column: span 2;
 }
 
 .erp-form-label {
-  font-size: 11.5px;
+  font-size: 11px;
   font-weight: 600;
-  color: #475569;
-  margin-bottom: 5px;
+  color: #64748b;
+  margin-bottom: 6px;
   text-transform: uppercase;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.04em;
 }
 
 .erp-input-wrapper {
@@ -320,12 +337,13 @@
 
 .erp-input-icon {
   position: absolute;
-  left: 11px;
+  left: 12px;
   color: #94a3b8;
   pointer-events: none;
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 2;
 }
 
 .erp-input-icon svg {
@@ -334,90 +352,73 @@
 }
 
 .erp-input-wrapper .erp-form-control {
-  padding-left: 36px;
+  padding-left: 38px !important;
 }
 
 .erp-form-control,
 .erp-input,
-.erp-select {
-  width: 100%;
-  max-width: 100%;
-  height: 38px;
-  padding: 7px 12px;
-  font-size: 13px;
-  color: #0f172a;
-  background-color: #ffffff;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  transition: border-color 150ms ease, box-shadow 150ms ease;
-  font-family: inherit;
-  box-sizing: border-box;
+.erp-select,
+select.erp-form-control {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 42px !important;
+  padding: 0 12px !important;
+  font-size: 14px !important;
+  color: #0f172a !important;
+  background-color: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 7px !important;
+  transition: border-color 150ms ease, box-shadow 150ms ease !important;
+  font-family: inherit !important;
+  box-sizing: border-box !important;
+  outline: none;
 }
 
 select.erp-select,
 select.erp-form-control {
-  max-width: 100%;
   text-overflow: ellipsis;
-}
-
-.erp-label {
-  font-size: 11.5px;
-  font-weight: 600;
-  color: #475569;
-  margin-bottom: 5px;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-}
-
-.erp-filter-group {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  max-width: 100%;
-}
-
-.erp-search-wrap {
-  position: relative;
-  display: flex;
-  align-items: center;
-  width: 100%;
-}
-
-.erp-search-wrap svg {
-  position: absolute;
-  left: 11px;
-  color: #94a3b8;
-  pointer-events: none;
-}
-
-.erp-search-input {
-  padding-left: 36px !important;
-}
-
-textarea.erp-form-control {
-  height: auto;
-  min-height: 85px;
-  padding: 10px 12px;
-  resize: vertical;
+  cursor: pointer;
 }
 
 .erp-form-control:focus,
 .erp-input:focus,
-.erp-select:focus {
-  outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+.erp-select:focus,
+select.erp-form-control:focus {
+  border-color: #7c3aed !important;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12) !important;
 }
 
 .erp-filter-actions {
   display: flex;
-  gap: 8px;
   align-items: flex-end;
+  width: 100%;
 }
 
-.erp-filter-actions .btn-erp {
-  height: 38px;
-  flex: 1;
+.erp-filter-actions .btn-erp,
+#btnResetFilters {
+  height: 42px !important;
+  width: 100% !important;
+  background-color: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #334155 !important;
+  border-radius: 7px !important;
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  padding: 0 16px !important;
+  cursor: pointer !important;
+  transition: background-color 150ms ease, border-color 150ms ease !important;
+  box-sizing: border-box !important;
+}
+
+.erp-filter-actions .btn-erp:hover,
+#btnResetFilters:hover {
+  background-color: #f8fafc !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
 }
 
 /* 5. Sticky ERP Tables */
@@ -1133,7 +1134,20 @@ textarea.erp-form-control {
 }
 
 /* 14. Responsive Layout Fixes (Zero Horizontal Document Scroll) */
+@media (min-width: 769px) and (max-width: 1023px) {
+  .erp-filter-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 14px !important;
+  }
+  .erp-form-group-search {
+    grid-column: span 2 !important;
+  }
+}
+
 @media (max-width: 768px) {
+  .erp-filter-card {
+    padding: 14px !important;
+  }
   .erp-page-header-row {
     flex-direction: column;
     align-items: flex-start;
@@ -1145,12 +1159,21 @@ textarea.erp-form-control {
   }
   .erp-filter-grid {
     grid-template-columns: 1fr !important;
+    gap: 12px !important;
   }
   .erp-filter-grid > *,
-  .erp-filter-group {
+  .erp-form-group,
+  .erp-form-group-search,
+  .erp-filter-actions {
     grid-column: 1 / -1 !important;
     min-width: 0 !important;
     max-width: 100% !important;
+    width: 100% !important;
+  }
+  .erp-filter-actions .btn-erp,
+  #btnResetFilters {
+    height: 44px !important;
+    width: 100% !important;
   }
   .erp-table-container,
   .erp-table-responsive {
