@@ -154,6 +154,7 @@ const findById = async (studentId) => {
       s.gender,
       s.class_name,
       s.division,
+      s.batch,
       s.semester,
       s.created_at AS student_created_at,
       s.updated_at AS student_updated_at,
@@ -195,18 +196,25 @@ const findByPrn = async (prn) => {
 const findByUserId = async (userId) => {
   const sql = `
     SELECT 
-      student_id, 
-      user_id, 
-      prn_number, 
-      department_id, 
-      admission_date, 
-      date_of_birth, 
-      gender, 
-      class_name, 
-      division, 
-      semester 
-    FROM students 
-    WHERE user_id = ? 
+      s.student_id, 
+      s.user_id, 
+      s.prn_number, 
+      s.department_id, 
+      s.admission_date, 
+      s.date_of_birth, 
+      s.gender, 
+      s.class_name, 
+      s.division, 
+      s.batch,
+      s.semester,
+      u.is_active,
+      u.is_profile_complete,
+      u.first_name,
+      u.last_name,
+      u.email
+    FROM students s
+    INNER JOIN users u ON s.user_id = u.user_id
+    WHERE s.user_id = ? 
     LIMIT 1
   `;
   const [rows] = await pool.query(sql, [userId]);
@@ -337,6 +345,7 @@ const updateStudentWithUser = async (studentId, userId, userFields = {}, student
         'gender',
         'class_name',
         'division',
+        'batch',
         'semester'
       ];
       const studentUpdates = [];

@@ -640,24 +640,11 @@ function initFormSubmissions() {
     addForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      const firstName = document.getElementById('addFirstName').value.trim();
-      const lastName = document.getElementById('addLastName').value.trim();
       const username = document.getElementById('addUsername').value.trim();
-      const email = document.getElementById('addEmail').value.trim();
-      const phone = document.getElementById('addPhone').value.trim();
       const password = document.getElementById('addPassword').value;
 
-      const prnNumber = document.getElementById('addPrn').value.trim();
-      const departmentId = document.getElementById('addDeptSelect').value;
-      const admissionDate = document.getElementById('addAdmissionDate').value;
-      const dob = document.getElementById('addDob').value;
-      const gender = document.getElementById('addGenderSelect').value;
-      const semester = document.getElementById('addSemesterSelect').value;
-      const className = document.getElementById('addClassName').value.trim();
-      const division = document.getElementById('addDivision').value.trim();
-
-      if (!firstName || !lastName || !username || !email || !password || !prnNumber || !departmentId || !admissionDate || !semester || !className || !division) {
-        showModalAlert('addModalAlert', 'Please fill in all required fields.');
+      if (!username || !password) {
+        showModalAlert('addModalAlert', 'Please fill in both Username and Password.');
         return;
       }
 
@@ -674,20 +661,8 @@ function initFormSubmissions() {
 
       try {
         const payload = {
-          first_name: firstName,
-          last_name: lastName,
           username,
-          email,
-          password,
-          phone: phone || null,
-          prn_number: prnNumber,
-          department_id: parseInt(departmentId, 10),
-          admission_date: admissionDate,
-          date_of_birth: dob || null,
-          gender: gender || null,
-          semester: parseInt(semester, 10),
-          class_name: className,
-          division
+          password
         };
 
         const res = await apiRequest('/students', {
@@ -697,17 +672,17 @@ function initFormSubmissions() {
 
         if (res.ok && res.data && res.data.success) {
           closeModal('addStudentModal');
-          showToast('Student registered successfully', 'success');
+          showToast('Student account created successfully', 'success');
           await loadStudents();
         } else {
-          showModalAlert('addModalAlert', res.data?.message || 'Failed to create student');
+          showModalAlert('addModalAlert', res.data?.message || 'Failed to create student account');
         }
       } catch (err) {
         showModalAlert('addModalAlert', 'Network communication error');
       } finally {
         if (saveBtn) {
           saveBtn.disabled = false;
-          saveBtn.textContent = 'Create Student';
+          saveBtn.textContent = 'Create Student Account';
         }
       }
     });

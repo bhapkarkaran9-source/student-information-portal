@@ -34,7 +34,11 @@ function clearSession() {
 // Role Navigation
 // ============================================================================
 
-function getDashboardUrl(role) {
+function getDashboardUrl(role, isProfileComplete) {
+  if (isProfileComplete === false) {
+    if (role === 'STUDENT') return '/pages/student/profile.html';
+    if (role === 'TEACHER') return '/pages/teacher/profile.html';
+  }
   switch (role) {
     case 'ADMIN':
       return '/pages/admin/dashboard.html';
@@ -47,8 +51,14 @@ function getDashboardUrl(role) {
   }
 }
 
-function redirectToDashboard(role) {
-  const target = getDashboardUrl(role);
+function redirectToDashboard(role, isProfileComplete) {
+  let targetRole = role;
+  let targetComplete = isProfileComplete;
+  if (typeof role === 'object' && role !== null) {
+    targetRole = role.role;
+    targetComplete = role.is_profile_complete;
+  }
+  const target = getDashboardUrl(targetRole, targetComplete);
   window.location.replace(target);
 }
 
@@ -209,6 +219,22 @@ async function requireAuth(expectedRole) {
       return null;
     }
 
+    // Redirect incomplete Student or Teacher to their self-service profile page
+    const isProfileComplete = currentUser.is_profile_complete === true || currentUser.is_profile_complete === 1 || currentUser.is_profile_complete === '1';
+    if (!isProfileComplete) {
+      const isStudentProfilePage = window.location.pathname.endsWith('/pages/student/profile.html') || window.location.pathname.endsWith('/profile.html');
+      const isTeacherProfilePage = window.location.pathname.endsWith('/pages/teacher/profile.html') || window.location.pathname.endsWith('/profile.html');
+
+      if (currentUser.role === 'STUDENT' && !isStudentProfilePage) {
+        window.location.replace('/pages/student/profile.html');
+        return null;
+      }
+      if (currentUser.role === 'TEACHER' && !isTeacherProfilePage) {
+        window.location.replace('/pages/teacher/profile.html');
+        return null;
+      }
+    }
+
     // Verify role authorization
     if (expectedRole && currentUser.role !== expectedRole) {
       // Redirect to the user's correct role dashboard
@@ -314,7 +340,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (user.must_change_password) {
         window.location.replace('/pages/first-login.html');
       } else {
-        redirectToDashboard(user.role);
+        redirectToDashboard(user);
       }
       return;
     }
@@ -374,7 +400,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (user.must_change_password) {
             window.location.replace('/pages/first-login.html');
           } else {
-            redirectToDashboard(user.role);
+            redirectToDashboard(user);
           }
         } else {
           const message = (result.data && result.data.message)

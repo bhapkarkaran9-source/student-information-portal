@@ -541,9 +541,13 @@
 
   function renderGradesTable(grades) {
     const tableBody = document.getElementById('gradesTableBody');
+    const mobileContainer = document.getElementById('gradesMobileCards');
     if (!tableBody) return;
 
-    tableBody.innerHTML = grades.map(g => {
+    let tableHtml = '';
+    let mobileHtml = '';
+
+    grades.forEach(g => {
       const studentName = g.student_name || `${g.student_first_name || ''} ${g.student_last_name || ''}`.trim() || 'Student';
       const prn = g.prn_number || g.enrollment_number || '-';
       const initials = studentName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'ST';
@@ -563,7 +567,8 @@
       const gradeBadge = getGradeBadge(g.letter_grade);
       const statusBadge = getStatusBadge(g.status);
 
-      return `
+      // Desktop table row
+      tableHtml += `
         <tr>
           <td>
             <div class="grades-student-cell">
@@ -612,18 +617,95 @@
           </td>
         </tr>
       `;
-    }).join('');
 
-    // Attach Row Action Handlers
-    tableBody.querySelectorAll('.btn-view-grade').forEach(b => {
-      b.addEventListener('click', () => openViewGradeModal(b.dataset.id));
+      // Mobile Card HTML
+      mobileHtml += `
+        <div class="grades-mobile-card">
+          <div class="grades-mobile-card-header">
+            <div class="grades-mobile-student-name">${studentName}</div>
+            <div class="grades-mobile-prn">PRN: ${prn}</div>
+          </div>
+          <div class="grades-mobile-course">
+            <div class="grades-mobile-course-code">${courseCode}</div>
+            <div class="grades-mobile-course-name">${courseName}</div>
+          </div>
+          <div class="grades-mobile-badges">
+            ${typeBadge}
+            ${gradeBadge}
+            ${statusBadge}
+          </div>
+          <div class="grades-mobile-grid">
+            ${g.assessment_type === 'Theory' ? `
+              <div class="grades-mobile-grid-item">
+                <span class="grades-mobile-grid-label">Internal</span>
+                <span class="grades-mobile-grid-val">${intMarks}</span>
+              </div>
+              <div class="grades-mobile-grid-item">
+                <span class="grades-mobile-grid-label">External</span>
+                <span class="grades-mobile-grid-val">${extMarks}</span>
+              </div>
+            ` : `
+              <div class="grades-mobile-grid-item">
+                <span class="grades-mobile-grid-label">Practical</span>
+                <span class="grades-mobile-grid-val">${pracMarks}</span>
+              </div>
+              <div class="grades-mobile-grid-item">
+                <span class="grades-mobile-grid-label">Total / Max</span>
+                <span class="grades-mobile-grid-val">${totalDisplay}</span>
+              </div>
+            `}
+            <div class="grades-mobile-grid-item">
+              <span class="grades-mobile-grid-label">Credits</span>
+              <span class="grades-mobile-grid-val">${credits}</span>
+            </div>
+            <div class="grades-mobile-grid-item">
+              <span class="grades-mobile-grid-label">Grade Point</span>
+              <span class="grades-mobile-grid-val">${g.grade_point}</span>
+            </div>
+          </div>
+          <div class="grades-mobile-actions">
+            <button type="button" class="btn-mobile-action btn-view-grade" data-id="${g.grade_id}" aria-label="View Result">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+              <span>View</span>
+            </button>
+            <button type="button" class="btn-mobile-action btn-edit-grade" data-id="${g.grade_id}" aria-label="Edit Result">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
+              <span>Edit</span>
+            </button>
+            <button type="button" class="btn-mobile-action btn-mobile-action-danger btn-delete-grade" data-id="${g.grade_id}" data-name="${studentName} - ${courseCode}" aria-label="Delete Result">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              </svg>
+              <span>Delete</span>
+            </button>
+          </div>
+        </div>
+      `;
     });
-    tableBody.querySelectorAll('.btn-edit-grade').forEach(b => {
-      b.addEventListener('click', () => openEditGradeModal(b.dataset.id));
-    });
-    tableBody.querySelectorAll('.btn-delete-grade').forEach(b => {
-      b.addEventListener('click', () => openDeleteGradeModal(b.dataset.id, b.dataset.name));
-    });
+
+    tableBody.innerHTML = tableHtml;
+    if (mobileContainer) mobileContainer.innerHTML = mobileHtml;
+
+    // Attach Row / Mobile Action Handlers to entire table card scope
+    const tableCard = document.querySelector('.grades-table-card');
+    if (tableCard) {
+      tableCard.querySelectorAll('.btn-view-grade').forEach(b => {
+        b.onclick = () => openViewGradeModal(b.dataset.id);
+      });
+      tableCard.querySelectorAll('.btn-edit-grade').forEach(b => {
+        b.onclick = () => openEditGradeModal(b.dataset.id);
+      });
+      tableCard.querySelectorAll('.btn-delete-grade').forEach(b => {
+        b.onclick = () => openDeleteGradeModal(b.dataset.id, b.dataset.name);
+      });
+    }
   }
 
   function renderPagination(pagination) {
@@ -734,29 +816,59 @@
   // 7. MODAL CONTROLLERS (ADD, EDIT, VIEW, DELETE, REPORTS)
   // ==========================================================================
   function showModal(id) {
+    // Close any other open modals first (ensure only 1 modal open at a time)
+    document.querySelectorAll('.modal-backdrop').forEach(modal => {
+      modal.classList.add('hidden');
+    });
+
     const el = document.getElementById(id);
-    if (el) el.classList.remove('hidden');
+    if (el) {
+      el.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
   }
 
   function hideModal(id) {
-    const el = document.getElementById(id);
-    if (el) el.classList.add('hidden');
+    if (id) {
+      const el = document.getElementById(id);
+      if (el) el.classList.add('hidden');
+    } else {
+      document.querySelectorAll('.modal-backdrop').forEach(modal => {
+        modal.classList.add('hidden');
+      });
+    }
+
+    // Restore body scroll if no modals are open
+    const openModals = document.querySelectorAll('.modal-backdrop:not(.hidden)');
+    if (openModals.length === 0) {
+      document.body.style.overflow = '';
+    }
   }
 
   // Dismiss buttons
   document.querySelectorAll('[data-dismiss="modal"]').forEach(btn => {
     btn.addEventListener('click', () => {
       const modal = btn.closest('.modal-backdrop');
-      if (modal) modal.classList.add('hidden');
+      if (modal) hideModal(modal.id);
     });
   });
 
-  // Close modals on Escape key
+  // Close active modal on backdrop click
+  document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
+    backdrop.addEventListener('click', (e) => {
+      if (e.target === backdrop) {
+        hideModal(backdrop.id);
+      }
+    });
+  });
+
+  // Close active modal on Escape key
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-      document.querySelectorAll('.modal-backdrop:not(.hidden)').forEach(modal => {
-        modal.classList.add('hidden');
-      });
+      const activeModal = document.querySelector('.modal-backdrop:not(.hidden)');
+      if (activeModal) {
+        hideModal(activeModal.id);
+      }
     }
   });
 
@@ -1146,8 +1258,9 @@
 
   // STUDENT GRADE CARD & SGPA REPORT
   const btnStudentReport = document.getElementById('btnStudentReport');
-  if (btnStudentReport && btnStudentReport.tagName === 'BUTTON') {
-    btnStudentReport.addEventListener('click', () => {
+  if (btnStudentReport) {
+    btnStudentReport.addEventListener('click', (e) => {
+      e.preventDefault();
       document.getElementById('reportStudentSelect').value = '';
       document.getElementById('reportSemesterSelect').value = '';
       document.getElementById('studentSummaryBanner').classList.add('hidden');
@@ -1354,51 +1467,53 @@
   // 8. EXPORT CSV & PRINT FUNCTIONALITY
   // ==========================================================================
   const btnExportCsv = document.getElementById('btnExportCsv');
-  if (btnExportCsv) {
-    btnExportCsv.addEventListener('click', () => {
-      if (!currentLoadedGrades || currentLoadedGrades.length === 0) {
-        showToast('No grade records available to export.', 'info');
-        return;
-      }
+  const btnExportCsvHeader = document.getElementById('btnExportCsvHeader');
 
-      const headers = ['Student Name', 'PRN', 'Course Code', 'Course Name', 'Credits', 'Type', 'Internal', 'External', 'Practical', 'Total Marks', 'Max Marks', 'Percentage', 'Grade', 'Grade Point', 'Status', 'Exam Session'];
-      const rows = currentLoadedGrades.map(g => [
-        `"${g.student_name || ''}"`,
-        `"${g.prn_number || ''}"`,
-        `"${g.course_code || ''}"`,
-        `"${g.course_name || ''}"`,
-        g.credits,
-        g.assessment_type,
-        g.internal_marks,
-        g.external_marks,
-        g.practical_marks,
-        g.total_marks,
-        g.max_marks,
-        g.percentage,
-        g.letter_grade,
-        g.grade_point,
-        g.status,
-        `"${g.exam_session || ''}"`
-      ]);
+  function triggerCsvExport() {
+    if (!currentLoadedGrades || currentLoadedGrades.length === 0) {
+      showToast('No grade records available to export.', 'info');
+      return;
+    }
 
-      const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
-      const encodedUri = encodeURI(csvContent);
-      const link = document.createElement('a');
-      link.setAttribute('href', encodedUri);
-      link.setAttribute('download', `grades_report_${new Date().toISOString().slice(0, 10)}.csv`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      showToast('CSV export downloaded successfully.', 'success');
-    });
+    const headers = ['Student Name', 'PRN', 'Course Code', 'Course Name', 'Credits', 'Type', 'Internal', 'External', 'Practical', 'Total Marks', 'Max Marks', 'Percentage', 'Grade', 'Grade Point', 'Status', 'Exam Session'];
+    const rows = currentLoadedGrades.map(g => [
+      `"${g.student_name || ''}"`,
+      `"${g.prn_number || ''}"`,
+      `"${g.course_code || ''}"`,
+      `"${g.course_name || ''}"`,
+      g.credits,
+      g.assessment_type,
+      g.internal_marks,
+      g.external_marks,
+      g.practical_marks,
+      g.total_marks,
+      g.max_marks,
+      g.percentage,
+      g.letter_grade,
+      g.grade_point,
+      g.status,
+      `"${g.exam_session || ''}"`
+    ]);
+
+    const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `grades_report_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    showToast('CSV export downloaded successfully.', 'success');
   }
+
+  if (btnExportCsv) btnExportCsv.addEventListener('click', triggerCsvExport);
+  if (btnExportCsvHeader) btnExportCsvHeader.addEventListener('click', triggerCsvExport);
 
   const btnPrintTable = document.getElementById('btnPrintTable');
-  if (btnPrintTable) {
-    btnPrintTable.addEventListener('click', () => {
-      window.print();
-    });
-  }
+  const btnPrintTableHeader = document.getElementById('btnPrintTableHeader');
+
+  if (btnPrintTable) btnPrintTable.addEventListener('click', () => window.print());
+  if (btnPrintTableHeader) btnPrintTableHeader.addEventListener('click', () => window.print());
 
   // ==========================================================================
   // 9. FILTER LISTENERS & CLEAR

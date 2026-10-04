@@ -98,13 +98,47 @@ const getEnrollmentById = async (req, res) => {
 };
 
 /**
- * Create a new enrollment
+ * Create a new enrollment (Supports Admin enrollment and Student self-enrollment)
  * POST /api/enrollments
  */
 const createEnrollment = async (req, res) => {
   try {
+    const userRole = req.user ? req.user.role : null;
+    let studentId = null;
+    let student = null;
+
+    if (userRole === 'STUDENT') {
+      // 1. Identity MUST come strictly from authenticated user/JWT
+      student = await studentModel.findByUserId(req.user.user_id);
+      if (!student) {
+        return errorResponse(res, 404, 'Student profile not found. Please complete your profile first.');
+      }
+      if (!student.is_active) {
+        return errorResponse(res, 400, 'Cannot enroll an inactive student. Your student account is inactive.');
+      }
+      studentId = student.student_id;
+    } else if (userRole === 'ADMIN') {
+      // 2. For ADMIN role, student_id comes from request body
+      const { student_id } = req.body;
+      if (!student_id) {
+        return errorResponse(res, 400, 'Student ID and Course ID are required');
+      }
+      studentId = parseInt(student_id, 10);
+      if (isNaN(studentId) || studentId <= 0) {
+        return errorResponse(res, 400, 'Invalid student ID');
+      }
+      student = await studentModel.findById(studentId);
+      if (!student) {
+        return errorResponse(res, 404, 'Student not found');
+      }
+      if (!student.is_active) {
+        return errorResponse(res, 400, 'Cannot enroll an inactive student. Please activate the student user account first.');
+      }
+    } else {
+      return errorResponse(res, 403, 'Access forbidden: requires ADMIN or STUDENT privileges');
+    }
+
     const {
-      student_id,
       course_id,
       academic_year,
       semester,
@@ -112,40 +146,23 @@ const createEnrollment = async (req, res) => {
       status
     } = req.body;
 
-    // 1. Validate required IDs
-    if (!student_id || !course_id) {
-      return errorResponse(res, 400, 'Student ID and Course ID are required');
+    // 3. Validate required Course ID
+    if (!course_id) {
+      return errorResponse(res, 400, 'Course ID is required');
     }
 
-    const studentId = parseInt(student_id, 10);
     const courseId = parseInt(course_id, 10);
-
-    if (isNaN(studentId) || studentId <= 0) {
-      return errorResponse(res, 400, 'Invalid student ID');
-    }
-
     if (isNaN(courseId) || courseId <= 0) {
       return errorResponse(res, 400, 'Invalid course ID');
     }
 
-    // 2. Validate student exists and is active
-    const student = await studentModel.findById(studentId);
-    if (!student) {
-      return errorResponse(res, 404, 'Student not found');
-    }
-
-    if (!student.is_active) {
-      return errorResponse(res, 400, 'Cannot enroll an inactive student. Please activate the student user account first.');
-    }
-
-    // 3. Validate course exists
     const course = await courseModel.findById(courseId);
     if (!course) {
       return errorResponse(res, 404, 'Course not found');
     }
 
     // 4. Academic year handling (use provided or fallback to course's academic year)
-    let cleanYear = course.academic_year || '2025-2026';
+    let cleanYear = course.academic_year || '2026-2027';
     if (academic_year && String(academic_year).trim()) {
       cleanYear = String(academic_year).trim();
       if (cleanYear.length > 20) {
@@ -162,9 +179,11 @@ const createEnrollment = async (req, res) => {
       }
     }
 
-    // 6. Status validation
+    // 6. Status validation (Students always start as "Enrolled")
     let cleanStatus = 'Enrolled';
-    if (status && String(status).trim()) {
+    if (userRole === 'STUDENT') {
+      cleanStatus = 'Enrolled';
+    } else if (status && String(status).trim()) {
       const raw = String(status).trim();
       const normalized = raw.charAt(0).toUpperCase() + raw.slice(1).toLowerCase();
       if (!ALLOWED_STATUSES.includes(normalized)) {
@@ -183,7 +202,7 @@ const createEnrollment = async (req, res) => {
       safeDate = dateStr;
     }
 
-    // 8. Prevent duplicate enrollment based on live unique constraint uk_enrollment_student_course_year
+    // 8. Prevent duplicate enrollment
     const duplicate = await enrollmentModel.findDuplicate(studentId, courseId, cleanYear);
     if (duplicate) {
       return errorResponse(res, 409, `Student is already enrolled in course "${course.course_code}" for academic year ${cleanYear}`);

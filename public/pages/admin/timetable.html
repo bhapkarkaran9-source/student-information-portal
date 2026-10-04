@@ -508,6 +508,13 @@
             <option value="Saturday">Saturday</option>
           </select>
 
+          <!-- Lecture Type filter -->
+          <select id="typeFilterSelect" class="filter-select" aria-label="Filter by lecture type">
+            <option value="">All Types</option>
+            <option value="Theory">Theory</option>
+            <option value="Practical">Practical</option>
+          </select>
+
           <!-- Department filter -->
           <select id="deptFilterSelect" class="filter-select" aria-label="Filter by department">
             <option value="">All Departments</option>
@@ -579,6 +586,7 @@
               <tr>
                 <th>Day</th>
                 <th>Time Slot</th>
+                <th>Type</th>
                 <th>Course</th>
                 <th>Teacher</th>
                 <th>Department</th>
@@ -683,6 +691,16 @@
             <small id="addCourseNotice" style="color: var(--slate-500); font-size: 11px; margin-top: 4px; display: block;">Select the academic course for this lecture.</small>
           </div>
 
+          <!-- Lecture Type selection -->
+          <div class="modal-form-group">
+            <label for="addLectureTypeSelect">Lecture Type *</label>
+            <select id="addLectureTypeSelect" required>
+              <option value="Theory" selected>Theory</option>
+              <option value="Practical">Practical</option>
+            </select>
+            <small id="addLectureTypeNotice" style="color: var(--slate-500); font-size: 11px; margin-top: 4px; display: block;">Select Theory for whole-class lectures or Practical for division-specific labs.</small>
+          </div>
+
           <!-- Teacher selection -->
           <div class="modal-form-group">
             <label for="addTeacherSelect">Teacher *</label>
@@ -698,9 +716,10 @@
               <label for="addClassName">Class Name *</label>
               <input type="text" id="addClassName" required placeholder="e.g. FY-CS, SY-IT" maxlength="50">
             </div>
-            <div class="modal-form-group">
-              <label for="addDivision">Division *</label>
-              <input type="text" id="addDivision" required placeholder="e.g. A, B" maxlength="10">
+            <div class="modal-form-group" id="addDivisionGroup">
+              <label for="addDivision" id="addDivisionLabel">Division</label>
+              <input type="text" id="addDivision" placeholder="e.g. A, B" maxlength="10">
+              <small id="addDivisionHelperText" style="color: #0284c7; font-size: 11px; margin-top: 4px; display: block;">This theory lecture is visible to all students enrolled in the course.</small>
             </div>
             <div class="modal-form-group">
               <label for="addRoomNo">Room No *</label>
@@ -789,6 +808,14 @@
           </div>
 
           <div class="modal-form-group">
+            <label for="editLectureTypeSelect">Lecture Type *</label>
+            <select id="editLectureTypeSelect" required>
+              <option value="Theory">Theory</option>
+              <option value="Practical">Practical</option>
+            </select>
+          </div>
+
+          <div class="modal-form-group">
             <label for="editTeacherSelect">Teacher *</label>
             <select id="editTeacherSelect" required>
               <option value="">Select Teacher</option>
@@ -800,9 +827,10 @@
               <label for="editClassName">Class Name *</label>
               <input type="text" id="editClassName" required placeholder="e.g. FY-CS" maxlength="50">
             </div>
-            <div class="modal-form-group">
-              <label for="editDivision">Division *</label>
-              <input type="text" id="editDivision" required placeholder="e.g. A" maxlength="10">
+            <div class="modal-form-group" id="editDivisionGroup">
+              <label for="editDivision" id="editDivisionLabel">Division</label>
+              <input type="text" id="editDivision" placeholder="e.g. A" maxlength="10">
+              <small id="editDivisionHelperText" style="color: #0284c7; font-size: 11px; margin-top: 4px; display: block;">This theory lecture is visible to all students enrolled in the course.</small>
             </div>
             <div class="modal-form-group">
               <label for="editRoomNo">Room No *</label>
@@ -871,6 +899,10 @@
           <li class="info-item">
             <span class="info-label">Timetable ID</span>
             <span class="info-value" id="viewTimetableIdVal">-</span>
+          </li>
+          <li class="info-item">
+            <span class="info-label">Lecture Type</span>
+            <span class="info-value" id="viewLectureTypeVal">-</span>
           </li>
           <li class="info-item">
             <span class="info-label">Teacher</span>

@@ -8,6 +8,7 @@ let currentPage = 1;
 const pageSize = 10;
 let searchQuery = '';
 let selectedDay = '';
+let selectedType = '';
 let selectedDept = '';
 let selectedCourse = '';
 let selectedTeacher = '';
@@ -25,6 +26,37 @@ let activeAdmin = null;
 let courseLoadStatus = 'idle';
 let teacherLoadStatus = 'idle';
 let deptLoadStatus = 'idle';
+
+// Dynamic Division Visibility Helper for Lecture Type
+function bindLectureTypeToggle(typeSelectId, labelId, inputId, helperTextId) {
+  const typeSelect = document.getElementById(typeSelectId);
+  const label = document.getElementById(labelId);
+  const input = document.getElementById(inputId);
+  const helper = document.getElementById(helperTextId);
+  if (!typeSelect) return;
+
+  function updateUi() {
+    const isPractical = typeSelect.value === 'Practical';
+    if (label) {
+      label.textContent = isPractical ? 'Division *' : 'Division';
+    }
+    if (input) {
+      input.required = isPractical;
+    }
+    if (helper) {
+      if (isPractical) {
+        helper.textContent = 'This practical lecture is visible only to students in the selected division.';
+        helper.style.color = '#6366f1';
+      } else {
+        helper.textContent = 'This theory lecture is visible to all students enrolled in the course.';
+        helper.style.color = '#0284c7';
+      }
+    }
+  }
+
+  typeSelect.addEventListener('change', updateUi);
+  updateUi();
+}
 
 // Modal Action Callback
 let pendingConfirmAction = null;
@@ -500,6 +532,7 @@ function populateEditModalDropdowns() {
 function initToolbarFilters() {
   const searchInput = document.getElementById('timetableSearchInput');
   const daySelect = document.getElementById('dayFilterSelect');
+  const typeSelect = document.getElementById('typeFilterSelect');
   const deptSelect = document.getElementById('deptFilterSelect');
   const courseSelect = document.getElementById('courseFilterSelect');
   const teacherSelect = document.getElementById('teacherFilterSelect');
@@ -510,6 +543,10 @@ function initToolbarFilters() {
   const nextBtn = document.getElementById('nextPageBtn');
   const refreshBtn = document.getElementById('refreshBtn');
   const openAddBtn = document.getElementById('openAddTimetableBtn');
+
+  // Wire dynamic division toggle logic for modals
+  bindLectureTypeToggle('addLectureTypeSelect', 'addDivisionLabel', 'addDivision', 'addDivisionHelperText');
+  bindLectureTypeToggle('editLectureTypeSelect', 'editDivisionLabel', 'editDivision', 'editDivisionHelperText');
 
   // Search with debounce
   let debounceTimeout = null;
@@ -528,6 +565,15 @@ function initToolbarFilters() {
   if (daySelect) {
     daySelect.addEventListener('change', (e) => {
       selectedDay = e.target.value;
+      currentPage = 1;
+      loadTimetable();
+    });
+  }
+
+  // Lecture Type filter
+  if (typeSelect) {
+    typeSelect.addEventListener('change', (e) => {
+      selectedType = e.target.value;
       currentPage = 1;
       loadTimetable();
     });
@@ -618,6 +664,12 @@ function initToolbarFilters() {
       if (startInput && !startInput.value) startInput.value = '09:00';
       if (endInput && !endInput.value) endInput.value = '10:00';
 
+      const typeSel = document.getElementById('addLectureTypeSelect');
+      if (typeSel) {
+        typeSel.value = 'Theory';
+        typeSel.dispatchEvent(new Event('change'));
+      }
+
       populateAddModalDropdowns();
       openModal('addTimetableModal');
     });
@@ -655,7 +707,7 @@ async function loadTimetable() {
   if (tableBody) {
     tableBody.innerHTML = `
       <tr>
-        <td colspan="10" style="text-align: center; padding: 36px; color: var(--slate-500);">
+        <td colspan="11" style="text-align: center; padding: 36px; color: var(--slate-500);">
           <div style="display: inline-flex; align-items: center; gap: 8px;">
             <svg class="spin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="12" y1="2" x2="12" y2="6"></line>
@@ -681,6 +733,7 @@ async function loadTimetable() {
 
     if (searchQuery) params.set('search', searchQuery);
     if (selectedDay) params.set('day_of_week', selectedDay);
+    if (selectedType) params.set('lecture_type', selectedType);
     if (selectedCourse) params.set('course_id', selectedCourse);
     if (selectedTeacher) params.set('teacher_id', selectedTeacher);
     if (selectedDept) params.set('department_id', selectedDept);
@@ -718,18 +771,22 @@ async function loadTimetable() {
     tableBody.innerHTML = timetable.map(t => {
       const timeSlot = `${formatTime(t.start_time)} - ${formatTime(t.end_time)}`;
       const dayBadge = getDayBadgeHtml(t.day_of_week);
+      const typeBadge = t.lecture_type === 'Practical'
+        ? '<span class="badge" style="background: #e0e7ff; color: #4338ca; font-weight: 700;">Practical</span>'
+        : '<span class="badge" style="background: #e0f2fe; color: #0369a1; font-weight: 700;">Theory</span>';
       const courseCode = t.course_code || '-';
       const courseName = t.course_name || '-';
       const teacherName = t.teacher_name || `Teacher #${t.teacher_id}`;
       const empNo = t.teacher_employee_number || '-';
       const dept = t.department_name ? `${t.department_name} (${t.department_code})` : (t.department_code || '-');
-      const classDiv = `${t.class_name} - ${t.division}`;
+      const classDiv = t.division ? `${t.class_name} - ${t.division}` : t.class_name;
       const room = t.room_no || '-';
 
       return `
         <tr>
           <td>${dayBadge}</td>
           <td><span style="font-family: monospace; font-weight: 700; color: var(--slate-800);">${timeSlot}</span></td>
+          <td>${typeBadge}</td>
           <td>
             <div style="display: flex; flex-direction: column; gap: 2px;">
               <span class="badge badge-info" style="align-self: flex-start; font-family: monospace; font-weight: 700;">${escapeHtml(courseCode)}</span>
@@ -1030,10 +1087,16 @@ async function openViewModal(timetableId) {
     document.getElementById('viewTimeRange').textContent = `${formatTime(t.start_time)} - ${formatTime(t.end_time)}`;
 
     document.getElementById('viewTimetableIdVal').textContent = `#${t.timetable_id}`;
+    const typeBadge = t.lecture_type === 'Practical'
+      ? '<span class="badge" style="background: #e0e7ff; color: #4338ca; font-weight: 700;">Practical</span>'
+      : '<span class="badge" style="background: #e0f2fe; color: #0369a1; font-weight: 700;">Theory</span>';
+    const viewTypeVal = document.getElementById('viewLectureTypeVal');
+    if (viewTypeVal) viewTypeVal.innerHTML = typeBadge;
+
     document.getElementById('viewTeacherVal').textContent = t.teacher_name || '-';
     document.getElementById('viewEmpNoVal').textContent = t.teacher_employee_number || '-';
     document.getElementById('viewDeptVal').textContent = t.department_name ? `${t.department_name} (${t.department_code})` : (t.department_code || '-');
-    document.getElementById('viewClassDivVal').textContent = `${t.class_name} - ${t.division}`;
+    document.getElementById('viewClassDivVal').textContent = t.division ? `${t.class_name} - ${t.division}` : t.class_name;
     document.getElementById('viewRoomVal').textContent = t.room_no || '-';
     document.getElementById('viewYearVal').textContent = t.academic_year || '-';
     document.getElementById('viewSemesterVal').textContent = `Semester ${t.semester}`;
@@ -1065,9 +1128,16 @@ async function openEditModal(timetableId) {
     document.getElementById('editStartTime').value = t.start_time.toString().slice(0, 5);
     document.getElementById('editEndTime').value = t.end_time.toString().slice(0, 5);
     document.getElementById('editCourseSelect').value = t.course_id;
+
+    const editTypeSel = document.getElementById('editLectureTypeSelect');
+    if (editTypeSel) {
+      editTypeSel.value = t.lecture_type || 'Theory';
+      editTypeSel.dispatchEvent(new Event('change'));
+    }
+
     document.getElementById('editTeacherSelect').value = t.teacher_id;
     document.getElementById('editClassName').value = t.class_name;
-    document.getElementById('editDivision').value = t.division;
+    document.getElementById('editDivision').value = t.division || '';
     document.getElementById('editRoomNo').value = t.room_no;
     document.getElementById('editAcademicYear').value = t.academic_year;
     document.getElementById('editSemester').value = t.semester;
@@ -1137,6 +1207,7 @@ function initFormSubmissions() {
       const startTime = document.getElementById('addStartTime').value;
       const endTime = document.getElementById('addEndTime').value;
       const courseId = document.getElementById('addCourseSelect').value;
+      const lectureType = document.getElementById('addLectureTypeSelect').value || 'Theory';
       const teacherId = document.getElementById('addTeacherSelect').value;
       const className = document.getElementById('addClassName').value.trim();
       const division = document.getElementById('addDivision').value.trim();
@@ -1144,8 +1215,13 @@ function initFormSubmissions() {
       const academicYear = document.getElementById('addAcademicYear').value.trim();
       const semester = parseInt(document.getElementById('addSemester').value, 10);
 
-      if (!dayOfWeek || !startTime || !endTime || !courseId || !teacherId || !className || !division || !roomNo) {
+      if (!dayOfWeek || !startTime || !endTime || !courseId || !teacherId || !className || !roomNo) {
         showModalAlert('addModalAlert', 'All fields marked with an asterisk are required.');
+        return;
+      }
+
+      if (lectureType === 'Practical' && !division) {
+        showModalAlert('addModalAlert', 'Division is required for practical lectures.');
         return;
       }
 
@@ -1167,6 +1243,7 @@ function initFormSubmissions() {
           end_time: endTime,
           course_id: parseInt(courseId, 10),
           teacher_id: parseInt(teacherId, 10),
+          lecture_type: lectureType,
           class_name: className,
           division,
           room_no: roomNo,
@@ -1210,6 +1287,7 @@ function initFormSubmissions() {
       const startTime = document.getElementById('editStartTime').value;
       const endTime = document.getElementById('editEndTime').value;
       const courseId = document.getElementById('editCourseSelect').value;
+      const lectureType = document.getElementById('editLectureTypeSelect').value || 'Theory';
       const teacherId = document.getElementById('editTeacherSelect').value;
       const className = document.getElementById('editClassName').value.trim();
       const division = document.getElementById('editDivision').value.trim();
@@ -1217,8 +1295,13 @@ function initFormSubmissions() {
       const academicYear = document.getElementById('editAcademicYear').value.trim();
       const semester = parseInt(document.getElementById('editSemester').value, 10);
 
-      if (!dayOfWeek || !startTime || !endTime || !courseId || !teacherId || !className || !division || !roomNo) {
+      if (!dayOfWeek || !startTime || !endTime || !courseId || !teacherId || !className || !roomNo) {
         showModalAlert('editModalAlert', 'All fields marked with an asterisk are required.');
+        return;
+      }
+
+      if (lectureType === 'Practical' && !division) {
+        showModalAlert('editModalAlert', 'Division is required for practical lectures.');
         return;
       }
 
@@ -1240,6 +1323,7 @@ function initFormSubmissions() {
           end_time: endTime,
           course_id: parseInt(courseId, 10),
           teacher_id: parseInt(teacherId, 10),
+          lecture_type: lectureType,
           class_name: className,
           division,
           room_no: roomNo,

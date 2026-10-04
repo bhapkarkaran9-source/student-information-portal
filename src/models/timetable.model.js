@@ -13,6 +13,7 @@ const getTimetable = async ({
   search = '',
   day_of_week = '',
   course_id = '',
+  lecture_type = '',
   teacher_id = '',
   department_id = '',
   academic_year = '',
@@ -36,9 +37,10 @@ const getTimetable = async ({
       tch.employee_number LIKE ? OR
       t.room_no LIKE ? OR
       t.class_name LIKE ? OR
-      t.division LIKE ?
+      t.division LIKE ? OR
+      t.lecture_type LIKE ?
     )`);
-    queryParams.push(term, term, term, term, term, term, term, term);
+    queryParams.push(term, term, term, term, term, term, term, term, term);
   }
 
   // Filter by day of week
@@ -51,6 +53,12 @@ const getTimetable = async ({
   if (course_id !== '' && course_id !== undefined && course_id !== null) {
     whereConditions.push('t.course_id = ?');
     queryParams.push(parseInt(course_id, 10));
+  }
+
+  // Filter by lecture_type
+  if (lecture_type && lecture_type.trim()) {
+    whereConditions.push('t.lecture_type = ?');
+    queryParams.push(lecture_type.trim());
   }
 
   // Filter by teacher
@@ -83,9 +91,9 @@ const getTimetable = async ({
     queryParams.push(class_name.trim());
   }
 
-  // Filter by division
+  // Filter by division (Smart division visibility: Theory ignores division!)
   if (division && division.trim()) {
-    whereConditions.push('t.division = ?');
+    whereConditions.push('(t.lecture_type = "Theory" OR t.division = ?)');
     queryParams.push(division.trim());
   }
 
@@ -125,6 +133,7 @@ const getTimetable = async ({
       t.start_time,
       t.end_time,
       t.course_id,
+      t.lecture_type,
       t.teacher_id,
       t.class_name,
       t.division,
@@ -203,9 +212,11 @@ const findById = async (timetableId) => {
       t.start_time,
       t.end_time,
       t.course_id,
+      t.lecture_type,
       t.teacher_id,
       t.class_name,
       t.division,
+      t.batch,
       t.room_no,
       t.academic_year,
       t.semester,
@@ -250,9 +261,10 @@ const checkConflict = async ({
   end_time,
   teacher_id,
   class_name,
-  division,
+  division = '',
   room_no,
   course_id,
+  lecture_type = 'Theory',
   excludeId = null
 }) => {
   const excludeClause = excludeId ? 'AND t.timetable_id != ?' : '';
@@ -291,33 +303,46 @@ const checkConflict = async ({
   }
 
   // B. Class & Division conflict check
-  const classSql = `
-    SELECT t.*, c.course_code, c.course_name
-    FROM timetable t
-    INNER JOIN courses c ON t.course_id = c.course_id
-    WHERE t.day_of_week = ? 
-      AND t.class_name = ? 
-      AND t.division = ? 
-      AND t.start_time < ? 
-      AND t.end_time > ?
-      ${excludeClause}
-    LIMIT 1
-  `;
-  const [classConflicts] = await pool.query(classSql, [
-    day_of_week,
-    class_name.trim(),
-    division.trim(),
-    end_time,
-    start_time,
-    ...excludeParam
-  ]);
+  let classSql = '';
+  let classParams = [];
+  const cleanDiv = (division || '').trim();
+  if (lecture_type === 'Theory') {
+    classSql = `
+      SELECT t.*, c.course_code, c.course_name
+      FROM timetable t
+      INNER JOIN courses c ON t.course_id = c.course_id
+      WHERE t.day_of_week = ? 
+        AND t.class_name = ? 
+        AND t.start_time < ? 
+        AND t.end_time > ?
+        ${excludeClause}
+      LIMIT 1
+    `;
+    classParams = [day_of_week, class_name.trim(), end_time, start_time, ...excludeParam];
+  } else {
+    classSql = `
+      SELECT t.*, c.course_code, c.course_name
+      FROM timetable t
+      INNER JOIN courses c ON t.course_id = c.course_id
+      WHERE t.day_of_week = ? 
+        AND t.class_name = ? 
+        AND (t.lecture_type = 'Theory' OR t.division = ?) 
+        AND t.start_time < ? 
+        AND t.end_time > ?
+        ${excludeClause}
+      LIMIT 1
+    `;
+    classParams = [day_of_week, class_name.trim(), cleanDiv, end_time, start_time, ...excludeParam];
+  }
+
+  const [classConflicts] = await pool.query(classSql, classParams);
 
   if (classConflicts.length > 0) {
     const existing = classConflicts[0];
     return {
       hasConflict: true,
       type: 'CLASS_CONFLICT',
-      message: `Class/division already has another lecture at this time (${existing.start_time.toString().slice(0, 5)} - ${existing.end_time.toString().slice(0, 5)} on ${day_of_week}): ${class_name} Div ${division} (${existing.course_code}).`,
+      message: `Class/division already has another lecture at this time (${existing.start_time.toString().slice(0, 5)} - ${existing.end_time.toString().slice(0, 5)} on ${day_of_week}): ${class_name} ${cleanDiv ? 'Div ' + cleanDiv : ''} (${existing.course_code}).`,
       conflictRecord: existing
     };
   }
@@ -356,35 +381,48 @@ const checkConflict = async ({
 
   // D. Course & Class/Division duplicate conflict check
   if (course_id) {
-    const courseClassSql = `
-      SELECT t.*, c.course_code, c.course_name
-      FROM timetable t
-      INNER JOIN courses c ON t.course_id = c.course_id
-      WHERE t.day_of_week = ?
-        AND t.course_id = ?
-        AND t.class_name = ?
-        AND t.division = ?
-        AND t.start_time < ?
-        AND t.end_time > ?
-        ${excludeClause}
-      LIMIT 1
-    `;
-    const [courseClassConflicts] = await pool.query(courseClassSql, [
-      day_of_week,
-      parseInt(course_id, 10),
-      class_name.trim(),
-      division.trim(),
-      end_time,
-      start_time,
-      ...excludeParam
-    ]);
+    let courseClassSql = '';
+    let courseClassParams = [];
+    if (lecture_type === 'Theory') {
+      courseClassSql = `
+        SELECT t.*, c.course_code, c.course_name
+        FROM timetable t
+        INNER JOIN courses c ON t.course_id = c.course_id
+        WHERE t.day_of_week = ?
+          AND t.course_id = ?
+          AND t.class_name = ?
+          AND t.lecture_type = 'Theory'
+          AND t.start_time < ?
+          AND t.end_time > ?
+          ${excludeClause}
+        LIMIT 1
+      `;
+      courseClassParams = [day_of_week, parseInt(course_id, 10), class_name.trim(), end_time, start_time, ...excludeParam];
+    } else {
+      courseClassSql = `
+        SELECT t.*, c.course_code, c.course_name
+        FROM timetable t
+        INNER JOIN courses c ON t.course_id = c.course_id
+        WHERE t.day_of_week = ?
+          AND t.course_id = ?
+          AND t.class_name = ?
+          AND t.division = ?
+          AND t.start_time < ?
+          AND t.end_time > ?
+          ${excludeClause}
+        LIMIT 1
+      `;
+      courseClassParams = [day_of_week, parseInt(course_id, 10), class_name.trim(), cleanDiv, end_time, start_time, ...excludeParam];
+    }
+
+    const [courseClassConflicts] = await pool.query(courseClassSql, courseClassParams);
 
     if (courseClassConflicts.length > 0) {
       const existing = courseClassConflicts[0];
       return {
         hasConflict: true,
         type: 'COURSE_CLASS_CONFLICT',
-        message: `Course ${existing.course_code} is already scheduled for class ${class_name}-${division} at this time on ${day_of_week}.`,
+        message: `Course ${existing.course_code} is already scheduled for class ${class_name}${cleanDiv ? '-' + cleanDiv : ''} at this time on ${day_of_week}.`,
         conflictRecord: existing
       };
     }
@@ -408,26 +446,30 @@ const createTimetable = async ({
   start_time,
   end_time,
   course_id,
+  lecture_type = 'Theory',
   teacher_id,
   class_name,
-  division,
+  division = '',
   room_no,
   academic_year,
   semester
 }) => {
+  const cleanType = (lecture_type === 'Practical') ? 'Practical' : 'Theory';
+  const cleanDiv = (division || '').trim();
   const sql = `
     INSERT INTO timetable (
       day_of_week,
       start_time,
       end_time,
       course_id,
+      lecture_type,
       teacher_id,
       class_name,
       division,
       room_no,
       academic_year,
       semester
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
   const [result] = await pool.query(sql, [
@@ -435,9 +477,10 @@ const createTimetable = async ({
     start_time,
     end_time,
     course_id,
+    cleanType,
     teacher_id,
     class_name.trim(),
-    division.trim(),
+    cleanDiv,
     room_no.trim(),
     academic_year.trim(),
     semester
@@ -457,19 +500,23 @@ const updateTimetable = async (timetableId, {
   start_time,
   end_time,
   course_id,
+  lecture_type = 'Theory',
   teacher_id,
   class_name,
-  division,
+  division = '',
   room_no,
   academic_year,
   semester
 }) => {
+  const cleanType = (lecture_type === 'Practical') ? 'Practical' : 'Theory';
+  const cleanDiv = (division || '').trim();
   const sql = `
     UPDATE timetable SET
       day_of_week = ?,
       start_time = ?,
       end_time = ?,
       course_id = ?,
+      lecture_type = ?,
       teacher_id = ?,
       class_name = ?,
       division = ?,
@@ -484,9 +531,10 @@ const updateTimetable = async (timetableId, {
     start_time,
     end_time,
     course_id,
+    cleanType,
     teacher_id,
     class_name.trim(),
-    division.trim(),
+    cleanDiv,
     room_no.trim(),
     academic_year.trim(),
     semester,
@@ -571,19 +619,27 @@ const getTodayLecturesForStudent = async ({
   day_of_week,
   student_id = null
 }) => {
-  let enrollmentClause = '';
-  const params = [day_of_week, department_id, class_name, division, semester];
+  const whereConditions = ['t.day_of_week = ?'];
+  const params = [day_of_week];
 
-  if (student_id) {
-    enrollmentClause = `
-      AND (
-        t.course_id IN (
-          SELECT e.course_id FROM enrollments e 
-          WHERE e.student_id = ? AND e.status = 'Enrolled'
-        )
-      )
-    `;
-    params.push(parseInt(student_id, 10));
+  if (department_id) {
+    whereConditions.push('(c.department_id = ? OR tch.department_id = ? OR t.class_name = ?)');
+    params.push(parseInt(department_id, 10), parseInt(department_id, 10), class_name || '');
+  }
+
+  if (class_name && class_name.trim()) {
+    whereConditions.push('t.class_name = ?');
+    params.push(class_name.trim());
+  }
+
+  if (semester !== '' && semester !== undefined && semester !== null) {
+    whereConditions.push('t.semester = ?');
+    params.push(parseInt(semester, 10));
+  }
+
+  if (division && division.trim()) {
+    whereConditions.push('(t.lecture_type = "Theory" OR t.division = ?)');
+    params.push(division.trim());
   }
 
   const sql = `
@@ -593,6 +649,7 @@ const getTodayLecturesForStudent = async ({
       DATE_FORMAT(t.start_time, '%H:%i:%s') AS start_time,
       DATE_FORMAT(t.end_time, '%H:%i:%s') AS end_time,
       t.course_id,
+      t.lecture_type,
       t.teacher_id,
       t.class_name,
       t.division,
@@ -615,12 +672,7 @@ const getTodayLecturesForStudent = async ({
     INNER JOIN departments d ON c.department_id = d.department_id
     INNER JOIN teachers tch ON t.teacher_id = tch.teacher_id
     INNER JOIN users u ON tch.user_id = u.user_id
-    WHERE t.day_of_week = ?
-      AND c.department_id = ?
-      AND t.class_name = ?
-      AND t.division = ?
-      AND t.semester = ?
-      ${enrollmentClause}
+    WHERE ${whereConditions.join(' AND ')}
     ORDER BY t.start_time ASC, t.timetable_id ASC
   `;
 
@@ -642,6 +694,7 @@ const getTodayLecturesForTeacher = async ({ teacher_id, day_of_week }) => {
       DATE_FORMAT(t.start_time, '%H:%i:%s') AS start_time,
       DATE_FORMAT(t.end_time, '%H:%i:%s') AS end_time,
       t.course_id,
+      t.lecture_type,
       t.teacher_id,
       t.class_name,
       t.division,
@@ -777,19 +830,27 @@ const isReminderLogged = async ({ user_id, timetable_id, lecture_date, reminder_
 
 /**
  * Find all applicable active students for a timetable entry
- * Scoped to department, class, division, semester, and active enrollment
+ * Scoped to department, class, division (if Practical), semester, and active enrollment
  * @param {number} timetableId
  * @returns {Promise<Array>}
  */
 const findStudentsForTimetableEntry = async (timetableId) => {
+  const entry = await findById(timetableId);
+  if (!entry) return [];
+
+  let divClause = '';
+  if (entry.lecture_type === 'Practical') {
+    divClause = 'AND s.division = t.division';
+  }
+
   const sql = `
     SELECT DISTINCT s.student_id, s.user_id, u.email, u.first_name, u.last_name, u.username
     FROM timetable t
     INNER JOIN courses c ON t.course_id = c.course_id
     INNER JOIN students s ON s.department_id = c.department_id 
       AND s.class_name = t.class_name 
-      AND s.division = t.division 
       AND s.semester = t.semester
+      ${divClause}
     INNER JOIN users u ON s.user_id = u.user_id
     INNER JOIN enrollments e ON e.student_id = s.student_id AND e.course_id = t.course_id
     WHERE t.timetable_id = ?

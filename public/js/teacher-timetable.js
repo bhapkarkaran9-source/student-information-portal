@@ -171,7 +171,9 @@
       if (nextEmpty) nextEmpty.style.display = 'none';
 
       if (nextCourse) nextCourse.textContent = `${nextLec.course_name || 'Class Session'} (${nextLec.course_code || ''})`;
-      if (nextMeta) nextMeta.textContent = `${nextLec.course_type || 'Theory'} • Class: ${nextLec.class_name || '-'} Div ${nextLec.division || '-'} • Sem ${nextLec.semester || '-'}`;
+      const lecType = nextLec.lecture_type || nextLec.course_type || 'Theory';
+      const divLabel = nextLec.division ? `Div ${nextLec.division}` : '';
+      if (nextMeta) nextMeta.textContent = `${lecType} • Class: ${nextLec.class_name || '-'} ${divLabel} • Sem ${nextLec.semester || '-'}`;
       if (nextTime) nextTime.textContent = nextLec.time_range || `${nextLec.start_time_12} - ${nextLec.end_time_12}`;
       if (nextRoom) nextRoom.textContent = `Room: ${nextLec.room_no || 'TBA'}`;
 
@@ -302,9 +304,9 @@
                 ${escapeHtml(slot.course_name)} <span style="font-size: 13px; font-weight: 600; color: #64748b;">(${escapeHtml(slot.course_code)})</span>
               </h4>
               <div style="font-size: 12.5px; color: #64748b; margin-top: 4px; display: flex; gap: 16px; flex-wrap: wrap;">
-                <span>Class: <strong style="color: #334155;">${escapeHtml(slot.class_name || '-')} Div ${escapeHtml(slot.division || '-')} (Sem ${escapeHtml(slot.semester || '-')})</strong></span>
+                <span>Class: <strong style="color: #334155;">${escapeHtml(slot.class_name || '-')} ${escapeHtml(slot.division ? 'Div ' + slot.division : '')} (Sem ${escapeHtml(slot.semester || '-')})</strong></span>
                 <span>Room: <strong style="color: #334155;">${escapeHtml(slot.room_no || 'TBA')}</strong></span>
-                <span>Type: <strong style="color: #334155;">${escapeHtml(slot.course_type || 'Theory')}</strong></span>
+                <span>Type: <strong style="color: #334155;">${escapeHtml(slot.lecture_type || slot.course_type || 'Theory')}</strong></span>
               </div>
             </div>
             <div style="text-align: right;">
@@ -359,11 +361,12 @@
           attendanceBtn = `<a href="/pages/teacher/attendance.html?course_id=${slot.course_id}&date=${todayDateStr}&start_time=${encodeURIComponent(slot.start_time)}" class="teacher-btn-outline" style="padding: 2px 8px; font-size: 11px; font-weight: 600; color: #0d9488; border-color: #0d9488;">Mark Attendance &rarr;</a>`;
         }
 
+        const divText = slot.division ? `Div ${slot.division}` : '';
         html += `
           <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
             <div>
               <div style="font-weight: 700; font-size: 14.5px; color: #0f172a;">${escapeHtml(slot.course_name)} <span style="font-weight: 500; color: #64748b;">(${escapeHtml(slot.course_code)})</span></div>
-              <div style="font-size: 12px; color: #64748b; margin-top: 3px;">Class: ${escapeHtml(slot.class_name || '-')} Div ${escapeHtml(slot.division || '-')} &bull; Room: ${escapeHtml(slot.room_no || 'TBA')}</div>
+              <div style="font-size: 12px; color: #64748b; margin-top: 3px;">Class: ${escapeHtml(slot.class_name || '-')} ${escapeHtml(divText)} &bull; Room: ${escapeHtml(slot.room_no || 'TBA')}</div>
             </div>
             <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
               <span style="font-weight: 700; font-size: 13px; color: #0f172a; background: #f1f5f9; padding: 3px 8px; border-radius: 6px;">${escapeHtml(slot.time_range)}</span>
@@ -386,12 +389,13 @@
         const s12 = formatTimeTo12Hour(slot.start_time);
         const e12 = formatTimeTo12Hour(slot.end_time);
         const timeRange = (s12 && e12) ? `${s12} - ${e12}` : (slot.start_time || '--');
+        const divText = slot.division ? `Div ${slot.division}` : '';
 
         html += `
           <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
             <div>
               <div style="font-weight: 700; font-size: 14.5px; color: #0f172a;">${escapeHtml(slot.course_name)} <span style="font-weight: 500; color: #64748b;">(${escapeHtml(slot.course_code)})</span></div>
-              <div style="font-size: 12px; color: #64748b; margin-top: 3px;">Class: ${escapeHtml(slot.class_name || '-')} Div ${escapeHtml(slot.division || '-')} &bull; Room: ${escapeHtml(slot.room_no || 'TBA')}</div>
+              <div style="font-size: 12px; color: #64748b; margin-top: 3px;">Class: ${escapeHtml(slot.class_name || '-')} ${escapeHtml(divText)} &bull; Room: ${escapeHtml(slot.room_no || 'TBA')}</div>
             </div>
             <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
               <span style="font-weight: 700; font-size: 13px; color: #0f172a; background: #f8fafc; padding: 3px 8px; border-radius: 6px; border: 1px solid #e2e8f0;">${escapeHtml(timeRange)}</span>
@@ -430,7 +434,8 @@
 
     let labCount = 0;
     slots.forEach(s => {
-      if ((s.course_type || '').toLowerCase() === 'practical') labCount++;
+      const type = (s.lecture_type || s.course_type || '').toLowerCase();
+      if (type === 'practical') labCount++;
     });
     const labsEl = document.getElementById('statWeeklyLabs');
     if (labsEl) labsEl.textContent = labCount;
@@ -489,6 +494,11 @@
       const s12 = formatTimeTo12Hour(item.start_time);
       const e12 = formatTimeTo12Hour(item.end_time);
       const timeStr = (s12 && e12) ? `${s12} - ${e12}` : `${item.start_time || '09:00'} - ${item.end_time || '10:00'}`;
+      const itemType = item.lecture_type || item.course_type || 'Theory';
+      const typeBadgeStyle = itemType === 'Practical'
+        ? 'background: #e0e7ff; color: #4338ca;'
+        : 'background: #e0f2fe; color: #0369a1;';
+      const divText = item.division ? `Div ${item.division}` : '';
 
       html += `
         <tr style="border-bottom: 1px solid #f1f5f9;">
@@ -498,10 +508,10 @@
             <div style="font-weight: 600; color: #0f172a;">${escapeHtml(item.course_name || 'Assigned Course')}</div>
             <div style="font-size: 11.5px; color: #64748b;">${escapeHtml(item.course_code || '')}</div>
           </td>
-          <td style="padding: 14px 16px; color: #475569;">${escapeHtml(item.class_name || '-')} ${escapeHtml(item.division ? 'Div ' + item.division : '')}</td>
+          <td style="padding: 14px 16px; color: #475569;">${escapeHtml(item.class_name || '-')} ${escapeHtml(divText)}</td>
           <td style="padding: 14px 16px; color: #475569; font-weight: 500;">${escapeHtml(item.room_no || 'TBD')}</td>
           <td style="padding: 14px 16px;">
-            <span class="teacher-meta-chip" style="background: #ccfbf1; color: #0f766e; border: none; padding: 2px 8px; border-radius: 4px; font-size: 11.5px; font-weight: 600;">${escapeHtml(item.course_type || 'Theory')}</span>
+            <span class="teacher-meta-chip" style="${typeBadgeStyle} border: none; padding: 2px 8px; border-radius: 4px; font-size: 11.5px; font-weight: 600;">${escapeHtml(itemType)}</span>
           </td>
           <td style="padding: 14px 16px; text-align: right; white-space: nowrap;">
             <a href="/pages/teacher/attendance.html?course_id=${item.course_id || ''}" class="teacher-btn-outline" style="padding: 4px 10px; font-size: 12px; text-decoration: none; border-radius: 4px; border: 1px solid #cbd5e1; color: #0d9488; font-weight: 600;">Mark Attendance</a>

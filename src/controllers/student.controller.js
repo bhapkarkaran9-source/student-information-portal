@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+const pool = require('../config/db');
 const studentModel = require('../models/student.model');
 const userModel = require('../models/user.model');
 const departmentModel = require('../models/department.model');
@@ -114,24 +115,69 @@ const createStudent = async (req, res) => {
       semester
     } = req.body;
 
-    // 1. Required field validations
-    if (
-      !first_name ||
-      !last_name ||
-      !username ||
-      !email ||
-      !password ||
-      !prn_number ||
-      department_id === undefined ||
-      !admission_date ||
-      !class_name ||
-      !division ||
-      semester === undefined
-    ) {
-      return errorResponse(res, 400, 'All required student and user fields must be filled');
+    if (!username || !password) {
+      return errorResponse(res, 400, 'Username and password are required');
     }
 
     const cleanUsername = String(username).trim();
+    if (!cleanUsername) {
+      return errorResponse(res, 400, 'Username cannot be blank');
+    }
+
+    if (typeof password !== 'string' || password.length < 6) {
+      return errorResponse(res, 400, 'Password must be at least 6 characters long');
+    }
+
+    // Check username uniqueness
+    const existingUser = await userModel.findByUsername(cleanUsername);
+    if (existingUser) {
+      return errorResponse(res, 409, 'Username is already taken');
+    }
+
+    // Find STUDENT role ID
+    const [roles] = await pool.query("SELECT role_id FROM roles WHERE role_name = 'STUDENT'");
+    if (roles.length === 0) {
+      return errorResponse(res, 500, 'STUDENT role does not exist');
+    }
+    const studentRoleId = roles[0].role_id;
+
+    // Check if full student profile fields were provided (legacy / full create)
+    const isFullCreation = Boolean(first_name && last_name && email && prn_number && department_id && admission_date && class_name && division && semester !== undefined);
+
+    if (!isFullCreation) {
+      // Simple Admin Student Creation (Username + Password only)
+      const password_hash = await bcrypt.hash(password, 10);
+      const newUserId = await userModel.createUser({
+        role_id: studentRoleId,
+        username: cleanUsername,
+        password_hash,
+        email: null,
+        first_name: null,
+        last_name: null,
+        phone: null,
+        is_active: true,
+        is_profile_complete: false
+      });
+
+      await createAuditLog({
+        userId: req.user.user_id,
+        action: 'STUDENT_ACCOUNT_CREATED',
+        entity: 'users',
+        entityId: newUserId,
+        description: `Created student account shell for username: ${cleanUsername}`,
+        details: { username: cleanUsername, is_profile_complete: false },
+        req
+      });
+
+      return successResponse(res, 201, 'Student account created successfully', {
+        user_id: newUserId,
+        username: cleanUsername,
+        role: 'STUDENT',
+        is_profile_complete: false
+      });
+    }
+
+    // Legacy / Full Student Creation Flow
     const cleanEmail = String(email).trim().toLowerCase();
     const cleanFirstName = String(first_name).trim();
     const cleanLastName = String(last_name).trim();
@@ -140,32 +186,23 @@ const createStudent = async (req, res) => {
     const cleanDivision = String(division).trim();
     const cleanPhone = phone ? String(phone).trim() : null;
 
-    if (!cleanUsername || !cleanEmail || !cleanFirstName || !cleanLastName || !cleanPrn || !cleanClass || !cleanDivision) {
+    if (!cleanEmail || !cleanFirstName || !cleanLastName || !cleanPrn || !cleanClass || !cleanDivision) {
       return errorResponse(res, 400, 'Fields cannot be blank');
     }
 
-    // 2. Email format validation
     if (!EMAIL_REGEX.test(cleanEmail)) {
       return errorResponse(res, 400, 'Please provide a valid email address');
     }
 
-    // 3. Password length
-    if (typeof password !== 'string' || password.length < 6) {
-      return errorResponse(res, 400, 'Password must be at least 6 characters long');
-    }
-
-    // 4. Semester validation
     const parsedSemester = parseInt(semester, 10);
     if (isNaN(parsedSemester) || parsedSemester < 1 || parsedSemester > 12) {
       return errorResponse(res, 400, 'Semester must be an integer between 1 and 12');
     }
 
-    // 5. Gender validation
     if (gender && !VALID_GENDERS.includes(gender)) {
       return errorResponse(res, 400, `Gender must be one of: ${VALID_GENDERS.join(', ')}`);
     }
 
-    // 6. Department existence
     const parsedDeptId = parseInt(department_id, 10);
     if (isNaN(parsedDeptId)) {
       return errorResponse(res, 400, 'Invalid department ID');
@@ -173,12 +210,6 @@ const createStudent = async (req, res) => {
     const deptRecord = await departmentModel.findById(parsedDeptId);
     if (!deptRecord) {
       return errorResponse(res, 400, 'Selected department does not exist');
-    }
-
-    // 7. Uniqueness checks
-    const existingUser = await userModel.findByUsername(cleanUsername);
-    if (existingUser) {
-      return errorResponse(res, 409, 'Username is already taken');
     }
 
     const existingEmail = await userModel.findByEmail(cleanEmail);
@@ -191,10 +222,8 @@ const createStudent = async (req, res) => {
       return errorResponse(res, 409, 'PRN number is already assigned to another student');
     }
 
-    // 8. Hash password securely
     const password_hash = await bcrypt.hash(password, 10);
 
-    // 9. Atomic transaction creation
     const newStudentId = await studentModel.createStudentWithUser(
       {
         username: cleanUsername,
@@ -202,7 +231,8 @@ const createStudent = async (req, res) => {
         password_hash,
         first_name: cleanFirstName,
         last_name: cleanLastName,
-        phone: cleanPhone
+        phone: cleanPhone,
+        is_profile_complete: true
       },
       {
         prn_number: cleanPrn,
@@ -232,6 +262,137 @@ const createStudent = async (req, res) => {
   } catch (error) {
     console.error('Error creating student:', error.message);
     return errorResponse(res, 500, 'An error occurred while creating student');
+  }
+};
+
+/**
+ * Complete student profile upon first login
+ * POST /api/students/complete-profile
+ */
+const completeStudentProfile = async (req, res) => {
+  try {
+    const userId = req.user.user_id;
+    const {
+      first_name,
+      last_name,
+      email,
+      phone,
+      date_of_birth,
+      gender,
+      prn_number,
+      department_id,
+      admission_date,
+      semester,
+      class_name,
+      division,
+      batch
+    } = req.body;
+
+    if (!first_name || !last_name || !email || !prn_number || department_id === undefined || !admission_date || !class_name || !division || semester === undefined) {
+      return errorResponse(res, 400, 'First name, last name, email, PRN, department, admission date, class, division, and semester are required');
+    }
+
+    const cleanFirstName = String(first_name).trim();
+    const cleanLastName = String(last_name).trim();
+    const cleanEmail = String(email).trim().toLowerCase();
+    const cleanPrn = String(prn_number).trim();
+    const cleanClass = String(class_name).trim();
+    const cleanDivision = String(division).trim();
+    const cleanBatch = batch && String(batch).trim() ? String(batch).trim() : null;
+    const cleanPhone = phone ? String(phone).trim() : null;
+
+    if (!cleanFirstName || !cleanLastName || !cleanEmail || !cleanPrn || !cleanClass || !cleanDivision) {
+      return errorResponse(res, 400, 'Fields cannot be blank');
+    }
+
+    if (!EMAIL_REGEX.test(cleanEmail)) {
+      return errorResponse(res, 400, 'Please provide a valid email address');
+    }
+
+    const parsedSemester = parseInt(semester, 10);
+    if (isNaN(parsedSemester) || parsedSemester < 1 || parsedSemester > 12) {
+      return errorResponse(res, 400, 'Semester must be an integer between 1 and 12');
+    }
+
+    if (gender && !VALID_GENDERS.includes(gender)) {
+      return errorResponse(res, 400, `Gender must be one of: ${VALID_GENDERS.join(', ')}`);
+    }
+
+    const parsedDeptId = parseInt(department_id, 10);
+    if (isNaN(parsedDeptId)) {
+      return errorResponse(res, 400, 'Invalid department ID');
+    }
+    const deptRecord = await departmentModel.findById(parsedDeptId);
+    if (!deptRecord) {
+      return errorResponse(res, 400, 'Selected department does not exist');
+    }
+
+    // Check email uniqueness (excluding current user)
+    const existingEmail = await userModel.findByEmail(cleanEmail);
+    if (existingEmail && existingEmail.user_id !== userId) {
+      return errorResponse(res, 409, 'Email address is already in use by another account');
+    }
+
+    // Check PRN uniqueness (excluding current student)
+    const existingPrn = await studentModel.findByPrn(cleanPrn);
+    if (existingPrn && existingPrn.user_id !== userId) {
+      return errorResponse(res, 409, 'PRN number is already assigned to another student');
+    }
+
+    // Update user record
+    await userModel.updateUser(userId, {
+      first_name: cleanFirstName,
+      last_name: cleanLastName,
+      email: cleanEmail,
+      phone: cleanPhone,
+      is_profile_complete: true
+    });
+
+    // Check if student record exists
+    const existingStudent = await studentModel.findByUserId(userId);
+    let studentId;
+    if (existingStudent) {
+      studentId = existingStudent.student_id;
+      await studentModel.updateStudent(studentId, {
+        prn_number: cleanPrn,
+        department_id: parsedDeptId,
+        admission_date,
+        date_of_birth: date_of_birth || null,
+        gender: gender || null,
+        class_name: cleanClass,
+        division: cleanDivision,
+        batch: cleanBatch,
+        semester: parsedSemester
+      });
+    } else {
+      const [insertRes] = await pool.query(
+        `INSERT INTO students (user_id, prn_number, department_id, admission_date, date_of_birth, gender, class_name, division, batch, semester)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [userId, cleanPrn, parsedDeptId, admission_date, date_of_birth || null, gender || null, cleanClass, cleanDivision, cleanBatch, parsedSemester]
+      );
+      studentId = insertRes.insertId;
+    }
+
+    const updatedUser = await userModel.findById(userId);
+    const updatedStudent = await studentModel.findById(studentId);
+
+    await createAuditLog({
+      userId,
+      action: 'STUDENT_PROFILE_COMPLETED',
+      entity: 'STUDENT',
+      entityId: studentId,
+      description: `Student ${cleanFirstName} ${cleanLastName} completed profile setup (PRN: ${cleanPrn})`,
+      details: { prn_number: cleanPrn, department_id: parsedDeptId },
+      req
+    });
+
+    return successResponse(res, 200, 'Profile completed successfully', {
+      user: updatedUser,
+      student: updatedStudent
+    });
+  } catch (error) {
+    console.error('Error completing student profile:', error.message);
+    return errorResponse(res, 500, 'An error occurred while completing student profile');
   }
 };
 
@@ -469,6 +630,7 @@ module.exports = {
   getStudents,
   getStudentById,
   createStudent,
+  completeStudentProfile,
   updateStudent,
   updateStatus,
   deleteStudent

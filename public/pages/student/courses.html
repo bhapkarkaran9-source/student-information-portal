@@ -216,7 +216,7 @@
         </div>
       </section>
 
-      <!-- Filter Bar -->
+      <!-- Filter Bar & Actions -->
       <div class="filter-card mb-4" style="background: #ffffff; border: 1px solid var(--stu-border); border-radius: var(--stu-radius-md); padding: 16px;">
         <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center; justify-content: space-between;">
           <div style="display: flex; gap: 12px; flex-wrap: wrap; flex: 1; max-width: 600px;">
@@ -233,8 +233,14 @@
               <option value="8">Semester VIII</option>
             </select>
           </div>
-          <div style="font-size: 13px; color: var(--stu-text-muted);">
-            Showing <strong id="visibleCourseCount">0</strong> registered courses
+          <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+            <div style="font-size: 13px; color: var(--stu-text-muted);">
+              Showing <strong id="visibleCourseCount">0</strong> registered courses
+            </div>
+            <button type="button" id="openSelfEnrollModalBtn" class="btn btn-primary" style="background: #2563eb; color: #ffffff; font-weight: 600; padding: 9px 18px; border-radius: 6px; display: flex; align-items: center; gap: 8px; font-size: 13.5px; min-height: 42px; border: none; cursor: pointer;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              <span>Enroll in Course</span>
+            </button>
           </div>
         </div>
       </div>
@@ -250,6 +256,65 @@
       </div>
 
     </main>
+  </div>
+
+  <!-- STUDENT SELF-ENROLLMENT MODAL -->
+  <div id="selfEnrollModal" class="modal-backdrop hidden" style="position: fixed; inset: 0; z-index: 1000; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; padding: 16px;">
+    <div class="modal-card" style="background: #ffffff; border-radius: 12px; width: 100%; max-width: 520px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); overflow: hidden; box-sizing: border-box;">
+      <div style="background: linear-gradient(135deg, #1e1b4b, #312e81); color: #ffffff; padding: 20px 24px; display: flex; align-items: center; justify-content: space-between;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="background: rgba(255,255,255,0.15); padding: 8px; border-radius: 8px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+          </div>
+          <div>
+            <h3 style="margin: 0; font-size: 18px; font-weight: 700; color: #ffffff;">Enroll in Course</h3>
+            <p style="margin: 2px 0 0 0; font-size: 12px; color: rgba(255,255,255,0.8);">Select a course, academic year, and semester</p>
+          </div>
+        </div>
+        <button type="button" id="closeSelfEnrollModalBtn" style="background: none; border: none; color: #ffffff; opacity: 0.8; cursor: pointer; padding: 4px; border-radius: 4px;" aria-label="Close modal">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <form id="studentSelfEnrollForm" style="padding: 24px;">
+        <div id="selfEnrollAlert" class="alert hidden" style="margin-bottom: 16px; padding: 12px 16px; border-radius: 6px; font-size: 13.5px;"></div>
+
+        <!-- 1. Select Course -->
+        <div style="margin-bottom: 18px;">
+          <label for="enrollCourseSelect" style="display: block; font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 6px;">Select Course *</label>
+          <select id="enrollCourseSelect" required class="form-control" style="width: 100%; min-height: 42px; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 14px; box-sizing: border-box;">
+            <option value="">Loading available courses...</option>
+          </select>
+        </div>
+
+        <!-- 2. Academic Year & 3. Semester -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 24px;">
+          <div>
+            <label for="enrollAcademicYear" style="display: block; font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 6px;">Academic Year *</label>
+            <input type="text" id="enrollAcademicYear" required class="form-control" placeholder="e.g. 2026-2027" value="2026-2027" style="width: 100%; min-height: 42px; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 14px; box-sizing: border-box;">
+          </div>
+          <div>
+            <label for="enrollSemester" style="display: block; font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 6px;">Semester *</label>
+            <select id="enrollSemester" required class="form-control" style="width: 100%; min-height: 42px; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 14px; box-sizing: border-box;">
+              <option value="1">Semester I</option>
+              <option value="2">Semester II</option>
+              <option value="3">Semester III</option>
+              <option value="4">Semester IV</option>
+              <option value="5" selected>Semester V</option>
+              <option value="6">Semester VI</option>
+              <option value="7">Semester VII</option>
+              <option value="8">Semester VIII</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Buttons (Full width touch targets) -->
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+          <button type="button" id="cancelSelfEnrollBtn" class="btn btn-secondary" style="flex: 1; min-height: 42px; font-weight: 600;">Cancel</button>
+          <button type="submit" id="submitSelfEnrollBtn" class="btn btn-primary" style="flex: 1; min-height: 42px; font-weight: 600; background: #2563eb; color: #ffffff;">Enroll in Course</button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <script src="/js/api.js"></script>
@@ -283,7 +348,7 @@
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
               </div>
               <h3 style="font-size: 18px; font-weight: 700; margin: 0 0 8px 0; color: var(--stu-text);">No Enrolled Courses Found</h3>
-              <p style="color: var(--stu-text-muted); max-width: 480px; margin: 0 auto 16px auto; font-size: 14px;">No registered courses found matching the selected filter criteria.</p>
+              <p style="color: var(--stu-text-muted); max-width: 480px; margin: 0 auto 16px auto; font-size: 14px;">No registered courses found matching the selected filter criteria. Click "Enroll in Course" above to select and add a new course.</p>
             </div>
           `;
           return;
@@ -325,10 +390,6 @@
         }).join('');
       }
 
-      const ROMAN_MAP = {
-        '1': 'I', '2': 'II', '3': 'III', '4': 'IV',
-        '5': 'V', '6': 'VI', '7': 'VII', '8': 'VIII'
-      };
       const NUM_MAP = {
         'i': '1', 'ii': '2', 'iii': '3', 'iv': '4',
         'v': '5', 'vi': '6', 'vii': '7', 'viii': '8'
@@ -450,6 +511,117 @@
           document.getElementById('btnRetryCourses')?.addEventListener('click', loadEnrollments);
         }
       }
+
+      // --- SELF ENROLLMENT MODAL LOGIC ---
+      async function loadAvailableCoursesForEnrollment() {
+        const select = document.getElementById('enrollCourseSelect');
+        if (!select) return;
+
+        select.innerHTML = '<option value="">Loading available courses...</option>';
+
+        try {
+          const res = await apiRequest('/courses?all=true');
+          if (res.ok && res.data) {
+            const courses = res.data.courses || res.data || [];
+            if (courses.length === 0) {
+              select.innerHTML = '<option value="">No courses available</option>';
+              return;
+            }
+
+            const enrolledCourseIds = new Set(allEnrollments.map(e => e.course_id));
+
+            select.innerHTML = '<option value="">-- Select a Course --</option>' + courses.map(c => {
+              const isEnrolled = enrolledCourseIds.has(c.course_id);
+              const disabledAttr = isEnrolled ? ' disabled' : '';
+              const suffix = isEnrolled ? ' (Already Enrolled)' : ` (${c.credits || 3} Credits)`;
+              return `<option value="${c.course_id}"${disabledAttr}>${escapeHtml(c.course_code)} - ${escapeHtml(c.course_name)}${suffix}</option>`;
+            }).join('');
+          } else {
+            select.innerHTML = '<option value="">Error loading courses</option>';
+          }
+        } catch (err) {
+          console.error('Error loading courses for enrollment:', err);
+          select.innerHTML = '<option value="">Failed to load courses</option>';
+        }
+      }
+
+      function hideSelfEnrollModal() {
+        document.getElementById('selfEnrollModal')?.classList.add('hidden');
+      }
+
+      document.getElementById('openSelfEnrollModalBtn')?.addEventListener('click', () => {
+        const alertEl = document.getElementById('selfEnrollAlert');
+        if (alertEl) { alertEl.className = 'alert hidden'; alertEl.textContent = ''; }
+        loadAvailableCoursesForEnrollment();
+        document.getElementById('selfEnrollModal')?.classList.remove('hidden');
+      });
+
+      document.getElementById('closeSelfEnrollModalBtn')?.addEventListener('click', hideSelfEnrollModal);
+      document.getElementById('cancelSelfEnrollBtn')?.addEventListener('click', hideSelfEnrollModal);
+
+      document.getElementById('studentSelfEnrollForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const alertEl = document.getElementById('selfEnrollAlert');
+        const submitBtn = document.getElementById('submitSelfEnrollBtn');
+
+        function showAlert(msg, isError = true) {
+          if (!alertEl) return;
+          alertEl.className = isError ? 'alert alert-error' : 'alert alert-success';
+          alertEl.style.display = 'block';
+          alertEl.style.background = isError ? '#fef2f2' : '#f0fdf4';
+          alertEl.style.color = isError ? '#b91c1c' : '#15803d';
+          alertEl.style.border = isError ? '1px solid #fecaca' : '1px solid #bbf7d0';
+          alertEl.textContent = msg;
+          alertEl.classList.remove('hidden');
+        }
+
+        const courseId = document.getElementById('enrollCourseSelect')?.value;
+        const academicYear = (document.getElementById('enrollAcademicYear')?.value || '').trim();
+        const semester = document.getElementById('enrollSemester')?.value;
+
+        if (!courseId) {
+          showAlert('Please select a course to enroll.');
+          return;
+        }
+        if (!academicYear) {
+          showAlert('Please specify an academic year.');
+          return;
+        }
+        if (!semester) {
+          showAlert('Please select a semester.');
+          return;
+        }
+
+        if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Enrolling...'; }
+        if (alertEl) alertEl.classList.add('hidden');
+
+        try {
+          const res = await apiRequest('/enrollments', {
+            method: 'POST',
+            body: JSON.stringify({
+              course_id: parseInt(courseId, 10),
+              academic_year: academicYear,
+              semester: parseInt(semester, 10)
+            })
+          });
+
+          if (res.ok && res.data) {
+            if (typeof showToast === 'function') {
+              showToast('Success', 'You have successfully enrolled in the course!', 'success');
+            }
+            hideSelfEnrollModal();
+            loadEnrollments();
+          } else {
+            const errMsg = res.data?.message || res.message || 'Failed to enroll in course';
+            showAlert(errMsg, true);
+          }
+        } catch (err) {
+          console.error('Self-enrollment error:', err);
+          showAlert('An unexpected server error occurred. Please try again.', true);
+        } finally {
+          if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Enroll in Course'; }
+        }
+      });
 
       initSemesterFilter();
       document.getElementById('courseSearch')?.addEventListener('input', filterAndRender);

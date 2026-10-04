@@ -20,6 +20,7 @@ const findByUsernameWithPassword = async (username) => {
       u.profile_photo_url,
       u.is_active,
       u.must_change_password,
+      u.is_profile_complete,
       r.role_name AS role
     FROM users u
     INNER JOIN roles r ON u.role_id = r.role_id
@@ -48,6 +49,7 @@ const findById = async (userId) => {
       u.profile_photo_url,
       u.is_active,
       u.must_change_password,
+      u.is_profile_complete,
       u.created_at,
       u.updated_at,
       r.role_name AS role
@@ -57,7 +59,12 @@ const findById = async (userId) => {
     LIMIT 1
   `;
   const [rows] = await pool.query(sql, [userId]);
-  return rows[0] || null;
+  if (!rows[0]) return null;
+  return {
+    ...rows[0],
+    must_change_password: Boolean(rows[0].must_change_password),
+    is_profile_complete: Boolean(rows[0].is_profile_complete)
+  };
 };
 
 /**
@@ -77,6 +84,7 @@ const findByUsername = async (username) => {
       u.phone,
       u.profile_photo_url,
       u.is_active,
+      u.is_profile_complete,
       u.created_at,
       u.updated_at,
       r.role_name AS role
@@ -106,6 +114,7 @@ const findByEmail = async (email) => {
       u.phone,
       u.profile_photo_url,
       u.is_active,
+      u.is_profile_complete,
       u.created_at,
       u.updated_at,
       r.role_name AS role
@@ -179,6 +188,7 @@ const getUsers = async ({ page = 1, limit = 10, search = '', role = '', status =
       u.phone,
       u.profile_photo_url,
       u.is_active,
+      u.is_profile_complete,
       u.created_at,
       u.updated_at,
       r.role_name AS role
@@ -198,7 +208,7 @@ const getUsers = async ({ page = 1, limit = 10, search = '', role = '', status =
  * @param {Object} userData
  * @returns {Promise<number>} Inserted user_id
  */
-const createUser = async ({ role_id, username, email, password_hash, first_name, last_name, phone = null, is_active = true }) => {
+const createUser = async ({ role_id, username, email = null, password_hash, first_name = null, last_name = null, phone = null, is_active = true, must_change_password = 0, is_profile_complete = false }) => {
   const sql = `
     INSERT INTO users (
       role_id,
@@ -209,19 +219,21 @@ const createUser = async ({ role_id, username, email, password_hash, first_name,
       last_name,
       phone,
       is_active,
-      must_change_password
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      must_change_password,
+      is_profile_complete
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
   const [result] = await pool.query(sql, [
     role_id,
     username.trim(),
-    email.trim().toLowerCase(),
+    email ? email.trim().toLowerCase() : null,
     password_hash,
-    first_name.trim(),
-    last_name.trim(),
+    first_name ? first_name.trim() : null,
+    last_name ? last_name.trim() : null,
     phone ? phone.trim() : null,
     is_active ? 1 : 0,
-    must_change_password !== undefined ? (must_change_password ? 1 : 0) : 1
+    must_change_password ? 1 : 0,
+    is_profile_complete ? 1 : 0
   ]);
   return result.insertId;
 };
@@ -233,18 +245,18 @@ const createUser = async ({ role_id, username, email, password_hash, first_name,
  * @returns {Promise<boolean>}
  */
 const updateUser = async (userId, fields = {}) => {
-  const allowedFields = ['role_id', 'username', 'email', 'first_name', 'last_name', 'phone', 'is_active', 'password_hash', 'must_change_password'];
+  const allowedFields = ['role_id', 'username', 'email', 'first_name', 'last_name', 'phone', 'is_active', 'password_hash', 'must_change_password', 'is_profile_complete'];
   const updates = [];
   const params = [];
 
   for (const [key, value] of Object.entries(fields)) {
     if (allowedFields.includes(key) && value !== undefined) {
       updates.push(`${key} = ?`);
-      if (key === 'username') params.push(value.trim());
-      else if (key === 'email') params.push(value.trim().toLowerCase());
-      else if (key === 'first_name' || key === 'last_name') params.push(value.trim());
+      if (key === 'username') params.push(value ? value.trim() : null);
+      else if (key === 'email') params.push(value ? value.trim().toLowerCase() : null);
+      else if (key === 'first_name' || key === 'last_name') params.push(value ? value.trim() : null);
       else if (key === 'phone') params.push(value ? value.trim() : null);
-      else if (key === 'is_active') params.push(value ? 1 : 0);
+      else if (key === 'is_active' || key === 'is_profile_complete' || key === 'must_change_password') params.push(value ? 1 : 0);
       else params.push(value);
     }
   }

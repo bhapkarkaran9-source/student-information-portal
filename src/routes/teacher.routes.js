@@ -5,8 +5,11 @@ const { requireRole } = require('../middlewares/role.middleware');
 
 const router = express.Router();
 
-// Strict Admin-only access enforcement on all Teacher Management routes
+// Teacher self-service profile completion route (accessible by TEACHER)
 router.use(requireAuth);
+router.post('/complete-profile', requireRole('TEACHER'), teacherController.completeTeacherProfile);
+
+// Strict Admin-only access enforcement on all other Teacher Management routes
 router.use(requireRole('ADMIN'));
 
 // GET /api/teachers - List teachers with search, department/status filters, pagination

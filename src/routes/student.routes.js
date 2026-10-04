@@ -7,6 +7,9 @@ const router = express.Router();
 
 router.use(requireAuth);
 
+// Student self-service profile completion
+router.post('/complete-profile', requireRole('STUDENT'), studentController.completeStudentProfile);
+
 // Read endpoints accessible by ADMIN and TEACHER
 router.get('/', requireRole('ADMIN', 'TEACHER'), studentController.getStudents);
 router.get('/:id', requireRole('ADMIN', 'TEACHER'), studentController.getStudentById);

@@ -5,11 +5,13 @@ const { requireRole } = require('../middlewares/role.middleware');
 
 const router = express.Router();
 
-// Enforce ADMIN role authentication for departments endpoint
-router.use(requireAuth, requireRole('ADMIN'));
-
+// Authenticated read access for department dropdowns and profile completion
+router.use(requireAuth);
 router.get('/', departmentController.getDepartments);
 router.get('/:id', departmentController.getDepartmentById);
+
+// Admin-only mutation endpoints
+router.use(requireRole('ADMIN'));
 router.post('/', departmentController.createDepartment);
 router.put('/:id', departmentController.updateDepartment);
 router.patch('/:id/status', departmentController.updateStatus);

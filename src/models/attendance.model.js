@@ -1404,6 +1404,37 @@ const deleteSessionAttendance = async (courseId, date, startTime, teacherId = nu
 };
 
 /**
+ * Normalize batch string for robust comparison
+ * e.g. "Batch A" -> "a", "A" -> "a", "batch-a" -> "a", "Division A" -> "a"
+ * @param {string} b
+ * @returns {string}
+ */
+const normalizeBatch = (b) => {
+  if (!b) return '';
+  const str = String(b).trim().toLowerCase();
+  return str.replace(/^(batch|division)[\s_-]*/i, '').replace(/[\s_-]+/g, '');
+};
+
+/**
+ * Check if student batch matches session batch
+ * If sessionBatch is null/empty/all, it matches all batches
+ * @param {string} studentBatch
+ * @param {string} sessionBatch
+ * @returns {boolean}
+ */
+const isBatchMatching = (studentBatch, sessionBatch) => {
+  if (!sessionBatch || !String(sessionBatch).trim() || String(sessionBatch).trim().toLowerCase() === 'all') {
+    return true;
+  }
+  if (!studentBatch || !String(studentBatch).trim()) {
+    return false;
+  }
+  const sNorm = normalizeBatch(studentBatch);
+  const sessNorm = normalizeBatch(sessionBatch);
+  return sNorm === sessNorm;
+};
+
+/**
  * Create a new QR attendance session in attendance_sessions table
  * @param {Object} sessionData
  * @returns {Promise<Object>}
@@ -1413,6 +1444,7 @@ const createQRSession = async ({
   teacher_id,
   course_id,
   timetable_id = null,
+  batch = null,
   session_date,
   start_time,
   end_time,
@@ -1424,18 +1456,20 @@ const createQRSession = async ({
   student_qr_visible = 0,
   qr_secret
 }) => {
+  const cleanBatch = batch && String(batch).trim() ? String(batch).trim() : null;
   const sql = `
     INSERT INTO attendance_sessions (
-      session_uuid, teacher_id, course_id, timetable_id,
+      session_uuid, teacher_id, course_id, timetable_id, batch,
       session_date, start_time, end_time, lecture_type,
       room_no, duration_minutes, expires_at, is_active, student_qr_visible, qr_secret
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
   const params = [
     session_uuid,
     parseInt(teacher_id, 10),
     parseInt(course_id, 10),
     timetable_id ? parseInt(timetable_id, 10) : null,
+    cleanBatch,
     session_date,
     start_time,
     end_time,
@@ -1454,6 +1488,7 @@ const createQRSession = async ({
     teacher_id: parseInt(teacher_id, 10),
     course_id: parseInt(course_id, 10),
     timetable_id: timetable_id ? parseInt(timetable_id, 10) : null,
+    batch: cleanBatch,
     session_date,
     start_time,
     end_time,
@@ -1512,6 +1547,7 @@ const findActiveQRSessionByTeacher = async (teacherId, courseId = null) => {
       s.teacher_id,
       s.course_id,
       s.timetable_id,
+      s.batch,
       DATE_FORMAT(s.session_date, '%Y-%m-%d') AS session_date,
       DATE_FORMAT(s.start_time, '%H:%i:%s') AS start_time,
       DATE_FORMAT(s.end_time, '%H:%i:%s') AS end_time,
@@ -1540,7 +1576,7 @@ const findActiveQRSessionByTeacher = async (teacherId, courseId = null) => {
 };
 
 /**
- * Find active QR session for an enrolled student
+ * Find active QR session for an enrolled student matching their specific batch
  * Checks if the student is actively enrolled in the course
  * Excludes expired sessions (expires_at > NOW()) and performs lazy expiration
  * Never exposes qr_secret
@@ -1554,6 +1590,16 @@ const findActiveQRSessionForStudent = async (studentId) => {
   // Lazily deactivate past expired sessions
   await expirePastQRSessions();
 
+  // Retrieve student record to get batch and division
+  const [studRows] = await pool.query(
+    'SELECT student_id, batch, division FROM students WHERE student_id = ? LIMIT 1',
+    [sid]
+  );
+  if (!studRows || studRows.length === 0) return null;
+
+  const studentRecord = studRows[0];
+  const studentBatch = studentRecord.batch || studentRecord.division;
+
   const sql = `
     SELECT 
       s.session_id,
@@ -1561,6 +1607,7 @@ const findActiveQRSessionForStudent = async (studentId) => {
       s.teacher_id,
       s.course_id,
       s.timetable_id,
+      s.batch,
       DATE_FORMAT(s.session_date, '%Y-%m-%d') AS session_date,
       DATE_FORMAT(s.start_time, '%H:%i:%s') AS start_time,
       DATE_FORMAT(s.end_time, '%H:%i:%s') AS end_time,
@@ -1586,10 +1633,17 @@ const findActiveQRSessionForStudent = async (studentId) => {
       AND s.is_active = 1
       AND s.expires_at > NOW()
     ORDER BY s.session_id DESC
-    LIMIT 1
   `;
   const [rows] = await pool.query(sql, [sid]);
-  return rows[0] || null;
+
+  // Return the first active session matching the student's batch
+  for (const session of rows) {
+    if (isBatchMatching(studentBatch, session.batch)) {
+      return session;
+    }
+  }
+
+  return null;
 };
 
 /**
@@ -1611,6 +1665,7 @@ const findQRSessionById = async (sessionIdOrUuid) => {
       s.teacher_id,
       s.course_id,
       s.timetable_id,
+      s.batch,
       DATE_FORMAT(s.session_date, '%Y-%m-%d') AS session_date,
       DATE_FORMAT(s.start_time, '%H:%i:%s') AS start_time,
       DATE_FORMAT(s.end_time, '%H:%i:%s') AS end_time,
@@ -1658,6 +1713,7 @@ const findQRSessionInternal = async (sessionIdOrUuid) => {
       s.teacher_id,
       s.course_id,
       s.timetable_id,
+      s.batch,
       DATE_FORMAT(s.session_date, '%Y-%m-%d') AS session_date,
       DATE_FORMAT(s.start_time, '%H:%i:%s') AS start_time,
       DATE_FORMAT(s.end_time, '%H:%i:%s') AS end_time,
@@ -1769,7 +1825,9 @@ module.exports = {
   findQRSessionById,
   findQRSessionInternal,
   closeQRSession,
-  updateQRStudentVisibility
+  updateQRStudentVisibility,
+  normalizeBatch,
+  isBatchMatching
 };
 
 

@@ -45,6 +45,7 @@ const getTimetable = async (req, res) => {
       day,
       day_of_week,
       course_id = '',
+      lecture_type = '',
       teacher_id = '',
       department_id = '',
       academic_year = '',
@@ -132,6 +133,7 @@ const getTimetable = async (req, res) => {
       search: typeof search === 'string' ? search.trim() : '',
       day_of_week: dayFilter,
       course_id,
+      lecture_type: typeof lecture_type === 'string' ? lecture_type.trim() : '',
       teacher_id: effectiveTeacherId,
       department_id,
       academic_year: typeof academic_year === 'string' ? academic_year.trim() : '',
@@ -185,6 +187,7 @@ const createTimetable = async (req, res) => {
       end_time,
       course_id,
       teacher_id,
+      lecture_type,
       class_name,
       division,
       room_no,
@@ -192,10 +195,20 @@ const createTimetable = async (req, res) => {
       semester
     } = req.body;
 
+    const cleanType = (lecture_type && String(lecture_type).trim()) || 'Theory';
+    if (!['Theory', 'Practical'].includes(cleanType)) {
+      return errorResponse(res, 400, 'Lecture type must be Theory or Practical');
+    }
+
     // 1. Required fields check
     const rawDay = day_of_week || day;
-    if (!rawDay || !start_time || !end_time || !course_id || !teacher_id || !class_name || !division || !room_no) {
-      return errorResponse(res, 400, 'Day of week, start time, end time, course, teacher, class name, division, and room number are required');
+    if (!rawDay || !start_time || !end_time || !course_id || !teacher_id || !class_name || !room_no) {
+      return errorResponse(res, 400, 'Day of week, start time, end time, course, teacher, class name, and room number are required');
+    }
+
+    const cleanDiv = division !== undefined && division !== null ? String(division).trim() : '';
+    if (cleanType === 'Practical' && !cleanDiv) {
+      return errorResponse(res, 400, 'Division is required for practical lectures.');
     }
 
     // 2. Validate day of week
@@ -222,14 +235,13 @@ const createTimetable = async (req, res) => {
 
     // 4. Validate string lengths and semester before DB lookups
     const cleanClass = String(class_name).trim();
-    const cleanDiv = String(division).trim();
     const cleanRoom = String(room_no).trim();
 
     if (!cleanClass || cleanClass.length > 50) {
       return errorResponse(res, 400, 'Class name cannot be blank or exceed 50 characters');
     }
-    if (!cleanDiv || cleanDiv.length > 10) {
-      return errorResponse(res, 400, 'Division cannot be blank or exceed 10 characters');
+    if (cleanDiv && cleanDiv.length > 10) {
+      return errorResponse(res, 400, 'Division cannot exceed 10 characters');
     }
     if (!cleanRoom || cleanRoom.length > 30) {
       return errorResponse(res, 400, 'Room number cannot be blank or exceed 30 characters');
@@ -285,6 +297,7 @@ const createTimetable = async (req, res) => {
       start_time: cleanStart,
       end_time: cleanEnd,
       teacher_id: teacherId,
+      lecture_type: cleanType,
       class_name: cleanClass,
       division: cleanDiv,
       room_no: cleanRoom,
@@ -305,6 +318,7 @@ const createTimetable = async (req, res) => {
       end_time: cleanEnd,
       course_id: courseId,
       teacher_id: teacherId,
+      lecture_type: cleanType,
       class_name: cleanClass,
       division: cleanDiv,
       room_no: cleanRoom,
@@ -320,7 +334,7 @@ const createTimetable = async (req, res) => {
       entity: 'TIMETABLE',
       entityId: newId,
       description: `Created timetable slot for Course #${courseId} (${cleanDay} ${cleanStart}-${cleanEnd}) in Room ${cleanRoom}`,
-      details: { timetable_id: newId, course_id: courseId, teacher_id: teacherId, day: cleanDay, room_no: cleanRoom },
+      details: { timetable_id: newId, course_id: courseId, teacher_id: teacherId, day: cleanDay, room_no: cleanRoom, lecture_type: cleanType },
       req
     });
 
@@ -355,12 +369,18 @@ const updateTimetable = async (req, res) => {
       end_time,
       course_id,
       teacher_id,
+      lecture_type,
       class_name,
       division,
       room_no,
       academic_year,
       semester
     } = req.body;
+
+    const cleanType = lecture_type !== undefined ? String(lecture_type).trim() : existing.lecture_type || 'Theory';
+    if (!['Theory', 'Practical'].includes(cleanType)) {
+      return errorResponse(res, 400, 'Lecture type must be Theory or Practical');
+    }
 
     // 1. Required fields check
     const rawDay = day_of_week || day || existing.day_of_week;
@@ -393,8 +413,11 @@ const updateTimetable = async (req, res) => {
     if (!cleanClass || cleanClass.length > 50) {
       return errorResponse(res, 400, 'Class name cannot be blank or exceed 50 characters');
     }
-    if (!cleanDiv || cleanDiv.length > 10) {
-      return errorResponse(res, 400, 'Division cannot be blank or exceed 10 characters');
+    if (cleanType === 'Practical' && !cleanDiv) {
+      return errorResponse(res, 400, 'Division is required for practical lectures.');
+    }
+    if (cleanDiv && cleanDiv.length > 10) {
+      return errorResponse(res, 400, 'Division cannot exceed 10 characters');
     }
     if (!cleanRoom || cleanRoom.length > 30) {
       return errorResponse(res, 400, 'Room number cannot be blank or exceed 30 characters');
@@ -445,6 +468,7 @@ const updateTimetable = async (req, res) => {
       start_time: cleanStart,
       end_time: cleanEnd,
       teacher_id: teacherId,
+      lecture_type: cleanType,
       class_name: cleanClass,
       division: cleanDiv,
       room_no: cleanRoom,
@@ -466,6 +490,7 @@ const updateTimetable = async (req, res) => {
       end_time: cleanEnd,
       course_id: courseId,
       teacher_id: teacherId,
+      lecture_type: cleanType,
       class_name: cleanClass,
       division: cleanDiv,
       room_no: cleanRoom,
@@ -481,7 +506,7 @@ const updateTimetable = async (req, res) => {
       entity: 'TIMETABLE',
       entityId: timetableId,
       description: `Updated timetable slot #${timetableId} (${cleanDay} ${cleanStart}-${cleanEnd})`,
-      details: { timetable_id: timetableId, course_id: courseId, teacher_id: teacherId, day: cleanDay },
+      details: { timetable_id: timetableId, course_id: courseId, teacher_id: teacherId, day: cleanDay, lecture_type: cleanType },
       req
     });
 

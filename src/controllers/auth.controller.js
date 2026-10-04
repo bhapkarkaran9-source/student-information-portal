@@ -93,7 +93,8 @@ const login = async (req, res) => {
       phone: user.phone,
       profile_photo_url: user.profile_photo_url || null,
       role: user.role,
-      must_change_password: Boolean(user.must_change_password)
+      must_change_password: Boolean(user.must_change_password),
+      is_profile_complete: Boolean(user.is_profile_complete)
     };
 
     // Log successful authentication event

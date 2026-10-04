@@ -405,6 +405,8 @@ const fetchFullUserProfile = async (userId) => {
       u.phone,
       u.profile_photo_url,
       u.is_active,
+      u.must_change_password,
+      u.is_profile_complete,
       u.created_at,
       u.updated_at,
       r.role_name AS role,
@@ -413,6 +415,7 @@ const fetchFullUserProfile = async (userId) => {
       s.class_name,
       s.division,
       s.semester,
+      COALESCE(s.department_id, t.department_id) AS department_id,
       COALESCE(sd.department_name, td.department_name, CASE WHEN r.role_name = 'ADMIN' THEN 'System Administration' ELSE 'Not Assigned' END) AS department_name,
       COALESCE(sd.department_code, td.department_code, CASE WHEN r.role_name = 'ADMIN' THEN 'ADMIN' ELSE NULL END) AS department_code,
       t.teacher_id,
@@ -428,7 +431,12 @@ const fetchFullUserProfile = async (userId) => {
     LIMIT 1
   `;
   const [rows] = await pool.query(sql, [userId]);
-  return rows[0] || null;
+  if (!rows[0]) return null;
+  return {
+    ...rows[0],
+    must_change_password: Boolean(rows[0].must_change_password),
+    is_profile_complete: Boolean(rows[0].is_profile_complete)
+  };
 };
 
 /**

@@ -619,25 +619,11 @@ function initFormSubmissions() {
     addForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      const firstName = document.getElementById('addFirstName').value.trim();
-      const lastName = document.getElementById('addLastName').value.trim();
       const username = document.getElementById('addUsername').value.trim();
-      const email = document.getElementById('addEmail').value.trim();
-      const phone = document.getElementById('addPhone').value.trim();
       const password = document.getElementById('addPassword').value;
 
-      const employeeNumber = document.getElementById('addEmployeeNumber').value.trim();
-      const departmentId = document.getElementById('addDeptSelect').value;
-      const designation = document.getElementById('addDesignation').value.trim();
-      const joiningDate = document.getElementById('addJoiningDate').value;
-
-      if (!departmentId) {
-        showModalAlert('addModalAlert', 'Please select a valid department. Note: Academic departments must be registered before teachers can be added.');
-        return;
-      }
-
-      if (!firstName || !lastName || !username || !email || !password || !employeeNumber || !designation || !joiningDate) {
-        showModalAlert('addModalAlert', 'Please fill in all required fields.');
+      if (!username || !password) {
+        showModalAlert('addModalAlert', 'Please fill in both Username and Password.');
         return;
       }
 
@@ -654,16 +640,8 @@ function initFormSubmissions() {
 
       try {
         const payload = {
-          first_name: firstName,
-          last_name: lastName,
           username,
-          email,
-          password,
-          phone: phone || null,
-          employee_number: employeeNumber,
-          department_id: parseInt(departmentId, 10),
-          designation,
-          joining_date: joiningDate
+          password
         };
 
         const res = await apiRequest('/teachers', {
@@ -673,17 +651,17 @@ function initFormSubmissions() {
 
         if (res.ok && res.data && res.data.success) {
           closeModal('addTeacherModal');
-          showToast('Teacher registered successfully', 'success');
+          showToast('Teacher account created successfully', 'success');
           await loadTeachers();
         } else {
-          showModalAlert('addModalAlert', res.data?.message || 'Failed to create teacher');
+          showModalAlert('addModalAlert', res.data?.message || 'Failed to create teacher account');
         }
       } catch (err) {
         showModalAlert('addModalAlert', 'Network communication error');
       } finally {
         if (saveBtn) {
           saveBtn.disabled = false;
-          saveBtn.textContent = 'Create Teacher';
+          saveBtn.textContent = 'Create Teacher Account';
         }
       }
     });

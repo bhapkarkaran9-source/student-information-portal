@@ -1069,6 +1069,7 @@ const startQRAttendanceSession = async (req, res) => {
     const {
       timetable_id,
       course_id,
+      batch,
       session_date,
       start_time,
       end_time,
@@ -1099,6 +1100,7 @@ const startQRAttendanceSession = async (req, res) => {
     let finalEndTime = null;
     let finalLectureType = 'Regular Lecture';
     let finalRoomNo = null;
+    let finalBatch = batch && String(batch).trim() ? String(batch).trim() : null;
 
     // Case A: Starting from an existing Timetable lecture slot
     if (timetable_id) {
@@ -1119,6 +1121,9 @@ const startQRAttendanceSession = async (req, res) => {
 
       finalCourseId = slot.course_id;
       finalTimetableId = slot.timetable_id;
+      if (!finalBatch) {
+        finalBatch = slot.batch || slot.division || null;
+      }
       finalStartTime = cleanTime(slot.start_time);
       finalEndTime = cleanTime(slot.end_time);
       finalRoomNo = (room_no && String(room_no).trim()) || slot.room_no || null;
@@ -1184,6 +1189,7 @@ const startQRAttendanceSession = async (req, res) => {
       teacher_id: teacherId,
       course_id: finalCourseId,
       timetable_id: finalTimetableId,
+      batch: finalBatch,
       session_date: finalSessionDate,
       start_time: finalStartTime,
       end_time: finalEndTime,
@@ -1605,6 +1611,7 @@ const scanQRAttendance = async (req, res) => {
       return errorResponse(res, 403, 'No active student profile found for your account');
     }
     const studentId = studentProfile.student_id;
+    const studentBatch = studentProfile.batch || studentProfile.division;
 
     // 2. Parse token from request body (accepts { token } or { sid, ts, nonce, sig })
     let sid, ts, nonce, sig;
@@ -1643,6 +1650,11 @@ const scanQRAttendance = async (req, res) => {
     const session = await attendanceModel.findQRSessionInternal(sid);
     if (!session) {
       return errorResponse(res, 404, 'Attendance session not found');
+    }
+
+    // 5. Batch verification (Student batch must match session batch)
+    if (!attendanceModel.isBatchMatching(studentBatch, session.batch)) {
+      return errorResponse(res, 403, 'This attendance session is not available for your batch.');
     }
 
     // 5. Session lifecycle validation (must be active and unexpired)

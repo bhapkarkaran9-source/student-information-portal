@@ -9,8 +9,10 @@ const router = express.Router();
 router.get('/', requireAuth, enrollmentController.getEnrollments);
 router.get('/:id', requireAuth, enrollmentController.getEnrollmentById);
 
-// Enforce ADMIN role authentication for enrollment mutations
-router.post('/', requireAuth, requireRole('ADMIN'), enrollmentController.createEnrollment);
+// Mutation endpoints
+router.post('/', requireAuth, requireRole('ADMIN', 'STUDENT'), enrollmentController.createEnrollment);
+router.post('/self', requireAuth, requireRole('STUDENT'), enrollmentController.createEnrollment);
+router.post('/self-enroll', requireAuth, requireRole('STUDENT'), enrollmentController.createEnrollment);
 router.put('/:id', requireAuth, requireRole('ADMIN'), enrollmentController.updateEnrollment);
 router.patch('/:id/status', requireAuth, requireRole('ADMIN'), enrollmentController.updateStatus);
 router.delete('/:id', requireAuth, requireRole('ADMIN'), enrollmentController.deleteEnrollment);

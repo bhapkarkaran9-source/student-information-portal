@@ -62,8 +62,94 @@
     <!-- MAIN CONTENT -->
     <main class="dashboard-main" style="padding: 24px; flex: 1;">
 
-      <!-- Profile Header Hero Card -->
-      <section class="card mb-4" style="background: linear-gradient(135deg, #134e4a, #0f172a); color: #ffffff; border: none; padding: 28px; border-radius: 10px; margin-bottom: 24px;">
+      <!-- Profile Completion Section (shown only when is_profile_complete is false) -->
+      <div id="profileCompletionContainer" class="hidden">
+        <div class="card mb-4" style="background: linear-gradient(135deg, #0d9488, #0f766e); color: #ffffff; padding: 24px; border-radius: 10px; margin-bottom: 24px; box-shadow: 0 4px 12px rgba(13,148,136,0.25);">
+          <div style="display: flex; align-items: flex-start; gap: 16px;">
+            <div style="background: rgba(255,255,255,0.2); padding: 12px; border-radius: 10px; flex-shrink: 0;">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+              </svg>
+            </div>
+            <div>
+              <h3 style="margin: 0 0 6px 0; font-size: 18px; font-weight: 700; color: #ffffff;">Action Required: Complete Your Faculty Profile</h3>
+              <p style="margin: 0; font-size: 14px; color: rgba(255,255,255,0.9); line-height: 1.5;">
+                Your account was created by the Administrator. Please provide your personal and faculty information below to activate your account and gain access to your teacher portal.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <section class="card" style="background: #ffffff; border: 1px solid #e2e8f0; border-top: 4px solid #0d9488; border-radius: 8px; padding: 28px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); margin-bottom: 24px;">
+          <h3 style="margin: 0 0 20px 0; font-size: 18px; font-weight: 700; color: #0f172a; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px;">Faculty Profile Credentials</h3>
+          
+          <form id="completeTeacherProfileForm" autocomplete="off">
+            <div id="cpAlert" class="alert alert-error hidden" style="background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; font-size: 13.5px; padding: 12px 16px; border-radius: 6px; margin-bottom: 20px;"></div>
+
+            <!-- Personal Details -->
+            <div style="font-weight: 700; font-size: 14px; color: #0d9488; margin-bottom: 14px;">1. Personal Details</div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px;">
+              <div>
+                <label for="cpFirstName" style="display: block; font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 6px;">First Name *</label>
+                <input type="text" id="cpFirstName" required class="form-control" placeholder="e.g. Alan" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px;">
+              </div>
+              <div>
+                <label for="cpLastName" style="display: block; font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 6px;">Last Name *</label>
+                <input type="text" id="cpLastName" required class="form-control" placeholder="e.g. Turing" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px;">
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px;">
+              <div>
+                <label for="cpEmail" style="display: block; font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 6px;">Institutional Email *</label>
+                <input type="email" id="cpEmail" required class="form-control" placeholder="e.g. aturing@portal.local" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px;">
+              </div>
+              <div>
+                <label for="cpPhone" style="display: block; font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 6px;">Phone Number</label>
+                <input type="tel" id="cpPhone" class="form-control" placeholder="e.g. +1-555-0300" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px;">
+              </div>
+            </div>
+
+            <!-- Faculty Details -->
+            <div style="font-weight: 700; font-size: 14px; color: #0d9488; margin-bottom: 14px;">2. Faculty Information</div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px;">
+              <div>
+                <label for="cpEmployeeNumber" style="display: block; font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 6px;">Employee Number *</label>
+                <input type="text" id="cpEmployeeNumber" required class="form-control" placeholder="e.g. EMP-CS-101" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px;">
+              </div>
+              <div>
+                <label for="cpDeptSelect" style="display: block; font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 6px;">Department *</label>
+                <select id="cpDeptSelect" required class="form-control" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; background-color: #fff;">
+                  <option value="">Select Department</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 28px;">
+              <div>
+                <label for="cpDesignation" style="display: block; font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 6px;">Designation *</label>
+                <input type="text" id="cpDesignation" required class="form-control" placeholder="e.g. Assistant Professor, Professor" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px;">
+              </div>
+              <div>
+                <label for="cpJoiningDate" style="display: block; font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 6px;">Joining Date *</label>
+                <input type="date" id="cpJoiningDate" required class="form-control" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px;">
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; padding-top: 16px; border-top: 1px solid #f1f5f9;">
+              <button type="submit" id="btnSubmitCompleteTeacherProfile" class="btn btn-primary" style="background: #0d9488; color: #ffffff; border: none; padding: 12px 28px; font-weight: 600; font-size: 15px; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(13,148,136,0.2);">
+                Complete & Save Profile
+              </button>
+            </div>
+          </form>
+        </section>
+      </div>
+
+      <div id="normalProfileContent">
+        <!-- Profile Header Hero Card -->
+        <section class="card mb-4" style="background: linear-gradient(135deg, #134e4a, #0f172a); color: #ffffff; border: none; padding: 28px; border-radius: 10px; margin-bottom: 24px;">
         <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
           <div style="display: flex; align-items: center; gap: 20px;">
             <div style="position: relative; width: 80px; height: 80px; flex-shrink: 0;">
