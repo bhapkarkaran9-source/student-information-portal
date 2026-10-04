@@ -5,8 +5,7 @@ const PORT = process.env.PORT || 5000;
 const db = require('./src/config/db');
 const academicEventModel = require('./src/models/academicEvent.model');
 const timetableReminderScheduler = require('./src/services/timetableReminderScheduler.service');
-
-const server = app.listen(PORT, () => {
+const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server is running on port ${PORT}`);
   timetableReminderScheduler.start();
 });
