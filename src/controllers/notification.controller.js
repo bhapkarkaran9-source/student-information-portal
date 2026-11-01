@@ -1,5 +1,7 @@
 const pool = require('../config/db');
 const Notification = require('../models/notification.model');
+const PushSubscription = require('../models/pushSubscription.model');
+const webPushService = require('../services/webPush.service');
 const { createAuditLog } = require('../services/audit.service');
 
 /**
@@ -532,6 +534,107 @@ const deleteNotification = async (req, res) => {
   }
 };
 
+/**
+ * GET /api/notifications/push/vapid-key
+ * Returns VAPID public key for web push subscription
+ */
+const getVapidKey = async (req, res) => {
+  try {
+    const publicKey = webPushService.getVapidPublicKey();
+    return res.status(200).json({
+      success: true,
+      data: {
+        publicKey,
+        enabled: Boolean(publicKey)
+      }
+    });
+  } catch (err) {
+    console.error('Error fetching VAPID public key:', err);
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to retrieve push notification configuration'
+    });
+  }
+};
+
+/**
+ * POST /api/notifications/push/subscribe
+ * Registers or updates a user's web push subscription
+ */
+const subscribePush = async (req, res) => {
+  try {
+    const { subscription } = req.body;
+    if (!subscription || !subscription.endpoint || !subscription.keys) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid subscription payload. Endpoint and keys are required.'
+      });
+    }
+
+    const { endpoint, keys } = subscription;
+    const { p256dh, auth } = keys;
+
+    if (!p256dh || !auth) {
+      return res.status(400).json({
+        success: false,
+        message: 'Subscription keys p256dh and auth are required.'
+      });
+    }
+
+    const userId = req.user.user_id;
+    const userAgent = req.headers['user-agent'] || null;
+
+    const saved = await PushSubscription.saveSubscription({
+      userId,
+      endpoint,
+      p256dh,
+      auth,
+      userAgent
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: 'Web push notification subscription registered successfully',
+      data: saved
+    });
+  } catch (err) {
+    console.error('Error subscribing to web push:', err);
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to save push notification subscription'
+    });
+  }
+};
+
+/**
+ * POST /api/notifications/push/unsubscribe
+ * Removes a web push subscription by endpoint
+ */
+const unsubscribePush = async (req, res) => {
+  try {
+    const { endpoint } = req.body;
+    if (!endpoint) {
+      return res.status(400).json({
+        success: false,
+        message: 'Endpoint is required for unsubscription.'
+      });
+    }
+
+    await PushSubscription.deleteByEndpoint(endpoint);
+
+    return res.status(200).json({
+      success: true,
+      message: 'Successfully unsubscribed from web push notifications'
+    });
+  } catch (err) {
+    console.error('Error unsubscribing from web push:', err);
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to remove push subscription'
+    });
+  }
+};
+
 module.exports = {
   getNotifications,
   getNotificationStats,
@@ -542,5 +645,8 @@ module.exports = {
   updateNotification,
   markAsRead,
   markAllAsRead,
-  deleteNotification
+  deleteNotification,
+  getVapidKey,
+  subscribePush,
+  unsubscribePush
 };

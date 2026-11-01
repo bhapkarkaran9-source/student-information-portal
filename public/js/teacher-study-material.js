@@ -153,8 +153,10 @@
   async function loadMaterials() {
     try {
       const res = await apiFetch('/api/study-materials');
-      if (res && res.success && res.data) {
-        allMaterials = Array.isArray(res.data) ? res.data : (res.data.materials || []);
+      if (res && res.data && (Array.isArray(res.data) || Array.isArray(res.data.materials))) {
+        allMaterials = Array.isArray(res.data) ? res.data : res.data.materials;
+      } else if (res && (Array.isArray(res.materials) || Array.isArray(res))) {
+        allMaterials = Array.isArray(res) ? res : res.materials;
       } else {
         allMaterials = [];
       }
@@ -163,8 +165,9 @@
       renderMaterials(allMaterials);
     } catch (err) {
       console.error('Failed to load study materials:', err);
-      allMaterials = [];
-      renderMaterials([]);
+      if (!allMaterials || allMaterials.length === 0) {
+        renderMaterials([]);
+      }
     }
   }
 
@@ -224,50 +227,54 @@
           <tbody>`;
 
     materials.forEach(m => {
-      const dateStr = m.created_at ? new Date(m.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '-';
-      const filename = m.original_filename || (m.file_path ? m.file_path.split('/').pop().split('\\').pop() : 'Document');
+      try {
+        const dateStr = m.created_at ? (typeof formatDate === 'function' ? formatDate(m.created_at) : String(m.created_at)) : '-';
+        const filename = m.original_filename || (m.file_path ? m.file_path.split('/').pop().split('\\').pop() : 'Document');
 
-      const downloadUrl = `/api/study-materials/${m.material_id}/download?token=${encodeURIComponent(token)}`;
-      const viewUrl = `/api/study-materials/${m.material_id}/view?token=${encodeURIComponent(token)}`;
+        const downloadUrl = `/api/study-materials/${m.material_id}/download?token=${encodeURIComponent(token)}`;
+        const viewUrl = `/api/study-materials/${m.material_id}/view?token=${encodeURIComponent(token)}`;
 
-      html += `
-        <tr style="border-bottom: 1px solid #f1f5f9;">
-          <td style="padding: 14px 16px; max-width: 320px;">
-            <div style="font-weight: 600; color: #0f172a;">${escapeHtml(m.title)}</div>
-            ${m.description ? `<div style="font-size: 12px; color: #64748b; margin-top: 2px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">${escapeHtml(m.description)}</div>` : ''}
-          </td>
-          <td style="padding: 14px 16px;">
-            <span style="display: inline-block; padding: 2px 6px; background: #ccfbf1; color: #0f766e; border-radius: 4px; font-weight: 600; font-size: 12px;">${escapeHtml(m.course_code || 'COURSE')}</span>
-            <div style="font-size: 12px; color: #475569; margin-top: 2px;">${escapeHtml(m.course_name || '')}</div>
-          </td>
-          <td style="padding: 14px 16px;">
-            <span style="display: inline-block; padding: 3px 8px; border-radius: 9999px; font-size: 11.5px; font-weight: 600; background: #f1f5f9; color: #334155; border: 1px solid #e2e8f0;">
-              ${escapeHtml(m.material_type || 'Notes')}
-            </span>
-          </td>
-          <td style="padding: 14px 16px; color: #475569;">${escapeHtml(dateStr)}</td>
-          <td style="padding: 14px 16px;">
-            <div style="font-size: 12.5px; font-weight: 600; color: #0f172a; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${escapeHtml(filename)}">
-              ${escapeHtml(filename)}
-            </div>
-            <div class="btn-action-group" style="margin-top: 4px;">
-              <a href="${viewUrl}" target="_blank" rel="noopener" class="btn-mat-action btn-mat-view" title="Preview document">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                <span>View</span>
-              </a>
-              <a href="${downloadUrl}" class="btn-mat-action btn-mat-download" title="Download document" download>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                <span>Download</span>
-              </a>
-            </div>
-          </td>
-          <td style="padding: 14px 16px; text-align: right;">
-            <button type="button" class="btn-mat-action btn-mat-del" data-action="delete" data-id="${m.material_id}" data-title="${escapeHtml(m.title)}">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-              <span>Delete</span>
-            </button>
-          </td>
-        </tr>`;
+        html += `
+          <tr style="border-bottom: 1px solid #f1f5f9;">
+            <td style="padding: 14px 16px; max-width: 320px;">
+              <div style="font-weight: 600; color: #0f172a;">${escapeHtml(m.title)}</div>
+              ${m.description ? `<div style="font-size: 12px; color: #64748b; margin-top: 2px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">${escapeHtml(m.description)}</div>` : ''}
+            </td>
+            <td style="padding: 14px 16px;">
+              <span style="display: inline-block; padding: 2px 6px; background: #ccfbf1; color: #0f766e; border-radius: 4px; font-weight: 600; font-size: 12px;">${escapeHtml(m.course_code || 'COURSE')}</span>
+              <div style="font-size: 12px; color: #475569; margin-top: 2px;">${escapeHtml(m.course_name || '')}</div>
+            </td>
+            <td style="padding: 14px 16px;">
+              <span style="display: inline-block; padding: 3px 8px; border-radius: 9999px; font-size: 11.5px; font-weight: 600; background: #f1f5f9; color: #334155; border: 1px solid #e2e8f0;">
+                ${escapeHtml(m.material_type || 'Notes')}
+              </span>
+            </td>
+            <td style="padding: 14px 16px; color: #475569;">${escapeHtml(dateStr)}</td>
+            <td style="padding: 14px 16px;">
+              <div style="font-size: 12.5px; font-weight: 600; color: #0f172a; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${escapeHtml(filename)}">
+                ${escapeHtml(filename)}
+              </div>
+              <div class="btn-action-group" style="margin-top: 4px;">
+                <a href="${viewUrl}" target="_blank" rel="noopener" class="btn-mat-action btn-mat-view" title="Preview document">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                  <span>View</span>
+                </a>
+                <a href="${downloadUrl}" class="btn-mat-action btn-mat-download" title="Download document" download>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                  <span>Download</span>
+                </a>
+              </div>
+            </td>
+            <td style="padding: 14px 16px; text-align: right;">
+              <button type="button" class="btn-mat-action btn-mat-del" data-action="delete" data-id="${m.material_id}" data-title="${escapeHtml(m.title)}">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                <span>Delete</span>
+              </button>
+            </td>
+          </tr>`;
+      } catch (err) {
+        console.error('Error rendering material row:', err);
+      }
     });
 
     html += '</tbody></table></div>';

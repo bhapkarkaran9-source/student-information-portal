@@ -554,7 +554,7 @@ async function loadDynamicStudentData(user) {
           assignList.innerHTML = `<div class="p-4 text-center text-muted" style="padding: 32px 16px; text-align: center; color: #64748b;">No pending assignments due.</div>`;
         } else {
           assignList.innerHTML = assignments.slice(0, 4).map(a => {
-            const dueDate = a.due_date ? new Date(a.due_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'No Deadline';
+            const dueDate = a.due_date ? formatDateTime(a.due_date) : 'No Deadline';
             const isOverdue = a.status === 'Overdue' || a.is_overdue;
             const badgeBg = isOverdue ? '#fee2e2' : (a.status === 'Submitted' ? '#dcfce7' : '#fef3c7');
             const badgeColor = isOverdue ? '#b91c1c' : (a.status === 'Submitted' ? '#15803d' : '#b45309');
@@ -739,7 +739,7 @@ async function loadDynamicStudentData(user) {
             <div style="padding: 12px 16px; border-bottom: 1px solid #f1f5f9;">
               <div style="font-weight: 600; font-size: 13px; color: #0f172a;">${escapeHtml(n.title)}</div>
               <div style="font-size: 12px; color: #64748b; margin-top: 3px;">${escapeHtml(n.content || '')}</div>
-              <div style="font-size: 11px; color: #94a3b8; margin-top: 4px;">${n.published_at ? new Date(n.published_at).toLocaleDateString() : ''}</div>
+              <div style="font-size: 11px; color: #94a3b8; margin-top: 4px;">${n.published_at ? formatDate(n.published_at) : ''}</div>
             </div>
           `).join('');
         }
@@ -779,7 +779,7 @@ async function loadDynamicStudentData(user) {
           notifList.innerHTML = `<div class="p-4 text-center text-muted" style="padding: 32px 16px; text-align: center; color: #64748b;">No new notifications. You are all caught up!</div>`;
         } else {
           notifList.innerHTML = notifications.slice(0, 5).map(n => {
-            const timeAgo = n.created_at ? new Date(n.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
+            const timeAgo = n.created_at ? formatDateTime(n.created_at) : '';
             return `
               <div class="notification-row ${n.is_read ? '' : 'unread'}" style="display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; border-bottom: 1px solid #f1f5f9; ${n.is_read ? '' : 'background: #f8fafc;'}">
                 <div style="background: #e0e7ff; color: #4338ca; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px;">

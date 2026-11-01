@@ -1,4 +1,5 @@
 const pool = require('../config/db');
+const { toISTIsoString } = require('../utils/dateTime');
 
 /**
  * Notification Data Model
@@ -54,7 +55,7 @@ const formatNotificationRow = (r) => {
     message: r.message,
     notification_type: r.notification_type || 'General',
     is_read: Boolean(r.is_read),
-    created_at: r.created_at,
+    created_at: toISTIsoString(r.created_at),
     recipient_username: r.recipient_username || null,
     recipient_name: r.recipient_name || null,
     recipient_email: r.recipient_email || null,
@@ -275,6 +276,21 @@ const createNotification = async ({
     console.warn('[NotificationModel] Email dispatch error:', emailErr.message);
   }
 
+  // Real Web Push Notification Dispatch to User's Mobile / Desktop Devices
+  try {
+    const { sendPushToUser } = require('../services/webPush.service');
+    sendPushToUser(recipient_user_id, {
+      title,
+      message,
+      notification_type,
+      metadata
+    }).catch(pushErr => {
+      console.warn('[NotificationModel] Web Push dispatch error:', pushErr.message);
+    });
+  } catch (pushErr) {
+    console.warn('[NotificationModel] Web Push dispatch error:', pushErr.message);
+  }
+
   return newNotif;
 };
 
@@ -354,6 +370,22 @@ const broadcastNotification = async ({
     }
   } catch (emailErr) {
     console.warn('[NotificationModel] Broadcast email dispatch error:', emailErr.message);
+  }
+
+  // Real Web Push Notification Dispatch to all target users
+  try {
+    const { sendPushToUsers } = require('../services/webPush.service');
+    const userIds = activeUsers.map(u => u.user_id);
+    sendPushToUsers(userIds, {
+      title,
+      message,
+      notification_type,
+      metadata
+    }).catch(pushErr => {
+      console.warn('[NotificationModel] Broadcast Web Push error:', pushErr.message);
+    });
+  } catch (pushErr) {
+    console.warn('[NotificationModel] Broadcast Web Push error:', pushErr.message);
   }
 
   return {

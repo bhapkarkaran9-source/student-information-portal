@@ -152,9 +152,22 @@ document.addEventListener('DOMContentLoaded', () => {
   // Format Date Time
   function formatDateTime(dateStr) {
     if (!dateStr) return '-';
-    const d = new Date(dateStr);
-    if (isNaN(d.getTime())) return dateStr;
-    return d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    try {
+      const d = parseDateSafe(dateStr);
+      if (!d) return dateStr;
+      return new Intl.DateTimeFormat('en-GB', {
+        timeZone: 'Asia/Kolkata',
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+      }).format(d).replace(/\b(am|pm)\b/i, m => m.toUpperCase());
+    } catch (e) {
+      return dateStr;
+    }
   }
 
   // Render Status Badge using unified ERP Badges

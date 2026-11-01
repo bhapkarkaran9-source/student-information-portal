@@ -14,6 +14,11 @@ router.get('/unread-count', notificationController.getUnreadCount);
 router.patch('/:id/read', notificationController.markAsRead);
 router.patch('/read-all', notificationController.markAllAsRead);
 
+// Web Push Notification endpoints (available to all authenticated roles: ADMIN, TEACHER, STUDENT)
+router.get('/push/vapid-key', notificationController.getVapidKey);
+router.post('/push/subscribe', notificationController.subscribePush);
+router.post('/push/unsubscribe', notificationController.unsubscribePush);
+
 // Administrative notification management routes (ADMIN ONLY)
 router.use(requireRole('ADMIN'));
 

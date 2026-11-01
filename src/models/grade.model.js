@@ -1,4 +1,5 @@
 const pool = require('../config/db');
+const { toISTIsoString } = require('../utils/dateTime');
 
 /**
  * Official Grading Scale Mapping
@@ -53,7 +54,9 @@ const formatGradeRow = (r) => {
     grade_point: gradePoint,
     credits,
     status: percentage >= 40.0 ? 'Pass' : 'Fail',
-    assessment_name: assessmentName
+    assessment_name: assessmentName,
+    created_at: toISTIsoString(r.created_at),
+    updated_at: toISTIsoString(r.updated_at)
   };
 };
 

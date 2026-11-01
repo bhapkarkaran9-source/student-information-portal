@@ -222,9 +222,10 @@
   function formatDateTime(dateStr) {
     if (!dateStr) return '-';
     try {
-      const d = new Date(dateStr);
-      if (isNaN(d.getTime())) return dateStr;
-      return d.toLocaleString('en-US', {
+      const d = parseDateSafe(dateStr);
+      if (!d) return dateStr;
+      return new Intl.DateTimeFormat('en-GB', {
+        timeZone: 'Asia/Kolkata',
         year: 'numeric',
         month: 'short',
         day: '2-digit',
@@ -232,7 +233,7 @@
         minute: '2-digit',
         second: '2-digit',
         hour12: false
-      });
+      }).format(d);
     } catch (e) {
       return dateStr;
     }

@@ -140,20 +140,7 @@
    */
   function formatDate(dateStr) {
     if (!dateStr) return '—';
-    try {
-      const d = new Date(dateStr);
-      if (isNaN(d.getTime())) return String(dateStr);
-      return d.toLocaleString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true
-      });
-    } catch (e) {
-      return String(dateStr);
-    }
+    return formatDateTime(dateStr);
   }
 
   /**

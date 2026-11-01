@@ -298,27 +298,8 @@
       }
 
       // Dates format
-      let formattedPub = '-';
-      if (n.published_at) {
-        formattedPub = new Date(n.published_at).toLocaleString('en-US', {
-          month: 'short',
-          day: 'numeric',
-          year: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit'
-        });
-      }
-
-      let formattedExp = '<span style="color: #94a3b8; font-size: 11.5px;">Indefinite</span>';
-      if (n.expires_at) {
-        formattedExp = new Date(n.expires_at).toLocaleString('en-US', {
-          month: 'short',
-          day: 'numeric',
-          year: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit'
-        });
-      }
+      const formattedPub = n.published_at ? formatDateTime(n.published_at) : '-';
+      const formattedExp = n.expires_at ? formatDateTime(n.expires_at) : '<span style="color: #94a3b8; font-size: 11.5px;">Indefinite</span>';
 
       // Safe Attachment
       let attachmentCell = '<span style="color: #94a3b8; font-size: 12px;">None</span>';
@@ -437,15 +418,8 @@
       const n = json.data && json.data.notice ? json.data.notice : null;
       if (!n) return;
 
-      const pubDate = n.published_at ? new Date(n.published_at).toLocaleString('en-US', {
-        dateStyle: 'full',
-        timeStyle: 'short'
-      }) : 'Immediate';
-
-      const expDate = n.expires_at ? new Date(n.expires_at).toLocaleString('en-US', {
-        dateStyle: 'full',
-        timeStyle: 'short'
-      }) : 'Indefinite';
+      const pubDate = n.published_at ? formatDateTime(n.published_at) : 'Immediate';
+      const expDate = n.expires_at ? formatDateTime(n.expires_at) : 'Indefinite';
 
       let attachmentDisplay = '<span class="text-muted">None attached</span>';
       if (n.attachment_path) {
@@ -515,10 +489,7 @@
 
   document.getElementById('btnAddNotice').addEventListener('click', () => {
     resetNoticeForm();
-    // Default published_at to current local datetime
-    const now = new Date();
-    const localIso = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
-    modalPublishedAt.value = localIso;
+    modalPublishedAt.value = formatDateTimeLocal(new Date());
     openModal(noticeModal);
   });
 
@@ -542,15 +513,8 @@
       modalAttachmentPath.value = n.attachment_path || '';
       modalIsActive.checked = Boolean(n.is_active);
 
-      if (n.published_at) {
-        const d = new Date(n.published_at);
-        modalPublishedAt.value = new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
-      }
-
-      if (n.expires_at) {
-        const d = new Date(n.expires_at);
-        modalExpiresAt.value = new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
-      }
+      modalPublishedAt.value = n.published_at ? formatDateTimeLocal(n.published_at) : '';
+      modalExpiresAt.value = n.expires_at ? formatDateTimeLocal(n.expires_at) : '';
 
       openModal(noticeModal);
     } catch (err) {

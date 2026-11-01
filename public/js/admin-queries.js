@@ -104,15 +104,7 @@
 
   function formatDate(dStr) {
     if (!dStr) return '-';
-    const d = new Date(dStr);
-    if (isNaN(d.getTime())) return '-';
-    return d.toLocaleDateString('en-GB', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+    return formatDateTime(dStr);
   }
 
   // ==========================================================================

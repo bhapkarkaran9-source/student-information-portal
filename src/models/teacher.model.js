@@ -1,4 +1,15 @@
 const pool = require('../config/db');
+const { toISTDateString, toISTIsoString } = require('../utils/dateTime');
+
+const formatTeacherRow = (t) => {
+  if (!t) return null;
+  return {
+    ...t,
+    joining_date: toISTDateString(t.joining_date),
+    created_at: toISTIsoString(t.created_at),
+    updated_at: toISTIsoString(t.updated_at)
+  };
+};
 
 /**
  * Teacher Data Access Model
@@ -97,7 +108,7 @@ const getTeachers = async ({ page = 1, limit = 10, search = '', department_id = 
   const [rows] = await pool.query(dataSql, [...queryParams, limit, offset]);
 
   return {
-    teachers: rows,
+    teachers: rows.map(formatTeacherRow),
     pagination: {
       total,
       page,
@@ -139,7 +150,7 @@ const findById = async (teacherId) => {
     LIMIT 1
   `;
   const [rows] = await pool.query(sql, [teacherId]);
-  return rows[0] || null;
+  return rows[0] ? formatTeacherRow(rows[0]) : null;
 };
 
 /**
@@ -155,13 +166,15 @@ const findByUserId = async (userId) => {
       t.employee_number,
       t.department_id,
       t.designation,
-      t.joining_date
+      t.joining_date,
+      t.created_at,
+      t.updated_at
     FROM teachers t
     WHERE t.user_id = ?
     LIMIT 1
   `;
   const [rows] = await pool.query(sql, [userId]);
-  return rows[0] || null;
+  return rows[0] ? formatTeacherRow(rows[0]) : null;
 };
 
 /**

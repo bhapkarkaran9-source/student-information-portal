@@ -768,7 +768,7 @@
         // Default admission date to today
         const cpAdmDate = document.getElementById('cpAdmissionDate');
         if (cpAdmDate && !cpAdmDate.value) {
-          cpAdmDate.value = new Date().toISOString().split('T')[0];
+          cpAdmDate.value = formatDateInput(new Date());
         }
 
         // Attach submission handler
@@ -895,8 +895,7 @@
         
         if (u.gender) document.getElementById('detGender').textContent = u.gender;
         if (u.date_of_birth) {
-          const d = new Date(u.date_of_birth);
-          document.getElementById('detDob').textContent = isNaN(d.getTime()) ? u.date_of_birth : d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+          document.getElementById('detDob').textContent = formatDate(u.date_of_birth);
         }
         if (u.address) document.getElementById('detAddress').textContent = u.address;
         if (u.blood_group) document.getElementById('detBlood').textContent = u.blood_group;

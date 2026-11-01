@@ -4,6 +4,7 @@ const pool = require('../config/db');
 const StudyMaterial = require('../models/studyMaterial.model');
 const teacherModel = require('../models/teacher.model');
 const studentModel = require('../models/student.model');
+const notificationModel = require('../models/notification.model');
 const { createAuditLog } = require('../services/audit.service');
 const { MATERIALS_DIR, BASE_UPLOADS } = require('../middlewares/upload.middleware');
 
@@ -325,6 +326,38 @@ const createStudyMaterial = async (req, res) => {
       details: { material_id: newMaterial.material_id, course_id, teacher_id: effectiveTeacherId, title: newMaterial.title },
       req
     });
+
+    // Notify enrolled students of newly published study material
+    try {
+      const [enrolledStudents] = await pool.query(
+        `SELECT u.user_id
+         FROM enrollments e
+         INNER JOIN students s ON e.student_id = s.student_id
+         INNER JOIN users u ON s.user_id = u.user_id
+         WHERE e.course_id = ? AND e.status = 'Enrolled' AND u.is_active = 1`,
+        [course_id]
+      );
+      if (enrolledStudents && enrolledStudents.length > 0) {
+        const courseCode = newMaterial.course_code || 'Course';
+        const notifTitle = `New Study Material: ${newMaterial.title}`;
+        const notifMsg = `New ${matchedType} material has been uploaded for ${courseCode}: "${newMaterial.title}".`;
+        for (const st of enrolledStudents) {
+          notificationModel.createNotification({
+            recipient_user_id: st.user_id,
+            title: notifTitle,
+            message: notifMsg,
+            notification_type: 'StudyMaterial',
+            metadata: {
+              url: '/pages/student/study-material.html',
+              materialId: newMaterial.material_id,
+              courseId: course_id
+            }
+          }).catch(() => {});
+        }
+      }
+    } catch (notifErr) {
+      console.warn('[StudyMaterialController] Failed to dispatch notifications:', notifErr.message);
+    }
 
     return res.status(201).json({
       success: true,

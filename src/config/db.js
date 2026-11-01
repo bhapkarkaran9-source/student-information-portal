@@ -16,11 +16,18 @@ const pool = mysql.createPool({
       }
     : undefined,
 
+  // Standardize timezone on Indian Standard Time (Asia/Kolkata, UTC+05:30)
+  timezone: '+05:30',
+
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
   enableKeepAlive: true,
   keepAliveInitialDelay: 0
+});
+
+pool.on('connection', (connection) => {
+  connection.query("SET time_zone = '+05:30'");
 });
 
 // Helper function to test database connectivity safely

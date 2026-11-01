@@ -346,15 +346,7 @@
       }
 
       // Format Date
-      let formattedDate = '-';
-      if (m.created_at) {
-        const d = new Date(m.created_at);
-        formattedDate = d.toLocaleDateString('en-US', {
-          month: 'short',
-          day: 'numeric',
-          year: 'numeric'
-        });
-      }
+      const formattedDate = m.created_at ? formatDate(m.created_at) : '-';
 
       // Safe Attachment Link
       const isExternal = /^https?:\/\//i.test(m.file_path);
@@ -472,10 +464,7 @@
       const m = json.data && json.data.material ? json.data.material : null;
       if (!m) return;
 
-      const formattedDate = m.created_at ? new Date(m.created_at).toLocaleString('en-US', {
-        dateStyle: 'full',
-        timeStyle: 'short'
-      }) : 'Not available';
+      const formattedDate = m.created_at ? formatDateTime(m.created_at) : 'Not available';
 
       viewMaterialContent.innerHTML = `
         <div class="detail-row" style="margin-bottom: 12px;">

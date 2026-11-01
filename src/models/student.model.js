@@ -1,4 +1,19 @@
 const pool = require('../config/db');
+const { toISTDateString, toISTIsoString } = require('../utils/dateTime');
+
+const formatStudentRow = (s) => {
+  if (!s) return null;
+  return {
+    ...s,
+    admission_date: toISTDateString(s.admission_date),
+    date_of_birth: toISTDateString(s.date_of_birth),
+    student_created_at: toISTIsoString(s.student_created_at),
+    student_updated_at: toISTIsoString(s.student_updated_at),
+    user_created_at: toISTIsoString(s.user_created_at),
+    created_at: toISTIsoString(s.created_at || s.student_created_at || s.user_created_at),
+    updated_at: toISTIsoString(s.updated_at || s.student_updated_at)
+  };
+};
 
 /**
  * Get paginated, searchable, filterable list of students
@@ -134,7 +149,7 @@ const getStudents = async ({ page = 1, limit = 10, search = '', department_id = 
   `;
   const [students] = await pool.query(dataSql, [...queryParams, parsedLimit, offset]);
 
-  return { students, total };
+  return { students: students.map(formatStudentRow), total };
 };
 
 /**
@@ -174,7 +189,7 @@ const findById = async (studentId) => {
     LIMIT 1
   `;
   const [rows] = await pool.query(sql, [studentId]);
-  return rows[0] || null;
+  return rows[0] ? formatStudentRow(rows[0]) : null;
 };
 
 /**
@@ -207,18 +222,21 @@ const findByUserId = async (userId) => {
       s.division, 
       s.batch,
       s.semester,
+      s.created_at AS student_created_at,
+      s.updated_at AS student_updated_at,
       u.is_active,
       u.is_profile_complete,
       u.first_name,
       u.last_name,
-      u.email
+      u.email,
+      u.created_at AS user_created_at
     FROM students s
     INNER JOIN users u ON s.user_id = u.user_id
     WHERE s.user_id = ? 
     LIMIT 1
   `;
   const [rows] = await pool.query(sql, [userId]);
-  return rows[0] || null;
+  return rows[0] ? formatStudentRow(rows[0]) : null;
 };
 
 /**

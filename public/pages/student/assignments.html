@@ -465,13 +465,8 @@
 
         // Render Desktop Table Rows
         tbody.innerHTML = filtered.map(a => {
-          const dueDateObj = a.due_date ? new Date(a.due_date) : null;
-          const dueDateFormatted = dueDateObj
-            ? dueDateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-            : 'No Date';
-          const dueTimeFormatted = dueDateObj
-            ? dueDateObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
-            : '';
+          const dueDateFormatted = a.due_date ? formatDate(a.due_date) : 'No Date';
+          const dueTimeFormatted = a.due_date ? formatTime(a.due_date) : '';
           const remainingInfo = formatRemainingTime(a.due_date);
           
           let badgeClass = 'badge-asg-pending';
@@ -561,13 +556,8 @@
 
         // Render Mobile Cards
         mobileContainer.innerHTML = filtered.map(a => {
-          const dueDateObj = a.due_date ? new Date(a.due_date) : null;
-          const dueDateFormatted = dueDateObj
-            ? dueDateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-            : 'No Date';
-          const dueTimeFormatted = dueDateObj
-            ? dueDateObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
-            : '';
+          const dueDateFormatted = a.due_date ? formatDate(a.due_date) : 'No Date';
+          const dueTimeFormatted = a.due_date ? formatTime(a.due_date) : '';
           const remainingInfo = formatRemainingTime(a.due_date);
 
           let badgeClass = 'badge-asg-pending';
@@ -676,8 +666,7 @@
 
             document.getElementById('asgSubmitId').value = asg.assignment_id;
 
-            const dueDateObj = asg.due_date ? new Date(asg.due_date) : null;
-            const dueDateFormatted = dueDateObj ? dueDateObj.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'No Deadline';
+            const dueDateFormatted = asg.due_date ? formatDateTime(asg.due_date) : 'No Deadline';
             document.getElementById('asgModalMeta').textContent = `Course: ${asg.course_code} | Deadline: ${dueDateFormatted} | Max Marks: ${asg.max_marks || 100} pts`;
 
             const token = localStorage.getItem('token');

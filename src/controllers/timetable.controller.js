@@ -6,6 +6,7 @@ const studentModel = require('../models/student.model');
 const notificationModel = require('../models/notification.model');
 const { successResponse, errorResponse } = require('../utils/response');
 const { createAuditLog } = require('../services/audit.service');
+const { toISTDateString } = require('../utils/dateTime');
 
 const TIME_REGEX = /^([01]\d|2[0-3]):([0-5]\d)(:([0-5]\d))?$/;
 
@@ -649,7 +650,7 @@ const getTodayTimetable = async (req, res) => {
     // Determine target date and reference time
     const targetDate = req.query.date ? new Date(req.query.date) : new Date();
     const dayName = getDayName(targetDate);
-    const dateStr = targetDate.toISOString().slice(0, 10);
+    const dateStr = toISTDateString(targetDate);
     const refTime = req.query.ref_time || req.query.time || null;
     const now = refTime ? parseTimeOnDate(refTime, targetDate) : new Date();
 
@@ -804,7 +805,7 @@ const checkAndDispatchReminders = async (req, res) => {
     }
 
     const dayName = getDayName(targetDate);
-    const dateStr = targetDate.toISOString().slice(0, 10);
+    const dateStr = toISTDateString(targetDate);
     const refTime = req.body?.ref_time || req.query.ref_time || null;
     const now = refTime ? parseTimeOnDate(refTime, targetDate) : new Date();
 

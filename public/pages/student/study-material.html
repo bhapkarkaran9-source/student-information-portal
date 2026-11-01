@@ -324,7 +324,7 @@
 
         // Render Desktop Table Rows
         tbody.innerHTML = list.map(m => {
-          const uploadDate = m.created_at ? new Date(m.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '-';
+          const uploadDate = m.created_at ? formatDate(m.created_at) : '-';
           const matType = m.material_type || 'Notes';
           
           let typeClass = '';
@@ -377,7 +377,7 @@
         // Render Mobile Cards
         if (mobileContainer) {
           mobileContainer.innerHTML = list.map(m => {
-            const uploadDate = m.created_at ? new Date(m.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '-';
+            const uploadDate = m.created_at ? formatDate(m.created_at) : '-';
             const matType = m.material_type || 'Notes';
             
             let typeClass = '';

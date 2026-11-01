@@ -322,7 +322,7 @@
 
   function renderReportPreview(data) {
     if (previewReportTitle) previewReportTitle.textContent = data.title || 'Academic Report';
-    if (previewTimestamp) previewTimestamp.textContent = new Date(data.generated_at).toLocaleString();
+    if (previewTimestamp) previewTimestamp.textContent = formatDateTime(data.generated_at);
     if (previewGeneratedBy) previewGeneratedBy.textContent = `${data.generated_by?.name || currentUser.full_name || 'Student'} (${data.generated_by?.role || 'STUDENT'})`;
 
     const filterParts = [];

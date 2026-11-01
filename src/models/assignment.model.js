@@ -1,4 +1,5 @@
 const pool = require('../config/db');
+const { toISTIsoString, toMySQLDateTime } = require('../utils/dateTime');
 
 /**
  * Assignment Data Model
@@ -122,11 +123,11 @@ const formatAssignmentRow = (r) => {
     teacher_id: r.teacher_id,
     title: r.title,
     description: r.description || null,
-    due_date: r.due_date ? r.due_date.toISOString().slice(0, 19).replace('T', ' ') : null,
+    due_date: toISTIsoString(r.due_date),
     max_marks: parseFloat(r.max_marks) || 100.00,
     file_path: r.file_path || null,
-    created_at: r.created_at,
-    updated_at: r.updated_at,
+    created_at: toISTIsoString(r.created_at),
+    updated_at: toISTIsoString(r.updated_at),
     course_code: r.course_code || null,
     course_name: r.course_name || null,
     department_name: r.department_name || null,
@@ -151,7 +152,7 @@ const formatAssignmentRow = (r) => {
       evaluation_status: Boolean(r.evaluation_id) ? 'Evaluated' : 'Pending Evaluation',
       marks_obtained: r.evaluation_marks_obtained !== null && r.evaluation_marks_obtained !== undefined ? parseFloat(r.evaluation_marks_obtained) : null,
       feedback: r.evaluation_feedback || null,
-      evaluated_at: r.evaluation_evaluated_at ? new Date(r.evaluation_evaluated_at).toISOString().slice(0, 19).replace('T', ' ') : null
+      evaluated_at: toISTIsoString(r.evaluation_evaluated_at)
     } : null,
     evaluation: r.submission_id ? {
       is_evaluated: Boolean(r.evaluation_id),
@@ -159,7 +160,7 @@ const formatAssignmentRow = (r) => {
       marks_obtained: r.evaluation_marks_obtained !== null && r.evaluation_marks_obtained !== undefined ? parseFloat(r.evaluation_marks_obtained) : null,
       max_marks: parseFloat(r.max_marks) || 100.00,
       feedback: r.evaluation_feedback || null,
-      evaluated_at: r.evaluation_evaluated_at ? new Date(r.evaluation_evaluated_at).toISOString().slice(0, 19).replace('T', ' ') : null
+      evaluated_at: toISTIsoString(r.evaluation_evaluated_at)
     } : null
   };
 };
@@ -537,8 +538,8 @@ const getAssignmentSubmissions = async (assignmentId) => {
       status,
       is_late: isLate,
       is_submitted: Boolean(r.submission_id),
-      submitted_at: r.submitted_at ? new Date(r.submitted_at).toISOString().slice(0, 19).replace('T', ' ') : null,
-      updated_at: r.updated_at ? new Date(r.updated_at).toISOString().slice(0, 19).replace('T', ' ') : null,
+      submitted_at: toISTIsoString(r.submitted_at),
+      updated_at: toISTIsoString(r.updated_at),
       original_filename: r.original_filename || null,
       attempt_number: r.submission_id ? (r.attempt_number || 1) : 0,
       // Evaluation details
@@ -547,16 +548,16 @@ const getAssignmentSubmissions = async (assignmentId) => {
       evaluation_status: evaluationStatus,
       marks_obtained: r.marks_obtained !== null && r.marks_obtained !== undefined ? parseFloat(r.marks_obtained) : null,
       feedback: r.feedback || null,
-      evaluated_at: r.evaluated_at ? new Date(r.evaluated_at).toISOString().slice(0, 19).replace('T', ' ') : null,
-      evaluation_updated_at: r.evaluation_updated_at ? new Date(r.evaluation_updated_at).toISOString().slice(0, 19).replace('T', ' ') : null,
+      evaluated_at: toISTIsoString(r.evaluated_at),
+      evaluation_updated_at: toISTIsoString(r.evaluation_updated_at),
       evaluated_by_teacher_id: r.evaluated_by_teacher_id || null,
       evaluation: isEvaluated ? {
         evaluation_id: r.evaluation_id,
         submission_id: r.submission_id,
         marks_obtained: r.marks_obtained !== null && r.marks_obtained !== undefined ? parseFloat(r.marks_obtained) : null,
         feedback: r.feedback || null,
-        evaluated_at: r.evaluated_at ? new Date(r.evaluated_at).toISOString().slice(0, 19).replace('T', ' ') : null,
-        evaluation_updated_at: r.evaluation_updated_at ? new Date(r.evaluation_updated_at).toISOString().slice(0, 19).replace('T', ' ') : null,
+        evaluated_at: toISTIsoString(r.evaluated_at),
+        evaluation_updated_at: toISTIsoString(r.evaluation_updated_at),
         evaluated_by_teacher_id: r.evaluated_by_teacher_id || null
       } : null
     };
@@ -790,8 +791,8 @@ const getStudentSubmission = async (assignmentId, studentId) => {
     marks_obtained: isEvaluated && row.marks_obtained !== null && row.marks_obtained !== undefined ? parseFloat(row.marks_obtained) : null,
     max_marks: parseFloat(row.max_marks) || 100,
     feedback: row.feedback || null,
-    evaluated_at: row.evaluated_at ? new Date(row.evaluated_at).toISOString().slice(0, 19).replace('T', ' ') : null,
-    evaluation_updated_at: row.evaluation_updated_at ? new Date(row.evaluation_updated_at).toISOString().slice(0, 19).replace('T', ' ') : null
+    evaluated_at: toISTIsoString(row.evaluated_at),
+    evaluation_updated_at: toISTIsoString(row.evaluation_updated_at)
   };
 };
 
@@ -852,8 +853,8 @@ const getSubmissionById = async (submissionId) => {
     marks_obtained: isEvaluated && row.marks_obtained !== null && row.marks_obtained !== undefined ? parseFloat(row.marks_obtained) : null,
     max_marks: parseFloat(row.max_marks) || 100,
     feedback: row.feedback || null,
-    evaluated_at: row.evaluated_at ? new Date(row.evaluated_at).toISOString().slice(0, 19).replace('T', ' ') : null,
-    evaluation_updated_at: row.evaluation_updated_at ? new Date(row.evaluation_updated_at).toISOString().slice(0, 19).replace('T', ' ') : null
+    evaluated_at: toISTIsoString(row.evaluated_at),
+    evaluation_updated_at: toISTIsoString(row.evaluation_updated_at)
   };
 };
 
@@ -943,8 +944,8 @@ const getSubmissionEvaluation = async (submissionId) => {
     max_marks: parseFloat(r.max_marks) || 100,
     is_evaluated: true,
     evaluation_status: 'Evaluated',
-    evaluated_at: r.evaluated_at ? new Date(r.evaluated_at).toISOString().slice(0, 19).replace('T', ' ') : null,
-    updated_at: r.updated_at ? new Date(r.updated_at).toISOString().slice(0, 19).replace('T', ' ') : null
+    evaluated_at: toISTIsoString(r.evaluated_at),
+    updated_at: toISTIsoString(r.updated_at)
   };
 };
 
@@ -993,15 +994,15 @@ const getStudentEvaluation = async (assignmentId, studentId) => {
     course_code: r.course_code,
     course_name: r.course_name,
     max_marks: parseFloat(r.max_marks) || 100,
-    submitted_at: r.submitted_at ? new Date(r.submitted_at).toISOString().slice(0, 19).replace('T', ' ') : null,
+    submitted_at: toISTIsoString(r.submitted_at),
     submission_status: r.submission_status,
     original_filename: r.original_filename,
     is_evaluated: isEvaluated,
     evaluation_status: isEvaluated ? 'Evaluated' : 'Pending Evaluation',
     marks_obtained: isEvaluated && r.marks_obtained !== null ? parseFloat(r.marks_obtained) : null,
     feedback: r.feedback || null,
-    evaluated_at: r.evaluated_at ? new Date(r.evaluated_at).toISOString().slice(0, 19).replace('T', ' ') : null,
-    updated_at: r.updated_at ? new Date(r.updated_at).toISOString().slice(0, 19).replace('T', ' ') : null
+    evaluated_at: toISTIsoString(r.evaluated_at),
+    updated_at: toISTIsoString(r.updated_at)
   };
 };
 
@@ -1199,13 +1200,13 @@ const getSubmissionHistory = async (assignmentId, studentId) => {
       file_path: h.file_path,
       file_size: h.file_size || null,
       remarks: h.remarks || null,
-      submitted_at: h.submitted_at ? new Date(h.submitted_at).toISOString().slice(0, 19).replace('T', ' ') : null,
+      submitted_at: toISTIsoString(h.submitted_at),
       status: h.status || 'Submitted',
       is_evaluated: isEvaluated,
       evaluation_status: isEvaluated ? 'Evaluated' : 'Pending Evaluation',
       marks_obtained: isEvaluated ? parseFloat(h.marks_obtained) : null,
       feedback: h.feedback || null,
-      evaluated_at: h.evaluated_at ? new Date(h.evaluated_at).toISOString().slice(0, 19).replace('T', ' ') : null,
+      evaluated_at: toISTIsoString(h.evaluated_at),
       evaluated_by_teacher_id: h.evaluated_by_teacher_id || null,
       evaluated_by_name: h.evaluated_by_name || null,
       is_current: false
@@ -1226,13 +1227,13 @@ const getSubmissionHistory = async (assignmentId, studentId) => {
       file_path: c.file_path,
       file_size: c.file_size || null,
       remarks: c.remarks || null,
-      submitted_at: c.submitted_at ? new Date(c.submitted_at).toISOString().slice(0, 19).replace('T', ' ') : null,
+      submitted_at: toISTIsoString(c.submitted_at),
       status: c.status || 'Submitted',
       is_evaluated: isEvaluated,
       evaluation_status: isEvaluated ? 'Evaluated' : 'Pending Evaluation',
       marks_obtained: isEvaluated && c.marks_obtained !== null && c.marks_obtained !== undefined ? parseFloat(c.marks_obtained) : null,
       feedback: c.feedback || null,
-      evaluated_at: c.evaluated_at ? new Date(c.evaluated_at).toISOString().slice(0, 19).replace('T', ' ') : null,
+      evaluated_at: toISTIsoString(c.evaluated_at),
       evaluated_by_teacher_id: c.evaluated_by_teacher_id || null,
       evaluated_by_name: c.evaluated_by_name || null,
       is_current: true

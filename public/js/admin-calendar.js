@@ -747,7 +747,7 @@
       ` : ''}
 
       <div style="font-size: 11px; color: var(--admin-light); border-top: 1px solid var(--admin-border); padding-top: 10px;">
-        Created by ${event.creator_name || 'System Admin'} on ${new Date(event.created_at).toLocaleDateString()}
+        Created by ${event.creator_name || 'System Admin'} on ${formatDate(event.created_at)}
       </div>
     `;
 

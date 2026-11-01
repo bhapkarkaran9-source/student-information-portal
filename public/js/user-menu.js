@@ -157,6 +157,14 @@
         this.renderUserInfo(cached);
       }
 
+      // Initialize Web Push Notifications
+      if (!window.PushManagerService && !document.querySelector('script[src*="push-notifications.js"]')) {
+        const pScript = document.createElement('script');
+        pScript.src = '/js/push-notifications.js';
+        pScript.defer = true;
+        document.head.appendChild(pScript);
+      }
+
       // 2. Inject CSS if needed for modals and dropdown
       this.injectStyles();
 
@@ -327,16 +335,8 @@
       if (detDept) detDept.textContent = user.department_name || (user.role === 'ADMIN' ? 'System Administration' : 'Not Assigned');
 
       const detCreatedAt = document.getElementById('detCreatedAt') || document.getElementById('profileCreatedAt');
-      if (detCreatedAt && user.created_at) {
-        try {
-          detCreatedAt.textContent = new Date(user.created_at).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
-          });
-        } catch (e) {
-          detCreatedAt.textContent = user.created_at;
-        }
+      if (detCreatedAt) {
+        detCreatedAt.textContent = user.created_at ? formatDate(user.created_at) : '-';
       }
     },
 
@@ -571,6 +571,11 @@
 
       notifyBtn.onclick = (e) => {
         e.preventDefault();
+        if (window.PushManagerService && typeof window.PushManagerService.subscribeUser === 'function') {
+          if (window.Notification && Notification.permission === 'default') {
+            window.PushManagerService.subscribeUser().catch(() => {});
+          }
+        }
         this.openNotifications();
       };
 

@@ -1,6 +1,7 @@
 const pool = require('../config/db');
 const Notice = require('../models/notice.model');
 const { createAuditLog } = require('../services/audit.service');
+const { toMySQLDateTime, isValidDate } = require('../utils/dateTime');
 
 /**
  * Validate positive integer ID
@@ -48,14 +49,7 @@ const isValidDateTime = (dateStr) => {
   return !isNaN(d.getTime());
 };
 
-/**
- * Helper to convert to MySQL DATETIME format (YYYY-MM-DD HH:mm:ss)
- */
-const toMySQLDateTime = (dateStr) => {
-  if (!dateStr) return null;
-  const d = new Date(dateStr);
-  return d.toISOString().slice(0, 19).replace('T', ' ');
-};
+
 
 /**
  * GET /api/notices

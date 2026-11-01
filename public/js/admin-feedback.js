@@ -185,17 +185,7 @@
    */
   function formatDate(dateStr) {
     if (!dateStr) return '—';
-    try {
-      const d = new Date(dateStr);
-      if (isNaN(d.getTime())) return String(dateStr);
-      return d.toLocaleDateString(undefined, {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-      });
-    } catch (e) {
-      return String(dateStr);
-    }
+    return window.formatDate ? window.formatDate(dateStr) : String(dateStr);
   }
 
   /**
@@ -872,7 +862,7 @@
       const card = document.createElement('div');
       card.className = 'response-card';
 
-      const submittedDateStr = resp.submitted_at ? new Date(resp.submitted_at).toLocaleString() : '—';
+      const submittedDateStr = resp.submitted_at ? formatDateTime(resp.submitted_at) : '—';
       const answers = resp.answers || [];
 
       let answersHtml = '';

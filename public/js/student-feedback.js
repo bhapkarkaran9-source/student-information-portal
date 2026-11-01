@@ -40,17 +40,7 @@
    */
   function formatDate(dateStr) {
     if (!dateStr) return 'N/A';
-    try {
-      const d = new Date(dateStr);
-      if (isNaN(d.getTime())) return String(dateStr).slice(0, 10);
-      return d.toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric'
-      });
-    } catch (e) {
-      return String(dateStr).slice(0, 10);
-    }
+    return window.formatDate ? window.formatDate(dateStr) : String(dateStr);
   }
 
   /**

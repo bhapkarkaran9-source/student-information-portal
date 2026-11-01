@@ -35,10 +35,7 @@
           }
           if (infoRow && dateEl) {
             infoRow.classList.remove('hidden');
-            const d = new Date(data.registered_at);
-            dateEl.textContent = isNaN(d.getTime()) ? data.registered_at : d.toLocaleDateString('en-GB', {
-              day: '2-digit', month: '2-digit', year: 'numeric'
-            });
+            dateEl.textContent = formatDate(data.registered_at);
           }
           if (livenessMethodEl && data.liveness_method) {
             const label = (data.liveness_method.includes('EAR') || data.liveness_method.includes('BLINK'))

@@ -242,7 +242,7 @@ function startLocalClock() {
     const clockEl = document.getElementById('localClockTicker');
     const now = new Date();
     if (clockEl) {
-      clockEl.textContent = now.toLocaleTimeString('en-US', { hour12: false });
+      clockEl.textContent = new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }).format(now);
     }
     // Update reminder logic periodically
     updateNextLectureReminder(now);
@@ -883,11 +883,8 @@ async function loadTodayAndNextLecture() {
 
   const todayDayEl = document.getElementById('todayDayName');
   if (todayDayEl) {
-    todayDayEl.textContent = now.toLocaleDateString('en-US', {
-      weekday: 'long',
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
+    todayDayEl.textContent = formatDate(now, {
+      weekday: 'long'
     });
   }
 
@@ -1438,15 +1435,7 @@ function formatTime(timeVal) {
  */
 function formatDateTime(dateVal) {
   if (!dateVal) return '-';
-  const d = new Date(dateVal);
-  if (isNaN(d.getTime())) return '-';
-  return d.toLocaleString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  });
+  return formatDateTime(dateVal);
 }
 
 /**

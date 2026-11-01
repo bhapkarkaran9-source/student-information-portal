@@ -909,8 +909,8 @@
         bar.style.backgroundColor = '#10b981';
       }
 
-      document.getElementById('viewCreatedAt').textContent = a.created_at ? new Date(a.created_at).toLocaleString() : '-';
-      document.getElementById('viewUpdatedAt').textContent = a.updated_at ? new Date(a.updated_at).toLocaleString() : '-';
+      document.getElementById('viewCreatedAt').textContent = a.created_at ? formatDateTime(a.created_at) : '-';
+      document.getElementById('viewUpdatedAt').textContent = a.updated_at ? formatDateTime(a.updated_at) : '-';
 
       openModal('viewAttendanceModal');
     } catch (err) {

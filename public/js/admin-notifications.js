@@ -166,19 +166,7 @@
 
   function formatDate(isoStr) {
     if (!isoStr) return '-';
-    try {
-      const d = new Date(isoStr);
-      if (isNaN(d.getTime())) return '-';
-      return d.toLocaleString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-    } catch (e) {
-      return '-';
-    }
+    return formatDateTime(isoStr);
   }
 
   // ==========================================================================

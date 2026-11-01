@@ -1,4 +1,5 @@
 const pool = require('../config/db');
+const { toISTIsoString } = require('../utils/dateTime');
 
 /**
  * Audit Log Model
@@ -44,7 +45,7 @@ const formatAuditRow = (r) => {
     description: description,
     user_agent: userAgent,
     details: parsedDetails,
-    created_at: r.created_at
+    created_at: toISTIsoString(r.created_at)
   };
 };
 

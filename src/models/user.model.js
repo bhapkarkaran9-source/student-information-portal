@@ -1,4 +1,5 @@
 const pool = require('../config/db');
+const { toISTIsoString } = require('../utils/dateTime');
 
 /**
  * Find user by username including password_hash and role
@@ -63,7 +64,9 @@ const findById = async (userId) => {
   return {
     ...rows[0],
     must_change_password: Boolean(rows[0].must_change_password),
-    is_profile_complete: Boolean(rows[0].is_profile_complete)
+    is_profile_complete: Boolean(rows[0].is_profile_complete),
+    created_at: toISTIsoString(rows[0].created_at),
+    updated_at: toISTIsoString(rows[0].updated_at)
   };
 };
 
@@ -94,7 +97,12 @@ const findByUsername = async (username) => {
     LIMIT 1
   `;
   const [rows] = await pool.query(sql, [username]);
-  return rows[0] || null;
+  if (!rows[0]) return null;
+  return {
+    ...rows[0],
+    created_at: toISTIsoString(rows[0].created_at),
+    updated_at: toISTIsoString(rows[0].updated_at)
+  };
 };
 
 /**
@@ -124,7 +132,12 @@ const findByEmail = async (email) => {
     LIMIT 1
   `;
   const [rows] = await pool.query(sql, [email]);
-  return rows[0] || null;
+  if (!rows[0]) return null;
+  return {
+    ...rows[0],
+    created_at: toISTIsoString(rows[0].created_at),
+    updated_at: toISTIsoString(rows[0].updated_at)
+  };
 };
 
 /**
@@ -199,8 +212,13 @@ const getUsers = async ({ page = 1, limit = 10, search = '', role = '', status =
     LIMIT ? OFFSET ?
   `;
   const [users] = await pool.query(dataSql, [...queryParams, take, offset]);
+  const formattedUsers = users.map(u => ({
+    ...u,
+    created_at: toISTIsoString(u.created_at),
+    updated_at: toISTIsoString(u.updated_at)
+  }));
 
-  return { users, total };
+  return { users: formattedUsers, total };
 };
 
 /**

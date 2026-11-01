@@ -230,8 +230,10 @@
   async function loadAssignments() {
     try {
       const res = await apiFetch('/api/assignments');
-      if (res && res.success && res.data) {
-        allAssignments = Array.isArray(res.data) ? res.data : (res.data.assignments || []);
+      if (res && res.data && (Array.isArray(res.data) || Array.isArray(res.data.assignments))) {
+        allAssignments = Array.isArray(res.data) ? res.data : res.data.assignments;
+      } else if (res && (Array.isArray(res.assignments) || Array.isArray(res))) {
+        allAssignments = Array.isArray(res) ? res : res.assignments;
       } else {
         allAssignments = [];
       }
@@ -240,8 +242,9 @@
       renderAssignments(allAssignments);
     } catch (err) {
       console.error('Failed to load assignments:', err);
-      allAssignments = [];
-      renderAssignments([]);
+      if (!allAssignments || allAssignments.length === 0) {
+        renderAssignments([]);
+      }
     }
   }
 
@@ -310,43 +313,47 @@
 
     const now = new Date();
     assignments.forEach(a => {
-      const isPast = a.due_date && new Date(a.due_date) < now;
-      const statusBadge = isPast
-        ? '<span style="display: inline-block; padding: 2px 8px; border-radius: 9999px; font-size: 11px; font-weight: 600; background: #fee2e2; color: #991b1b;">Closed</span>'
-        : '<span style="display: inline-block; padding: 2px 8px; border-radius: 9999px; font-size: 11px; font-weight: 600; background: #dcfce7; color: #15803d;">Active</span>';
+      try {
+        const isPast = a.due_date && new Date(a.due_date) < now;
+        const statusBadge = isPast
+          ? '<span style="display: inline-block; padding: 2px 8px; border-radius: 9999px; font-size: 11px; font-weight: 600; background: #fee2e2; color: #991b1b;">Closed</span>'
+          : '<span style="display: inline-block; padding: 2px 8px; border-radius: 9999px; font-size: 11px; font-weight: 600; background: #dcfce7; color: #15803d;">Active</span>';
 
-      const dueDateStr = a.due_date ? new Date(a.due_date).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'No Deadline';
+        const dueDateStr = a.due_date ? (typeof formatDateTime === 'function' ? formatDateTime(a.due_date) : String(a.due_date)) : 'No Deadline';
 
-      html += `
-        <tr style="border-bottom: 1px solid #f1f5f9;">
-          <td style="padding: 14px 16px; max-width: 320px;">
-            <div style="font-weight: 600; color: #0f172a;">${escapeHtml(a.title)}</div>
-            ${a.description ? `<div style="font-size: 12px; color: #64748b; margin-top: 2px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">${escapeHtml(a.description)}</div>` : ''}
-          </td>
-          <td style="padding: 14px 16px;">
-            <span style="display: inline-block; padding: 2px 6px; background: #ccfbf1; color: #0f766e; border-radius: 4px; font-weight: 600; font-size: 12px;">${escapeHtml(a.course_code || 'COURSE')}</span>
-            <div style="font-size: 12px; color: #475569; margin-top: 2px;">${escapeHtml(a.course_name || '')}</div>
-          </td>
-          <td style="padding: 14px 16px; color: #475569;">${escapeHtml(dueDateStr)}</td>
-          <td style="padding: 14px 16px; color: #0f172a; font-weight: 600;">${escapeHtml(a.max_marks || '100')} pts</td>
-          <td style="padding: 14px 16px;">${statusBadge}</td>
-          <td style="padding: 14px 16px; text-align: right;">
-            <div class="btn-action-group">
-              <button type="button" class="btn-asg-action btn-view-sub" data-action="submissions" data-id="${a.assignment_id}" title="View Student Submissions">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                <span>Submissions</span>
-              </button>
-              <button type="button" class="btn-asg-action btn-edit-asg" data-action="edit" data-id="${a.assignment_id}" title="Edit Assignment">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                <span>Edit</span>
-              </button>
-              <button type="button" class="btn-asg-action btn-del-asg" data-action="delete" data-id="${a.assignment_id}" title="Delete Assignment">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                <span>Delete</span>
-              </button>
-            </div>
-          </td>
-        </tr>`;
+        html += `
+          <tr style="border-bottom: 1px solid #f1f5f9;">
+            <td style="padding: 14px 16px; max-width: 320px;">
+              <div style="font-weight: 600; color: #0f172a;">${escapeHtml(a.title)}</div>
+              ${a.description ? `<div style="font-size: 12px; color: #64748b; margin-top: 2px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">${escapeHtml(a.description)}</div>` : ''}
+            </td>
+            <td style="padding: 14px 16px;">
+              <span style="display: inline-block; padding: 2px 6px; background: #ccfbf1; color: #0f766e; border-radius: 4px; font-weight: 600; font-size: 12px;">${escapeHtml(a.course_code || 'COURSE')}</span>
+              <div style="font-size: 12px; color: #475569; margin-top: 2px;">${escapeHtml(a.course_name || '')}</div>
+            </td>
+            <td style="padding: 14px 16px; color: #475569;">${escapeHtml(dueDateStr)}</td>
+            <td style="padding: 14px 16px; color: #0f172a; font-weight: 600;">${escapeHtml(a.max_marks || '100')} pts</td>
+            <td style="padding: 14px 16px;">${statusBadge}</td>
+            <td style="padding: 14px 16px; text-align: right;">
+              <div class="btn-action-group">
+                <button type="button" class="btn-asg-action btn-view-sub" data-action="submissions" data-id="${a.assignment_id}" title="View Student Submissions">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                  <span>Submissions</span>
+                </button>
+                <button type="button" class="btn-asg-action btn-edit-asg" data-action="edit" data-id="${a.assignment_id}" title="Edit Assignment">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                  <span>Edit</span>
+                </button>
+                <button type="button" class="btn-asg-action btn-del-asg" data-action="delete" data-id="${a.assignment_id}" title="Delete Assignment">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                  <span>Delete</span>
+                </button>
+              </div>
+            </td>
+          </tr>`;
+      } catch (err) {
+        console.error('Error rendering assignment row:', err);
+      }
     });
 
     html += '</tbody></table></div>';
@@ -391,7 +398,7 @@
 
         if (titleEl) titleEl.textContent = `Submissions: ${asg.title}`;
         if (metaEl) {
-          const dueStr = asg.due_date ? new Date(asg.due_date).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'No Deadline';
+          const dueStr = asg.due_date ? formatDateTime(asg.due_date) : 'No Deadline';
           metaEl.textContent = `Course: ${asg.course_code} - ${asg.course_name} | Deadline: ${dueStr}`;
         }
 
@@ -465,7 +472,7 @@
       if (s.status === 'Late Submission') badgeClass = 'badge-late';
 
       const submittedAtStr = s.submitted_at
-        ? new Date(s.submitted_at).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+        ? formatDateTime(s.submitted_at)
         : '-';
 
       const filenameStr = s.original_filename ? escapeHtml(s.original_filename) : '-';
@@ -610,7 +617,7 @@
             : `/api/assignments/${aid}/submissions/${subId}/history/${att.history_id}/view?token=${encodeURIComponent(token)}`;
 
           const dateStr = att.submitted_at
-            ? new Date(att.submitted_at).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+            ? formatDateTime(att.submitted_at)
             : '-';
 
           const statusBadge = att.status === 'Late Submission'
@@ -692,7 +699,7 @@
     document.getElementById('evalStudentPrn').textContent = student.prn_number || '-';
     
     const submittedAtStr = student.submitted_at
-      ? new Date(student.submitted_at).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+      ? formatDateTime(student.submitted_at)
       : '-';
     document.getElementById('evalSubmittedAt').textContent = submittedAtStr;
 
@@ -834,10 +841,7 @@
     document.getElementById('editAssignDesc').value = asg.description || '';
 
     if (asg.due_date) {
-      const d = new Date(asg.due_date);
-      // Format as YYYY-MM-DDTHH:mm
-      const localIso = new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
-      document.getElementById('editAssignDueDate').value = localIso;
+      document.getElementById('editAssignDueDate').value = formatDateTimeLocal(asg.due_date);
     } else {
       document.getElementById('editAssignDueDate').value = '';
     }

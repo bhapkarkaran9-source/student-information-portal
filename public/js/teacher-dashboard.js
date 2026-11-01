@@ -95,8 +95,7 @@
    */
   function updateDateDisplay() {
     const today = new Date();
-    const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
-    const dateStr = today.toLocaleDateString('en-US', options);
+    const dateStr = formatDate(today, { weekday: 'long' });
 
     const dateEl = document.getElementById('welcomeCurrentDate');
     if (dateEl) {
@@ -381,8 +380,10 @@
     try {
       const res = await apiFetch('/api/assignments?limit=10');
       let assignments = [];
-      if (res && res.success && res.data) {
-        assignments = Array.isArray(res.data) ? res.data : (res.data.assignments || []);
+      if (res && res.data && (Array.isArray(res.data) || Array.isArray(res.data.assignments))) {
+        assignments = Array.isArray(res.data) ? res.data : res.data.assignments;
+      } else if (res && (Array.isArray(res.assignments) || Array.isArray(res))) {
+        assignments = Array.isArray(res) ? res : res.assignments;
       }
 
       const kpiAssignments = document.getElementById('kpiAssignmentsCount');
@@ -418,15 +419,19 @@
             <tbody>`;
 
       assignments.slice(0, 5).forEach(a => {
-        const dueDate = a.due_date ? new Date(a.due_date).toLocaleDateString() : '-';
-        html += `
-          <tr>
-            <td style="font-weight: 600;">${escapeHtml(a.title)}</td>
-            <td>${escapeHtml(a.course_code || a.course_name || '-')}</td>
-            <td>${escapeHtml(dueDate)}</td>
-            <td>${escapeHtml(a.max_marks || '100')}</td>
-            <td><span class="teacher-meta-chip badge-active" style="border: none; padding: 2px 8px;">Active</span></td>
-          </tr>`;
+        try {
+          const dueDate = a.due_date ? (typeof formatDateTime === 'function' ? formatDateTime(a.due_date) : String(a.due_date)) : '-';
+          html += `
+            <tr>
+              <td style="font-weight: 600;">${escapeHtml(a.title)}</td>
+              <td>${escapeHtml(a.course_code || a.course_name || '-')}</td>
+              <td>${escapeHtml(dueDate)}</td>
+              <td>${escapeHtml(a.max_marks || '100')}</td>
+              <td><span class="teacher-meta-chip badge-active" style="border: none; padding: 2px 8px;">Active</span></td>
+            </tr>`;
+        } catch (rowErr) {
+          console.error('Error rendering dashboard assignment row:', rowErr);
+        }
       });
 
       html += '</tbody></table></div>';
@@ -572,7 +577,7 @@
       let html = '<div style="padding: 12px 16px;">';
       queries.forEach(q => {
         const studentName = [q.first_name, q.last_name].filter(Boolean).join(' ') || q.student_name || 'Student';
-        const dateStr = q.created_at ? new Date(q.created_at).toLocaleDateString() : '';
+        const dateStr = q.created_at ? formatDate(q.created_at) : '';
         html += `
           <div style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; gap: 10px;">
             <div style="overflow: hidden;">
@@ -618,7 +623,7 @@
 
       let html = '<div style="padding: 12px 16px;">';
       notices.forEach(n => {
-        const dateStr = n.created_at ? new Date(n.created_at).toLocaleDateString() : '';
+        const dateStr = n.created_at ? formatDate(n.created_at) : '';
         html += `
           <div style="padding: 10px 0; border-bottom: 1px solid #f1f5f9;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">

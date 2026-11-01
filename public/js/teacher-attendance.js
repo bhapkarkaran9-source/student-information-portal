@@ -1868,7 +1868,7 @@
       let html = '<div class="session-cards-grid">';
 
       sessions.forEach(s => {
-        const dateFormatted = s.attendance_date ? new Date(s.attendance_date + 'T00:00:00').toLocaleDateString(undefined, { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }) : '-';
+        const dateFormatted = s.attendance_date ? formatDate(s.attendance_date, { weekday: 'short' }) : '-';
         const lectureType = s.lecture_type || 'Regular Lecture';
 
         let typeBadgeStyle = 'background: #e0e7ff; color: #3730a3;';

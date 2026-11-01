@@ -326,7 +326,9 @@ document.addEventListener('DOMContentLoaded', () => {
       successBox.id = 'successAlert';
       successBox.className = 'alert alert-success';
       successBox.style.cssText = 'background:#f0fdf4; color:#15803d; border-left:4px solid #22c55e; padding:12px; border-radius:6px; margin-bottom:16px; font-size:14px; display:flex; align-items:center; gap:8px;';
-      successBox.innerHTML = `<span>${msgParam}</span>`;
+      const msgSpan = document.createElement('span');
+      msgSpan.textContent = msgParam;
+      successBox.appendChild(msgSpan);
       errorAlert.parentNode.insertBefore(successBox, errorAlert);
     }
   }

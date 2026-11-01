@@ -1208,28 +1208,32 @@ function escapeHtml(str) {
  * Format Date YYYY-MM-DD to locale string
  */
 function formatDate(dateVal) {
+  if (typeof window.formatDate === 'function' && window.formatDate !== formatDate) {
+    return window.formatDate(dateVal);
+  }
   if (!dateVal) return '-';
-  const d = new Date(dateVal);
-  if (isNaN(d.getTime())) return '-';
-  return d.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric'
-  });
+  try {
+    const d = new Date(dateVal);
+    if (isNaN(d.getTime())) return '-';
+    return new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Kolkata', day: '2-digit', month: 'short', year: 'numeric' }).format(d);
+  } catch (e) {
+    return String(dateVal);
+  }
 }
 
 /**
- * Format DateTime to locale string
+ * Format DateTime to locale string in Asia/Kolkata
  */
 function formatDateTime(dateVal) {
+  if (typeof window.formatDateTime === 'function' && window.formatDateTime !== formatDateTime) {
+    return window.formatDateTime(dateVal);
+  }
   if (!dateVal) return '-';
-  const d = new Date(dateVal);
-  if (isNaN(d.getTime())) return '-';
-  return d.toLocaleString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  });
+  try {
+    const d = new Date(dateVal);
+    if (isNaN(d.getTime())) return '-';
+    return new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Kolkata', day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true }).format(d).replace(/\b(am|pm)\b/i, m => m.toUpperCase());
+  } catch (e) {
+    return String(dateVal);
+  }
 }

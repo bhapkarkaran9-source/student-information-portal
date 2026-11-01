@@ -1,4 +1,5 @@
 const pool = require('../config/db');
+const { toISTIsoString } = require('../utils/dateTime');
 
 /**
  * Study Material Data Model
@@ -103,8 +104,8 @@ const formatMaterialRow = (r) => {
     file_path: r.file_path,
     original_filename: r.original_filename || null,
     description: r.description || null,
-    created_at: r.created_at,
-    updated_at: r.updated_at,
+    created_at: toISTIsoString(r.created_at),
+    updated_at: toISTIsoString(r.updated_at),
     course_code: r.course_code || null,
     course_name: r.course_name || null,
     department_name: r.department_name || null,

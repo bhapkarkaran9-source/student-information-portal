@@ -239,11 +239,7 @@
 
       const detCreatedAt = document.getElementById('detCreatedAt');
       if (detCreatedAt) {
-        detCreatedAt.textContent = u.created_at ? new Date(u.created_at).toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'short',
-          day: 'numeric'
-        }) : '-';
+        detCreatedAt.textContent = u.created_at ? formatDate(u.created_at) : '-';
       }
 
       const badge = document.getElementById('profileStatusBadge');

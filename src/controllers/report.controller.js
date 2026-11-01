@@ -1,6 +1,7 @@
 const Report = require('../models/report.model');
 const ExportService = require('../services/export.service');
 const { createAuditLog } = require('../services/audit.service');
+const { toISTIsoString, toISTDateString } = require('../utils/dateTime');
 
 /**
  * Report Column Mappings for CSV & Excel Exporters
@@ -351,7 +352,7 @@ const getReport = async (req, res) => {
         name: req.user.full_name || req.user.username,
         role: req.user.role
       },
-      generated_at: new Date().toISOString()
+      generated_at: toISTIsoString(new Date())
     });
   } catch (err) {
     console.error('Error generating report preview:', err);
@@ -387,7 +388,7 @@ const exportReportCsv = async (req, res) => {
       summary: report.summary
     });
 
-    const dateStr = new Date().toISOString().slice(0, 10);
+    const dateStr = toISTDateString(new Date());
     const filename = `${reportType}-report-${dateStr}.csv`;
 
     await createAuditLog({
@@ -437,7 +438,7 @@ const exportReportExcel = async (req, res) => {
       summary: report.summary
     });
 
-    const dateStr = new Date().toISOString().slice(0, 10);
+    const dateStr = toISTDateString(new Date());
     const filename = `${reportType}-report-${dateStr}.xlsx`;
 
     await createAuditLog({

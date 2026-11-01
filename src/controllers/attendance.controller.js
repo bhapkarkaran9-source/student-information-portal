@@ -8,6 +8,7 @@ const timetableModel = require('../models/timetable.model');
 const notificationModel = require('../models/notification.model');
 const { successResponse, errorResponse } = require('../utils/response');
 const { createAuditLog } = require('../services/audit.service');
+const { toISTDateString } = require('../utils/dateTime');
 
 /**
  * Evaluates a student's attendance percentage for a course after attendance recording/updating.
@@ -67,7 +68,7 @@ const checkAndNotifyLowAttendance = async (studentId, courseId, options = {}) =>
         ? `${row.course_code} - ${row.course_name || ''}`.trim() 
         : (row.course_name || 'Course');
 
-      const dateStr = options.date || new Date().toISOString().slice(0, 10);
+      const dateStr = options.date || toISTDateString(new Date());
       const eventId = options.eventId || `low_att_${sId}_${cId}_${dateStr}`;
 
       const notif = await notificationModel.createNotification({
@@ -1132,7 +1133,7 @@ const startQRAttendanceSession = async (req, res) => {
         : 'Regular Lecture';
 
       const dateClean = cleanDate(session_date);
-      finalSessionDate = dateClean || new Date().toISOString().slice(0, 10);
+      finalSessionDate = dateClean || toISTDateString(new Date());
     } 
     // Case B: Extra / Custom lecture (timetable_id = NULL)
     else {

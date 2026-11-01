@@ -1,4 +1,5 @@
 const pool = require('../config/db');
+const { toISTDateString } = require('../utils/dateTime');
 
 /**
  * Academic Event Model
@@ -65,8 +66,8 @@ const formatEventRow = (r) => {
     description: r.description || '',
     event_type: r.event_type,
     exam_type: r.exam_type || null,
-    start_date: r.start_date_str || (r.start_date ? r.start_date.toISOString().split('T')[0] : null),
-    end_date: r.end_date_str || (r.end_date ? r.end_date.toISOString().split('T')[0] : null),
+    start_date: r.start_date_str || toISTDateString(r.start_date),
+    end_date: r.end_date_str || toISTDateString(r.end_date),
     start_time: r.start_time ? r.start_time.toString().slice(0, 5) : null,
     end_time: r.end_time ? r.end_time.toString().slice(0, 5) : null,
     location: r.location || '',
@@ -756,7 +757,7 @@ const triggerReminders = async ({ event_id = null, reminder_type = null, user_id
   let checkedCount = 0;
   let dispatchedCount = 0;
 
-  const todayStr = new Date().toISOString().split('T')[0];
+  const todayStr = toISTDateString(new Date());
   const now = new Date();
   const months = [
     'January', 'February', 'March', 'April', 'May', 'June',

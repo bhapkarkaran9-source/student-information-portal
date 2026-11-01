@@ -340,17 +340,7 @@
       }
 
       // Format Date
-      let formattedDate = 'Not set';
-      if (a.due_date) {
-        const d = new Date(a.due_date);
-        formattedDate = d.toLocaleString('en-US', {
-          month: 'short',
-          day: 'numeric',
-          year: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit'
-        });
-      }
+      let formattedDate = a.due_date ? formatDateTime(a.due_date) : 'Not set';
 
       // Safe Attachment Link
       let attachmentCell = '<span style="color: #94a3b8; font-size: 12px;">No resource</span>';
@@ -471,13 +461,7 @@
       const a = json.data && json.data.assignment ? json.data.assignment : null;
       if (!a) return;
 
-      let formattedDate = 'Not set';
-      if (a.due_date) {
-        formattedDate = new Date(a.due_date).toLocaleString('en-US', {
-          dateStyle: 'full',
-          timeStyle: 'short'
-        });
-      }
+      let formattedDate = a.due_date ? formatDateTime(a.due_date) : 'Not set';
 
       let resourceDisplay = '<span class="text-muted">None attached</span>';
       if (a.file_path) {
@@ -550,7 +534,7 @@
     resetAssignmentForm();
     // Default due date to 7 days from now formatted for datetime-local
     const future = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-    modalDueDate.value = future.toISOString().slice(0, 16);
+    modalDueDate.value = formatDateTimeLocal(future);
     openModal(assignmentModal);
   });
 
@@ -576,10 +560,9 @@
       modalDescription.value = a.description || '';
 
       if (a.due_date) {
-        const d = new Date(a.due_date);
-        // adjust to local ISO string for datetime-local
-        const localIso = new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
-        modalDueDate.value = localIso;
+        modalDueDate.value = formatDateTimeLocal(a.due_date);
+      } else {
+        modalDueDate.value = '';
       }
 
       openModal(assignmentModal);

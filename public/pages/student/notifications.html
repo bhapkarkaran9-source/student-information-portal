@@ -286,7 +286,7 @@
 
         container.innerHTML = filtered.map(n => {
           const isUnread = !n.is_read;
-          const timeAgo = n.created_at ? new Date(n.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
+          const timeAgo = n.created_at ? formatDateTime(n.created_at) : '';
           const type = n.notification_type || 'System';
 
           let typeBg = '#e0e7ff';

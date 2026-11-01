@@ -28,8 +28,9 @@ function sanitizeErrorMessage(error) {
   let message = typeof error === 'string' ? error : (error.message || String(error));
 
   // Redact known environment secrets if defined
-  if (process.env.SMTP_PASSWORD && process.env.SMTP_PASSWORD.trim()) {
-    message = message.split(process.env.SMTP_PASSWORD).join('[REDACTED]');
+  const smtpPass = process.env.SMTP_PASS || process.env.SMTP_PASSWORD;
+  if (smtpPass && smtpPass.trim()) {
+    message = message.split(smtpPass).join('[REDACTED]');
   }
   if (process.env.JWT_SECRET && process.env.JWT_SECRET.trim()) {
     message = message.split(process.env.JWT_SECRET).join('[REDACTED]');
@@ -48,13 +49,26 @@ function sanitizeErrorMessage(error) {
  * @returns {object}
  */
 function getEmailConfig() {
+  const hasPass = Boolean((process.env.SMTP_PASS && process.env.SMTP_PASS.trim()) || (process.env.SMTP_PASSWORD && process.env.SMTP_PASSWORD.trim()));
   return {
     enabled: String(process.env.EMAIL_ENABLED).toLowerCase() === 'true',
     host: process.env.SMTP_HOST || 'smtp.mailtrap.io',
     port: parseInt(process.env.SMTP_PORT, 10) || 2525,
-    from: process.env.EMAIL_FROM || 'Student Portal <noreply@studentportal.local>',
-    hasAuth: Boolean(process.env.SMTP_USER && process.env.SMTP_PASSWORD)
+    from: process.env.SMTP_FROM || process.env.EMAIL_FROM || 'Student Portal <noreply@studentportal.local>',
+    hasAuth: Boolean(process.env.SMTP_USER && hasPass)
   };
+}
+
+/**
+ * Checks whether SMTP outbound email service is properly configured in environment variables.
+ * @returns {boolean}
+ */
+function isSmtpConfigured() {
+  const isEnabled = String(process.env.EMAIL_ENABLED).toLowerCase() === 'true';
+  const hasHost = Boolean(process.env.SMTP_HOST && process.env.SMTP_HOST.trim());
+  const hasUser = Boolean(process.env.SMTP_USER && process.env.SMTP_USER.trim());
+  const hasPass = Boolean((process.env.SMTP_PASS && process.env.SMTP_PASS.trim()) || (process.env.SMTP_PASSWORD && process.env.SMTP_PASSWORD.trim()));
+  return isEnabled && hasHost && hasUser && hasPass;
 }
 
 /**
@@ -65,7 +79,7 @@ function createDefaultTransporter() {
   const host = process.env.SMTP_HOST || 'smtp.mailtrap.io';
   const port = parseInt(process.env.SMTP_PORT, 10) || 2525;
   const user = process.env.SMTP_USER || '';
-  const pass = process.env.SMTP_PASSWORD || '';
+  const pass = process.env.SMTP_PASS || process.env.SMTP_PASSWORD || '';
 
   const config = {
     host,
@@ -119,7 +133,7 @@ async function sendEmail(to, subject, html, text = '', options = {}) {
   const emailType = options.emailType || 'GENERAL';
   const userId = options.userId || null;
   const safeSubject = String(subject || 'Notification').trim().slice(0, 255);
-  const fromAddress = options.from || process.env.EMAIL_FROM || 'Student Portal <noreply@studentportal.local>';
+  const fromAddress = options.from || process.env.SMTP_FROM || process.env.EMAIL_FROM || 'Student Portal <noreply@studentportal.local>';
 
   // 2. Create initial PENDING database log
   let logId = null;
@@ -245,6 +259,7 @@ module.exports = {
   sendTemplateEmail,
   isValidEmail,
   getEmailConfig,
+  isSmtpConfigured,
   sanitizeErrorMessage,
   createDefaultTransporter
 };

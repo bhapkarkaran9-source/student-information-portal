@@ -1,4 +1,5 @@
 const pool = require('../config/db');
+const { toISTIsoString } = require('../utils/dateTime');
 
 /**
  * Notice Data Model
@@ -36,11 +37,11 @@ const formatNoticeRow = (r) => {
     title: r.title,
     content: r.content,
     attachment_path: r.attachment_path || null,
-    published_at: r.published_at ? r.published_at.toISOString().slice(0, 19).replace('T', ' ') : null,
-    expires_at: r.expires_at ? r.expires_at.toISOString().slice(0, 19).replace('T', ' ') : null,
+    published_at: toISTIsoString(r.published_at),
+    expires_at: toISTIsoString(r.expires_at),
     is_active: Boolean(r.is_active),
-    created_at: r.created_at,
-    updated_at: r.updated_at,
+    created_at: toISTIsoString(r.created_at),
+    updated_at: toISTIsoString(r.updated_at),
     creator_name: r.creator_name || null,
     creator_username: r.creator_username || null,
     creator_role: r.creator_role || null,

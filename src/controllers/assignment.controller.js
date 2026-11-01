@@ -7,6 +7,7 @@ const studentModel = require('../models/student.model');
 const notificationModel = require('../models/notification.model');
 const { createAuditLog } = require('../services/audit.service');
 const { SUBMISSIONS_DIR, BASE_UPLOADS } = require('../middlewares/upload.middleware');
+const { toMySQLDateTime, isValidDate: isValidDateTime, formatKolkata, toISTIsoString } = require('../utils/dateTime');
 
 /**
  * Validate positive integer ID
@@ -38,22 +39,7 @@ const isSafeFilePathOrUrl = (pathStr) => {
   return true;
 };
 
-/**
- * Helper to validate datetime
- */
-const isValidDateTime = (dateStr) => {
-  if (!dateStr) return false;
-  const d = new Date(dateStr);
-  return !isNaN(d.getTime());
-};
 
-/**
- * Helper to convert to MySQL DATETIME format (YYYY-MM-DD HH:mm:ss)
- */
-const toMySQLDateTime = (dateStr) => {
-  const d = new Date(dateStr);
-  return d.toISOString().slice(0, 19).replace('T', ' ');
-};
 
 /**
  * Helper to check and dispatch due reminders (due soon within 3 days or overdue)
@@ -73,7 +59,7 @@ const checkAndDispatchDueReminders = async ({ student_id = null, assignment_id =
 
       if (existingRows.length === 0) {
         const dueDateFormatted = candidate.due_date
-          ? new Date(candidate.due_date).toLocaleString()
+          ? formatKolkata(candidate.due_date)
           : '';
 
         const courseDisplay = candidate.course_name

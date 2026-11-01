@@ -39,11 +39,8 @@ function initAdminProfile(user) {
   const welcomeDate = document.getElementById('welcomeCurrentDate');
   if (welcomeDate) {
     const now = new Date();
-    welcomeDate.textContent = now.toLocaleDateString('en-US', {
-      weekday: 'short',
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
+    welcomeDate.textContent = formatDate(now, {
+      weekday: 'short'
     });
   }
 
@@ -654,7 +651,7 @@ function formatRelativeTime(dateStr) {
   if (diffSec < 60) return 'Just now';
   if (diffMin < 60) return `${diffMin}m ago`;
   if (diffHours < 24) return `${diffHours}h ago`;
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+  return formatDateTime(d);
 }
 
 function escapeHtml(unsafe) {

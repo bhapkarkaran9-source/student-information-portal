@@ -148,7 +148,7 @@
         ? '<span style="display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; background: #fee2e2; color: #991b1b;">URGENT</span>'
         : '<span style="display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; background: #f1f5f9; color: #475569;">NORMAL</span>';
 
-      const dateStr = n.created_at ? new Date(n.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+      const dateStr = n.created_at ? formatDate(n.created_at) : '';
       const targetStr = n.target_role || 'ALL';
 
       html += `

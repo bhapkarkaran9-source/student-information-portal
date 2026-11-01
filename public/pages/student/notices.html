@@ -280,7 +280,7 @@
         }
 
         container.innerHTML = filtered.map(n => {
-          const dateStr = n.published_at ? new Date(n.published_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+          const dateStr = n.published_at ? formatDate(n.published_at) : '';
           const isUrgent = (n.priority || '').toLowerCase() === 'high';
           const badgeBg = isUrgent ? '#fee2e2' : '#e0e7ff';
           const badgeColor = isUrgent ? '#b91c1c' : '#4338ca';

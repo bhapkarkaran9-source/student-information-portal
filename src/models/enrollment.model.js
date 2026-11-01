@@ -1,4 +1,5 @@
 const pool = require('../config/db');
+const { toISTDateString } = require('../utils/dateTime');
 
 /**
  * Get paginated, searchable, filterable list of enrollments
@@ -297,7 +298,7 @@ const createEnrollment = async ({
 
   const safeDate = enrollment_date && String(enrollment_date).trim() 
     ? String(enrollment_date).trim() 
-    : new Date().toISOString().split('T')[0];
+    : toISTDateString(new Date());
 
   const [result] = await pool.query(sql, [
     student_id,

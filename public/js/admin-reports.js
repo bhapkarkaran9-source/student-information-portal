@@ -297,7 +297,7 @@
   function renderReportPreview(data) {
     // Header metadata
     previewReportTitle.textContent = data.title || 'Academic Report';
-    previewTimestamp.textContent = new Date(data.generated_at).toLocaleString();
+    previewTimestamp.textContent = formatDateTime(data.generated_at);
     previewGeneratedBy.textContent = `${data.generated_by.name} (${data.generated_by.role})`;
 
     // Filter metadata string

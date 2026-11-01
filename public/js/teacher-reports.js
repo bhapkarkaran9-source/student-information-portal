@@ -365,7 +365,7 @@
 
   function renderReportPreview(data) {
     if (previewReportTitle) previewReportTitle.textContent = data.title || 'Course Report';
-    if (previewTimestamp) previewTimestamp.textContent = new Date(data.generated_at).toLocaleString();
+    if (previewTimestamp) previewTimestamp.textContent = formatDateTime(data.generated_at);
     if (previewGeneratedBy) previewGeneratedBy.textContent = `${data.generated_by?.name || currentUser.full_name || 'Faculty'} (${data.generated_by?.role || 'TEACHER'})`;
 
     // Build human-readable criteria string

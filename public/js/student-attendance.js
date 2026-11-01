@@ -151,13 +151,7 @@
 
   function getLogDisplayDate(dateVal) {
     if (!dateVal) return '-';
-    try {
-      const d = new Date(dateVal);
-      if (!isNaN(d.getTime())) {
-        return d.toLocaleDateString();
-      }
-    } catch (e) {}
-    return String(dateVal);
+    return formatDate(dateVal);
   }
 
   function getLogSemester(log, courses) {

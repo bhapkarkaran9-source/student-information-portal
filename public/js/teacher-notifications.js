@@ -194,7 +194,7 @@
       item.style.alignItems = 'center';
       item.style.gap = '14px';
 
-      const dateStr = n.created_at ? new Date(n.created_at).toLocaleString() : '';
+      const dateStr = n.created_at ? formatDateTime(n.created_at) : '';
 
       item.innerHTML = `
         <div style="flex: 1;">
